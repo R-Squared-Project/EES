@@ -7,11 +7,11 @@ export default class StubRepository implements RepositoryInterface {
     } = {}
 
     getBySecret(secret: string): Deposit {
-        return undefined;
+        return this._deposits[secret] ?? null
     }
 
     create(deposit: Deposit): void {
-
+        this._deposits[deposit.secret] = deposit
     }
 
     get size(): number {

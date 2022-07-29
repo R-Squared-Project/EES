@@ -1,10 +1,9 @@
 export default class Deposit {
-    private _id: string
     private _status: number
-    private _account: string
+    private _account: string | null = null
 
     constructor(
-        readonly private _secret: string
+        private readonly _secret: string
     ) {
         this._status = 1
     }

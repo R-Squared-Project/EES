@@ -1,5 +1,9 @@
 import {expect} from "chai";
-import {InitializeDeposit, InitializeDepositHandler, StubRepository} from "../../../../../../Context/Wallet";
+import StubRepository from "../../../../../../Context/Wallet/Infrastructure/StubRepository";
+import {InitializeDeposit} from "../../../../../../Context/Wallet";
+import InitializeDepositHandler
+    from "../../../../../../Context/Wallet/Application/Command/InitializeDeposit/InitializeDepositHandler";
+import web3SecretGenerator from "../../../../../../Context/Wallet/Infrastructure/SecretGenerator/Web3SecretGenerator";
 
 describe("InitializeDepositHandler", () => {
     let repository: StubRepository;
@@ -7,11 +11,11 @@ describe("InitializeDepositHandler", () => {
 
     beforeEach(function() {
         repository = new StubRepository()
-        handler = new InitializeDepositHandler(repository);
+        handler = new InitializeDepositHandler(repository, web3SecretGenerator);
     });
 
     describe("execute", () => {
-        it("with secret", async () => {
+        it("should save new deposit", async () => {
             const command = new InitializeDeposit()
             handler.execute(command)
 
