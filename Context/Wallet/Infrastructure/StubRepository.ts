@@ -6,20 +6,20 @@ export default class StubRepository implements RepositoryInterface {
         [index: string]: Deposit
     } = {}
 
-    getBySecret(secret: string): Deposit {
-        return this._deposits[secret] ?? null
+    getBySecret(sessionId: string): Deposit {
+        return this._deposits[sessionId] ?? null
     }
 
     create(deposit: Deposit): void {
-        this._deposits[deposit.secret] = deposit
+        this._deposits[deposit.sessionId] = deposit
     }
 
     save(deposit: Deposit): void {
-        if (!(deposit.secret in this._deposits)) {
+        if (!(deposit.sessionId in this._deposits)) {
             throw new Error("Deposit not found!")
         }
 
-        this._deposits[deposit.secret] = deposit
+        this._deposits[deposit.sessionId] = deposit
     }
 
     get size(): number {

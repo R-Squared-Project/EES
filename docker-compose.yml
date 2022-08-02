@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: "root_password"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+      - ./docker/initdb.sh:/docker-entrypoint-initdb.d/init.sh
+#  app:
+#    depends_on:
+#      - mysqldb
+#    build: ./bezkoder-app
+#    restart: unless-stopped
+#    env_file: ./.env
+#    ports:
+#      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+#    environment:
+#      - DB_HOST=mysqldb
+#      - DB_USER=$MYSQLDB_USER
+#      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+#      - DB_NAME=$MYSQLDB_DATABASE
+#      - DB_PORT=$MYSQLDB_DOCKER_PORT
+#    stdin_open: true
+#    tty: true
+
+volumes:
+  db:

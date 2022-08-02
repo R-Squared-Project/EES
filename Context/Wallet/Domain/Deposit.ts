@@ -3,13 +3,13 @@ export default class Deposit {
     private _account: string | null = null
 
     constructor(
-        private readonly _secret: string
+        private readonly _sessionId: string
     ) {
         this._status = 1
     }
 
-    get secret(): string {
-        return this._secret;
+    get sessionId(): string {
+        return this._sessionId;
     }
 
     confirm(account: string) {

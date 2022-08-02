@@ -22,7 +22,7 @@ describe("ConfirmDepositHandler", () => {
             const deposit = new Deposit(sessionId)
             repository.create(deposit)
 
-            const command = new ConfirmDeposit(deposit.secret, "revpop_account_name")
+            const command = new ConfirmDeposit(deposit.sessionId, "revpop_account_name")
             const result = handler.execute(command)
 
             expect(result.isLeft()).false

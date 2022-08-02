@@ -8,7 +8,7 @@ describe("Deposit", () => {
             const secret = web3SecretGenerator.generate()
             const deposit = new Deposit(secret)
 
-            expect(deposit.secret).equals(secret)
+            expect(deposit.sessionId).equals(secret)
         })
     });
 
