@@ -17,9 +17,11 @@ describe("InitializeDepositHandler", () => {
     describe("execute", () => {
         it("should save new deposit", async () => {
             const command = new InitializeDeposit()
-            handler.execute(command)
+            const depositOrError = handler.execute(command)
 
             expect(repository.size).equals(1)
+            expect(depositOrError.isLeft()).false
+            expect(depositOrError.isRight()).true
         });
     });
 });
