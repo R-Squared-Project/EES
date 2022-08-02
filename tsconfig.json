@@ -12,7 +12,6 @@
         "baseUrl": "./",
         "incremental": true,
         "skipLibCheck": true,
-
         "noImplicitAny": true,
         "noImplicitThis": true,
         "alwaysStrict": true,

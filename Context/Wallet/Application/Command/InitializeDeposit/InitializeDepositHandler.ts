@@ -1,4 +1,3 @@
-import Web3 from "web3";
 import InitializeDeposit from "./InitializeDeposit";
 import RepositoryInterface from "../../../Domain/RepositoryInterface";
 import SecretGeneratorInterface from "../../../Infrastructure/SecretGenerator/SecretGeneratorInterface";
@@ -18,9 +17,10 @@ export default class InitializeDepositHandler implements UseCase<InitializeDepos
         private _secretGenerator: SecretGeneratorInterface
     ) {}
 
-    execute(request: InitializeDeposit): Response {
-        const secret = Web3.utils.randomHex(16)
-        const deposit = new Deposit(secret)
+    execute(_: InitializeDeposit): Response {
+        const sessionId = this._secretGenerator.generate()
+
+        const deposit = new Deposit(sessionId)
 
         this._repository.create(deposit);
 
