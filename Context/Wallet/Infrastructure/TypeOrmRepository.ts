@@ -5,21 +5,19 @@ import {DataSource} from "typeorm";
 export default class TypeOrmRepository implements RepositoryInterface {
     constructor(
         private _datasource: DataSource
-    ) {
-        _datasource.initialize()
-    }
+    ) {}
 
     create(deposit: Deposit): void {
-        // console.log(this._datasource.getRepository<Deposit>(DepositEntity))
         this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
 
-    getBySecret(sessionId: string): Deposit {
-        return new Deposit(sessionId);
+    async getBySecret(sessionId: string): Promise<Deposit | null> {
+        return await this._datasource.getRepository<Deposit>(Deposit).findOneById(sessionId)
     }
 
-    save(deposit: Deposit): void {
-        return undefined
+    async save(deposit: Deposit): Promise<void> {
+        // "upsert" is used because "save" method not working: https://github.com/typeorm/typeorm/issues/4122
+        await this._datasource.getRepository<Deposit>(Deposit).upsert(deposit, ['sessionId'])
     }
 
 }

@@ -6,8 +6,8 @@ export default class StubRepository implements RepositoryInterface {
         [index: string]: Deposit
     } = {}
 
-    getBySecret(sessionId: string): Deposit {
-        return this._deposits[sessionId] ?? null
+    getBySecret(sessionId: string): Promise<Deposit | null> {
+        return Promise.resolve(this._deposits[sessionId] ?? null)
     }
 
     create(deposit: Deposit): void {

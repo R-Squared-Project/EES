@@ -22,16 +22,16 @@ describe("ConfirmDepositHandler", () => {
             const deposit = new Deposit(sessionId)
             repository.create(deposit)
 
-            const command = new ConfirmDeposit(deposit.sessionId, "revpop_account_name")
-            const result = handler.execute(command)
+            const command = new ConfirmDeposit(deposit.sessionId, "revpop_account_name", "tx_hash")
+            const result = await handler.execute(command)
 
             expect(result.isLeft()).false
             expect(result.isRight()).true
         });
 
         it("should return error if session id is not existed", async () => {
-            const command = new ConfirmDeposit(web3SecretGenerator.generate(), "revpop_account_name")
-            const result = handler.execute(command)
+            const command = new ConfirmDeposit(web3SecretGenerator.generate(), "revpop_account_name", "tx_hash")
+            const result = await handler.execute(command)
 
             expect(result.isLeft()).true
             expect(result.value).is.instanceof(DepositNotFoundError)

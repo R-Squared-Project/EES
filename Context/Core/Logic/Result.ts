@@ -1,10 +1,10 @@
 export class Result<T> {
     public isSuccess: boolean;
     public isFailure: boolean
-    public error: T | string | null;
+    public error: T | null;
     private readonly _value: T | null;
 
-    public constructor(isSuccess: boolean, error: T | string | null, value: T | null = null) {
+    public constructor(isSuccess: boolean, error: T | null, value: T | null = null) {
         if (isSuccess && error) {
             throw new Error("InvalidOperation: A result cannot be successful and contain an error");
         }

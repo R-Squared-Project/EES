@@ -4,7 +4,7 @@ import {UseCaseError} from "../../../../Core/Logic/UseCaseError";
 export class DepositNotFoundError extends Result<UseCaseError> {
     constructor(sessionId: string) {
         super(false, {
-            message: `The deposit with ${sessionId} is not found`
+            message: `The deposit with sessionId ${sessionId} is not found`
         } as UseCaseError)
     }
 }

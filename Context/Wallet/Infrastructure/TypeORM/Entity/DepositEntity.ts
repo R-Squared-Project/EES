@@ -11,9 +11,23 @@ const DepositEntity = new EntitySchema<Deposit>({
             primary: true
         },
         // @ts-ignore
+        _revpopAccount: {
+            type: String,
+            name: 'revpop_account',
+        },
+        // @ts-ignore
+        _txHash: {
+            type: String,
+            name: 'tx_hash',
+        },
+        // @ts-ignore
         _status: {
             type: Number,
-            name: 'status'
+            name: 'status',
+        },
+        _createdAt: {
+            name: 'created_at',
+            createDate: true,
         },
     },
 })

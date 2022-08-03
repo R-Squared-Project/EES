@@ -1,14 +1,19 @@
 export default class ConfirmDeposit {
     constructor(
-        private _secret: string,
-        private _account: string
+        private _sessionId: string,
+        private _revpopAccount: string,
+        private _txHash: string
     ) {}
 
-    get secret(): string {
-        return this._secret;
+    get sessionId(): string {
+        return this._sessionId;
     }
 
-    get account(): string {
-        return this._account;
+    get revpopAccount(): string {
+        return this._revpopAccount;
+    }
+
+    get txHash(): string {
+        return this._txHash;
     }
 }

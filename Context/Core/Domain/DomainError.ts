@@ -1,8 +1,8 @@
-interface UseCaseErrorInterface {
+interface DomainErrorInterface {
     message: string;
 }
 
-export abstract class UseCaseError implements UseCaseErrorInterface {
+export abstract class DomainError implements DomainErrorInterface {
     public readonly message: string;
 
     constructor(message: string) {

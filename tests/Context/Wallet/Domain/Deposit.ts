@@ -17,7 +17,9 @@ describe("Deposit", () => {
             const secret = web3SecretGenerator.generate()
             const deposit = new Deposit(secret)
 
-            deposit.confirm("revpop_account_name")
+            const resultOrError = deposit.confirm("revpop_account_name", "tx_hash")
+
+            expect(resultOrError.isRight()).true
         })
     });
 });
