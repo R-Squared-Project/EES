@@ -20,7 +20,7 @@ export default class InitializeDepositHandler implements UseCase<InitializeDepos
     execute(_: InitializeDeposit): Response {
         const sessionId = this._secretGenerator.generate()
 
-        const deposit = new Deposit(sessionId)
+        const deposit = Deposit.create(sessionId)
 
         this._repository.create(deposit);
 

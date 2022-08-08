@@ -19,10 +19,10 @@ describe("ConfirmDepositHandler", () => {
     describe("execute", () => {
         it("should confirm deposit", async () => {
             const sessionId = web3SecretGenerator.generate()
-            const deposit = new Deposit(sessionId)
+            const deposit = Deposit.create(sessionId)
             repository.create(deposit)
 
-            const command = new ConfirmDeposit(deposit.sessionId, "revpop_account_name", "tx_hash")
+            const command = new ConfirmDeposit(deposit.sessionId.id.toValue(), "revpop_account_name", "tx_hash")
             const result = await handler.execute(command)
 
             expect(result.isLeft()).false

@@ -11,15 +11,15 @@ export default class StubRepository implements RepositoryInterface {
     }
 
     create(deposit: Deposit): void {
-        this._deposits[deposit.sessionId] = deposit
+        this._deposits[deposit.sessionId.id.toValue()] = deposit
     }
 
     save(deposit: Deposit): void {
-        if (!(deposit.sessionId in this._deposits)) {
+        if (!(deposit.sessionId.id.toValue() in this._deposits)) {
             throw new Error("Deposit not found!")
         }
 
-        this._deposits[deposit.sessionId] = deposit
+        this._deposits[deposit.sessionId.id.toValue()] = deposit
     }
 
     get size(): number {
