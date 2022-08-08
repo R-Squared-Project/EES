@@ -16,9 +16,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
                     if (null === value.data) {
                         return null
                     } else {
-                        return {
-                            data: value.data
-                        }
+                        return value.data
                     }
                 }
 

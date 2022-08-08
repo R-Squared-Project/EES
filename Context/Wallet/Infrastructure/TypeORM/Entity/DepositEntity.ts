@@ -14,11 +14,13 @@ const DepositEntity = new EntitySchema<Deposit>({
         _revpopAccount: {
             type: String,
             name: 'revpop_account',
+            nullable: true
         },
         // @ts-ignore
         _txHash: {
             type: String,
             name: 'tx_hash',
+            nullable: true
         },
         // @ts-ignore
         _status: {
