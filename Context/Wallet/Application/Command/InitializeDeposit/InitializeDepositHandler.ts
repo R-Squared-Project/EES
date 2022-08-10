@@ -2,9 +2,10 @@ import InitializeDeposit from "./InitializeDeposit";
 import RepositoryInterface from "../../../Domain/RepositoryInterface";
 import SecretGeneratorInterface from "../../../Infrastructure/SecretGenerator/SecretGeneratorInterface";
 import Deposit from "../../../Domain/Deposit";
-import {Result, Either, right} from "../../../../Core";
+import {Result, Either, right, left} from "../../../../Core";
 import {UseCase} from "../../../../Core/Domain/UseCase";
 import {UnexpectedError} from "../../../../Core/Logic/AppError";
+import SessionId from "../../../Domain/SessionId";
 
 type Response = Either<
     UnexpectedError,
@@ -18,9 +19,15 @@ export default class InitializeDepositHandler implements UseCase<InitializeDepos
     ) {}
 
     execute(_: InitializeDeposit): Response {
-        const sessionId = this._secretGenerator.generate()
+        const sessionIdOrError = SessionId.create(this._secretGenerator.generate())
 
-        const deposit = Deposit.create(sessionId)
+        const combinedPropsResult = Result.combine([ sessionIdOrError ]);
+
+        if (combinedPropsResult.isFailure) {
+            return left(Result.fail<void>(combinedPropsResult.error)) as Response;
+        }
+
+        const deposit = Deposit.create(sessionIdOrError.getValue() as SessionId)
 
         this._repository.create(deposit);
 

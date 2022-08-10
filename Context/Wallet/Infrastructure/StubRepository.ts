@@ -6,20 +6,22 @@ export default class StubRepository implements RepositoryInterface {
         [index: string]: Deposit
     } = {}
 
-    getBySecret(sessionId: string): Promise<Deposit | null> {
-        return Promise.resolve(this._deposits[sessionId] ?? null)
+    getBySessionId(sessionId: string): Promise<Deposit | null> {
+        const deposit = Object.values(this._deposits).find(deposit => deposit.sessionId.value === sessionId)
+        return Promise.resolve(deposit ?? null)
     }
 
     create(deposit: Deposit): void {
-        this._deposits[deposit.sessionId.id.toValue()] = deposit
+        this._deposits[deposit.id.toValue()] = deposit
+        this._deposits[deposit.id.toValue()] = deposit
     }
 
     save(deposit: Deposit): void {
-        if (!(deposit.sessionId.id.toValue() in this._deposits)) {
+        if (!(deposit.id.toValue() in this._deposits)) {
             throw new Error("Deposit not found!")
         }
 
-        this._deposits[deposit.sessionId.id.toValue()] = deposit
+        this._deposits[deposit.id.toValue()] = deposit
     }
 
     get size(): number {

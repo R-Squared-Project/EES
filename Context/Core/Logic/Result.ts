@@ -4,7 +4,7 @@ export class Result<T> {
     public error: T | null;
     private readonly _value: T | null;
 
-    public constructor(isSuccess: boolean, error: T | null, value: T | null = null) {
+    constructor(isSuccess: boolean, error: T | null, value: T | null = null) {
         if (isSuccess && error) {
             throw new Error("InvalidOperation: A result cannot be successful and contain an error");
         }
@@ -21,7 +21,7 @@ export class Result<T> {
         Object.freeze(this);
     }
 
-    public getValue(): T | null {
+    getValue(): T | null {
         if (!this.isSuccess) {
             return this.error as T;
         }
@@ -29,12 +29,19 @@ export class Result<T> {
         return this._value;
     }
 
-    public static ok<U>(value: U | null = null): Result<U> {
+    static ok<U>(value: U | null = null): Result<U> {
         return new Result<U>(true, null, value);
     }
 
-    public static fail<U>(error: any): Result<U> {
+    static fail<U>(error: any): Result<U> {
         return new Result<U>(false, error);
+    }
+
+    static combine(results: Result<any>[]): Result<any> {
+        for (const result of results) {
+            if (result.isFailure) return result;
+        }
+        return Result.ok();
     }
 }
 

@@ -14,7 +14,7 @@ export default class InitializeDepositController {
         }
 
         return Promise.resolve(SuccessResponse.create({
-            sessionId: depositOrError.value.getValue()?.sessionId
+            sessionId: depositOrError.value.getValue()?.sessionId.value
         }))
     }
 }

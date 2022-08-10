@@ -1,6 +1,7 @@
 import { EntitySchema } from "typeorm"
 import Deposit from "../../../Domain/Deposit";
 import UniqueEntityIDType from "../Type/UniqueEntityIDType";
+import SessionIdType from "../Type/SessionIdType";
 
 const DepositEntity = new EntitySchema<Deposit>({
     name: "Deposit",
@@ -8,6 +9,8 @@ const DepositEntity = new EntitySchema<Deposit>({
     columns: {
         // @ts-ignore
         id: UniqueEntityIDType,
+        // @ts-ignore
+        _sessionId: SessionIdType,
         // @ts-ignore
         _revpopAccount: {
             type: String,

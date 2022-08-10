@@ -6,6 +6,7 @@ import web3SecretGenerator from "../../../../../../Context/Wallet/Infrastructure
 import {expect} from "chai";
 import Deposit from "../../../../../../Context/Wallet/Domain/Deposit";
 import {DepositNotFoundError} from "../../../../../../Context/Wallet/Application/Command/ConfirmDeposit/Errors";
+import SessionId from "../../../../../../Context/Wallet/Domain/SessionId";
 
 describe("ConfirmDepositHandler", () => {
     let repository: StubRepository;
@@ -19,10 +20,12 @@ describe("ConfirmDepositHandler", () => {
     describe("execute", () => {
         it("should confirm deposit", async () => {
             const sessionId = web3SecretGenerator.generate()
-            const deposit = Deposit.create(sessionId)
+            const deposit = Deposit.create(
+                SessionId.create(sessionId).getValue() as SessionId
+            )
             repository.create(deposit)
 
-            const command = new ConfirmDeposit(deposit.sessionId.id.toValue(), "revpop_account_name", "tx_hash")
+            const command = new ConfirmDeposit(deposit.sessionId.value, "revpop_account_name", "tx_hash")
             const result = await handler.execute(command)
 
             expect(result.isLeft()).false

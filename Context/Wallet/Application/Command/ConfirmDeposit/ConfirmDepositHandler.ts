@@ -19,7 +19,7 @@ export default class ConfirmDepositHandler implements UseCase<ConfirmDeposit, Re
     ) {}
 
     async execute(command: ConfirmDeposit): Promise<Response> {
-        const deposit = await this._repository.getBySecret(command.sessionId)
+        const deposit = await this._repository.getBySessionId(command.sessionId)
 
         if (!deposit) {
             return left(new DepositNotFoundError(command.sessionId)) as Response;
