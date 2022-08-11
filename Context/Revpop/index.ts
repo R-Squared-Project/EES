@@ -1,10 +1,10 @@
 import CreateDeposit from './Application/Command/CreateDeposit/CreateDeposit'
 import CreateDepositHandler from './Application/Command/CreateDeposit/CreateDepositHandler'
 import TypeOrmRepository from "./Infrastructure/TypeOrmRepository";
-import WalletDataSource from "../Wallet/Infrastructure/TypeORM/DataSource/WalletDataSource";
+import DataSource from "./Infrastructure/TypeORM/DataSource/DataSource";
 import "./Subscribers";
 
-const repository = new TypeOrmRepository(WalletDataSource)
+const repository = new TypeOrmRepository(DataSource)
 const createDepositHandler = new CreateDepositHandler(repository)
 
 export {CreateDeposit, createDepositHandler}

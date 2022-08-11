@@ -8,6 +8,6 @@ export default class TypeOrmRepository implements RepositoryInterface {
     ) {}
 
     create(deposit: Deposit): void {
-        console.log('Revpop TypeOrmRepository create', deposit)
+        this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
 }

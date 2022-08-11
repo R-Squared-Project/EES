@@ -10,10 +10,6 @@ export default class SessionId extends ValueObject<SessionIdProps> {
         super(props);
     }
 
-    get value(): string {
-        return this.props.value;
-    }
-
     public static create(sessionId: string): Result<SessionId> {
         if (sessionId.length === 0) {
             return Result.fail<SessionId>('Must provide a sessionId')

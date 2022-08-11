@@ -4,7 +4,7 @@ import TxHash from "./TxHash";
 import RevpopAccount from "./RevpopAccount";
 
 export default class Deposit extends AggregateRoot {
-    private status: number
+    private _status: number
 
     constructor(
         private _txHash: TxHash,
@@ -12,7 +12,7 @@ export default class Deposit extends AggregateRoot {
         id?: UniqueEntityID
     ) {
         super(id)
-        this.status = 1
+        this._status = 1
     }
 
     get txHash(): TxHash {

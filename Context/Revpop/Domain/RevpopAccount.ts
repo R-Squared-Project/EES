@@ -10,10 +10,6 @@ export default class RevpopAccount extends ValueObject<RevpopAccountProps> {
         super(props);
     }
 
-    get value(): string {
-        return this.props.value;
-    }
-
     public static create(revpopAccount: string): Result<RevpopAccount> {
         if (revpopAccount.length === 0) {
             return Result.fail<RevpopAccount>('Must provide a revpop account')

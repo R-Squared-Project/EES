@@ -1,6 +1,6 @@
 import {shallowEqual} from 'shallow-equal-object';
 
-interface ValueObjectProps {
+export interface ValueObjectProps {
     [index: string]: any;
 }
 
@@ -9,6 +9,10 @@ export default abstract class ValueObject<T extends ValueObjectProps> {
 
     constructor(props: T) {
         this.props = Object.freeze(props);
+    }
+
+    get value(): string {
+        return this.props.value;
     }
 
     public equals(vo?: ValueObject<T>): boolean {

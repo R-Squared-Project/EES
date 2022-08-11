@@ -10,10 +10,6 @@ export default class TxHash extends ValueObject<TxHashProps> {
         super(props);
     }
 
-    get value(): string {
-        return this.props.value;
-    }
-
     public static create(txHash: string): Result<TxHash> {
         if (txHash.length === 0) {
             return Result.fail<TxHash>('Must provide a transaction hash')
