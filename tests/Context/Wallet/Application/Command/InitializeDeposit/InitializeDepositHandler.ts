@@ -14,10 +14,10 @@ describe("InitializeDepositHandler", () => {
         handler = new InitializeDepositHandler(repository, web3SecretGenerator);
     });
 
-    describe("execute", () => {
+    describe("execute", async () => {
         it("should save new deposit", async () => {
             const command = new InitializeDeposit()
-            const depositOrError = handler.execute(command)
+            const depositOrError = await handler.execute(command)
 
             expect(repository.size).equals(1)
             expect(depositOrError.isLeft()).false

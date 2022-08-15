@@ -17,7 +17,7 @@ export default class CreateDepositHandler implements UseCase<CreateDeposit, Resp
         private _repository: RepositoryInterface,
     ) {}
 
-    execute(command: CreateDeposit): Response {
+    async execute(command: CreateDeposit): Promise<Response> {
         const txHashOrError = TxHash.create(command.txHash)
         const revpopAccountOrError = RevpopAccount.create(command.revpopAccount)
 
@@ -32,7 +32,7 @@ export default class CreateDepositHandler implements UseCase<CreateDeposit, Resp
             revpopAccountOrError.getValue() as RevpopAccount
         )
 
-        this._repository.create(deposit);
+        await this._repository.create(deposit);
 
         return right(Result.ok<Deposit>(deposit)) as Response;
     }

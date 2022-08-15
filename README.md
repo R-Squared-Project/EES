@@ -23,3 +23,21 @@ yarn typeorm migration:generate -d Context/Revpop/Infrastructure/TypeORM/DataSou
 ```
 yarn typeorm migration:run -d Context/Revpop/Infrastructure/TypeORM/DataSource/DataSource.ts
 ```
+
+## Tests
+### Unit
+Unit tests does`t use database. Just run to launch them:
+```
+yarn test
+```
+
+### Integration
+1. Create test databases
+```
+docker compose exec db bash -c "./initdb_test.sh"
+```
+2. Migrations will be applied automatically
+3. Run tests
+```
+yarn test:intergration
+```

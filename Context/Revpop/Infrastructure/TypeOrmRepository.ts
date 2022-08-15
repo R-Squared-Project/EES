@@ -1,13 +1,23 @@
 import {DataSource} from "typeorm";
-import Deposit from "../Domain/Deposit";
 import RepositoryInterface from "../Domain/RepositoryInterface";
+import Deposit from "../Domain/Deposit";
+import TxHash from "../Domain/TxHash";
 
 export default class TypeOrmRepository implements RepositoryInterface {
     constructor(
         private _datasource: DataSource
     ) {}
 
-    create(deposit: Deposit): void {
-        this._datasource.getRepository<Deposit>(Deposit).save(deposit)
+    async create(deposit: Deposit): Promise<void> {
+        await this._datasource.getRepository<Deposit>(Deposit).save(deposit)
+    }
+
+    async getByTxHash(txHash: string): Promise<Deposit | null> {
+        return await this._datasource.getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .where({
+                _txHash: TxHash.create(txHash).getValue()
+            })
+            .getOne()
     }
 }

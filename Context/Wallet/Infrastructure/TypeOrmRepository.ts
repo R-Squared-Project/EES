@@ -8,8 +8,8 @@ export default class TypeOrmRepository implements RepositoryInterface {
         private _datasource: DataSource
     ) {}
 
-    create(deposit: Deposit): void {
-        this._datasource.getRepository<Deposit>(Deposit).save(deposit)
+    async create(deposit: Deposit) {
+        await this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
 
     async getBySessionId(sessionId: string): Promise<Deposit | null> {

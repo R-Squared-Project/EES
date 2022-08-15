@@ -18,4 +18,12 @@ const DatabaseConfig: DataSourceOptions = {
     subscribers: [Subscriber]
 }
 
+const DatabaseConfigTest: DataSourceOptions = {
+    ...DatabaseConfig,
+    database: process.env.WALLET_DATABASE_TEST,
+    migrationsRun: true,
+    logging: false
+}
+
 export default DatabaseConfig
+export {DatabaseConfigTest}

@@ -7,7 +7,7 @@ export default class InitializeDepositController {
     @Get("initialize")
     async initialize(): Promise<SuccessResponse> {
         const command = new InitializeDeposit()
-        const depositOrError = initializeDepositHandler.execute(command)
+        const depositOrError = await initializeDepositHandler.execute(command)
 
         if (depositOrError.isLeft()) {
             throw new HttpException(depositOrError.value.error?.message as string, 500)

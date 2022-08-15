@@ -13,13 +13,13 @@ export class AfterDepositConfirmed implements HandlerInterface<DepositConfirmedE
         DomainEvents.register(this.onDepositConfirmedEvent.bind(this), DepositConfirmedEvent.name);
     }
 
-    private onDepositConfirmedEvent(event: DepositConfirmedEvent) {
+    private async onDepositConfirmedEvent(event: DepositConfirmedEvent) {
         const command = new CreateDeposit(
             event.txHash,
             event.revpopAccount
         )
 
-        const result = createDepositHandler.execute(command)
+        const result = await createDepositHandler.execute(command)
 
         if (result.isLeft()) {
             // Send notification

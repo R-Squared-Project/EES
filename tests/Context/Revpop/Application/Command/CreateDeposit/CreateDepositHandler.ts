@@ -19,7 +19,7 @@ describe("Revpop CreateDepositHandler", () => {
                 "0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f",
                 "revpopAccount"
             )
-            const depositOrError = handler.execute(command)
+            const depositOrError = await handler.execute(command)
 
             expect(repository.size).equals(1)
             expect(depositOrError.isLeft()).false

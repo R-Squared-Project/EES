@@ -1,7 +1,9 @@
-import { EntitySchema } from "typeorm"
+import {EntitySchema} from "typeorm"
 import Deposit from "../../../Domain/Deposit";
 import UniqueEntityIDType from "../Type/UniqueEntityIDType";
 import SessionIdType from "../Type/SessionIdType";
+import RevpopAccountType from "../Type/RevpopAccountType";
+import TxHashType from "../Type/TxHashType";
 
 const DepositEntity = new EntitySchema<Deposit>({
     name: "Deposit",
@@ -12,17 +14,9 @@ const DepositEntity = new EntitySchema<Deposit>({
         // @ts-ignore
         _sessionId: SessionIdType,
         // @ts-ignore
-        _revpopAccount: {
-            type: String,
-            name: 'revpop_account',
-            nullable: true
-        },
+        _revpopAccount: RevpopAccountType,
         // @ts-ignore
-        _txHash: {
-            type: String,
-            name: 'tx_hash',
-            nullable: true
-        },
+        _txHash: TxHashType,
         // @ts-ignore
         _status: {
             type: Number,

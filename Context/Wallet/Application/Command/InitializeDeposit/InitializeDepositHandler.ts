@@ -18,7 +18,7 @@ export default class InitializeDepositHandler implements UseCase<InitializeDepos
         private _secretGenerator: SecretGeneratorInterface
     ) {}
 
-    execute(_: InitializeDeposit): Response {
+    async execute(_: InitializeDeposit): Promise<Response> {
         const sessionIdOrError = SessionId.create(this._secretGenerator.generate())
 
         const combinedPropsResult = Result.combine([ sessionIdOrError ]);
@@ -29,7 +29,7 @@ export default class InitializeDepositHandler implements UseCase<InitializeDepos
 
         const deposit = Deposit.create(sessionIdOrError.getValue() as SessionId)
 
-        this._repository.create(deposit);
+        await this._repository.create(deposit);
 
         return right(Result.ok<Deposit>(deposit)) as Response;
     }
