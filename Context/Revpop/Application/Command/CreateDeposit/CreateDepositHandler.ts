@@ -21,7 +21,7 @@ export default class CreateDepositHandler implements UseCase<CreateDeposit, Resp
         const txHashOrError = TxHash.create(command.txHash)
         const revpopAccountOrError = RevpopAccount.create(command.revpopAccount)
 
-        const combinedPropsResult = Result.combine([ txHashOrError, revpopAccountOrError ]);
+        const combinedPropsResult = Result.combine([txHashOrError, revpopAccountOrError]);
 
         if (combinedPropsResult.isFailure) {
             return left(Result.fail<void>(combinedPropsResult.error)) as Response;

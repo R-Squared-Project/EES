@@ -13,6 +13,18 @@ yarn typeorm migration:generate -d Context/Wallet/Infrastructure/TypeORM/DataSou
 ```
 yarn typeorm migration:run -d Context/Wallet/Infrastructure/TypeORM/DataSource/WalletDataSource.ts
 ```
+
+### Eth context
+#### Create migration:
+```
+yarn typeorm migration:generate -d Context/Eth/Infrastructure/TypeORM/DataSource/DataSource.ts Context/Eth/Infrastructure/TypeORM/migrations/__migrationName__
+```
+
+#### Execute migrations
+```
+yarn typeorm migration:run -d Context/Eth/Infrastructure/TypeORM/DataSource/DataSource.ts
+```
+
 ### Revpop context
 #### Create migration:
 ```
@@ -39,5 +51,5 @@ docker compose exec db bash -c "./initdb_test.sh"
 2. Migrations will be applied automatically
 3. Run tests
 ```
-yarn test:intergration
+yarn test:integration
 ```

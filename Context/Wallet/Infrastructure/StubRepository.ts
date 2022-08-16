@@ -13,7 +13,6 @@ export default class StubRepository implements RepositoryInterface {
 
     create(deposit: Deposit): void {
         this._deposits[deposit.id.toValue()] = deposit
-        this._deposits[deposit.id.toValue()] = deposit
     }
 
     save(deposit: Deposit): void {

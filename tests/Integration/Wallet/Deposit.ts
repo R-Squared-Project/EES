@@ -1,15 +1,15 @@
 import {expect} from 'chai';
-import initWalletDataSourceTest from '../../Context/Wallet/Infrastructure/TypeORM/DataSource/WalletDataSourceTest'
-import TypeOrmRepositoryWallet from '../../Context/Wallet/Infrastructure/TypeOrmRepository';
-import web3SecretGenerator from '../../Context/Wallet/Infrastructure/SecretGenerator/Web3SecretGenerator';
-import InitializeDepositHandler
-    from '../../Context/Wallet/Application/Command/InitializeDeposit/InitializeDepositHandler';
-import {ConfirmDeposit, InitializeDeposit} from '../../Context/Wallet';
-import ConfirmDepositHandler from '../../Context/Wallet/Application/Command/ConfirmDeposit/ConfirmDepositHandler';
 import {DataSource} from 'typeorm';
-import Deposit from '../../Context/Wallet/Domain/Deposit';
+import initWalletDataSourceTest from '../../../Context/Wallet/Infrastructure/TypeORM/DataSource/WalletDataSourceTest'
+import TypeOrmRepositoryWallet from '../../../Context/Wallet/Infrastructure/TypeOrmRepository';
+import web3SecretGenerator from '../../../Context/Wallet/Infrastructure/SecretGenerator/Web3SecretGenerator';
+import InitializeDepositHandler
+    from '../../../Context/Wallet/Application/Command/InitializeDeposit/InitializeDepositHandler';
+import {ConfirmDeposit, InitializeDeposit} from '../../../Context/Wallet';
+import ConfirmDepositHandler from '../../../Context/Wallet/Application/Command/ConfirmDeposit/ConfirmDepositHandler';
+import Deposit from '../../../Context/Wallet/Domain/Deposit';
 
-describe('Deposit', async () => {
+describe('Wallet context integration test', async () => {
     let walletDataSourceTest: DataSource
     let walletRepository: TypeOrmRepositoryWallet
 

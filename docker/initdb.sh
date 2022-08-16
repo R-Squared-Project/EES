@@ -6,6 +6,14 @@ GRANT ALL PRIVILEGES ON $WALLET_DATABASE.* TO '$WALLET_DATABASE_USER'@'%' IDENTI
 
 echo "Finished creating wallet context database and user"
 
+echo "Creating eth context database and user"
+
+mysql -u root -p$MYSQL_ROOT_PASSWORD --execute \
+"CREATE DATABASE IF NOT EXISTS $ETH_DATABASE;
+GRANT ALL PRIVILEGES ON $ETH_DATABASE.* TO '$ETH_DATABASE_USER'@'%' IDENTIFIED BY '$ETH_DATABASE_PASSWORD'";
+
+echo "Finished creating eth context database and user"
+
 echo "Creating revpop context database and user"
 
 mysql -u root -p$MYSQL_ROOT_PASSWORD --execute \

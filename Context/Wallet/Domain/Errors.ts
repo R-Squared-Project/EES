@@ -8,3 +8,11 @@ export class DepositAlreadyConfirmed extends Result<DomainError>{
         } as DomainError)
     }
 }
+
+export class DepositAlreadyRedeemed extends Result<DomainError>{
+    constructor() {
+        super(false, {
+            message: `The deposit was already redeemed`
+        } as DomainError)
+    }
+}

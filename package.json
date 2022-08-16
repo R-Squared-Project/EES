@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "test": "mocha -r ts-node/register ./tests/Context --recursive --extension ts",
-    "test:intergration": "mocha -r ts-node/register ./tests/Integration --recursive --extension ts"
+    "test:integration": "mocha -r ts-node/register ./tests/Integration --recursive --extension ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.7",
@@ -23,6 +23,7 @@
     "@nestjs/typeorm": "^9.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "dayjs": "^1.11.5",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.6",
