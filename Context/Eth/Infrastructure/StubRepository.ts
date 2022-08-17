@@ -6,6 +6,10 @@ export default class StubRepository implements RepositoryInterface {
         [index: string]: Deposit
     } = {}
 
+    isContractExists(contractId: string): Promise<boolean> {
+        return Promise.resolve(Object.values(this._deposits).find(deposit => deposit.contractId === contractId) !== undefined)
+    }
+
     create(deposit: Deposit): void {
         this._deposits[deposit.id.toValue()] = deposit
     }

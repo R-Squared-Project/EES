@@ -6,6 +6,7 @@ import ConfirmDepositHandler
 import Deposit from '../../../../../../Context/Revpop/Domain/Deposit';
 import TxHash from '../../../../../../Context/Revpop/Domain/TxHash';
 import RevpopAccount from '../../../../../../Context/Revpop/Domain/RevpopAccount';
+import DepositConfirmedEvent from "../../../../../../Context/Revpop/Domain/Event/DepositConfirmedEvent";
 
 describe('Revpop ConfirmDepositHandler', () => {
     let repository: StubRepository;
@@ -17,21 +18,53 @@ describe('Revpop ConfirmDepositHandler', () => {
     });
 
     describe('execute', () => {
-        it('should confirm deposit', async () => {
-            const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
+        const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
 
-            const deposit = Deposit.create(
-                TxHash.create(txHash).getValue() as TxHash,
-                RevpopAccount.create('revpop_account').getValue() as RevpopAccount
-            )
-            await repository.create(deposit)
+        describe('deposit is created by user', () => {
+            let deposit: Deposit
 
-            const command = new ConfirmDeposit(txHash)
+            beforeEach(async () => {
+                deposit = Deposit.createByUser(
+                    TxHash.create(txHash).getValue() as TxHash,
+                    RevpopAccount.create('revpop_account').getValue() as RevpopAccount
+                )
+                await repository.create(deposit)
+            })
 
-            const result = await handler.execute(command)
+            it('should confirm deposit', async () => {
+                const command = new ConfirmDeposit(txHash)
+                const result = await handler.execute(command)
 
-            expect(result.isLeft()).false
-            expect(result.isRight()).true
-        });
+                expect(result.isLeft()).false
+                expect(result.isRight()).true
+            });
+
+            it('DepositConfirmedEvent should be added', async () => {
+                const command = new ConfirmDeposit(txHash)
+                await handler.execute(command)
+
+                expect(deposit.domainEvents).length(1)
+                expect(deposit.domainEvents[0]).instanceof(DepositConfirmedEvent)
+            });
+        })
+
+        describe('deposit is not created by user', () => {
+            it('should create new deposit', async () => {
+                const command = new ConfirmDeposit(txHash)
+                const result = await handler.execute(command)
+
+                expect(result.isLeft()).false
+                expect(result.isRight()).true
+                expect(repository.size).equals(1)
+            });
+
+            it('DepositConfirmedEvent should not be added ', async () => {
+                const command = new ConfirmDeposit(txHash)
+                await handler.execute(command)
+
+                const deposit = await repository.getByTxHash(txHash)
+                expect(deposit?.domainEvents).empty
+            });
+        })
     });
 });
