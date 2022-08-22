@@ -33,13 +33,13 @@ export default class TypeOrmRepository implements RepositoryInterface {
     async isContractExists(contractId: string): Promise<boolean> {
         const repository = this._datasource.getRepository<Deposit>(Deposit)
 
-        console.log(await repository.createQueryBuilder().whereExists(
+        const deposit = await repository.createQueryBuilder().whereExists(
             repository.createQueryBuilder().where({
                 _contractId: contractId
             })
-        ).getOne())
+        ).getOne()
 
-        return false
+        return deposit !== null
     }
 
     async create(deposit: Deposit): Promise<void> {

@@ -15,7 +15,7 @@ export default class Deposit extends AggregateRoot {
         private _receiver: Address,
         private _value: string,
         private _hashLock: string,
-        private _timelock: Date,
+        private _timeLock: Date,
         id?: UniqueEntityID
     ) {
         super(id)
@@ -47,7 +47,7 @@ export default class Deposit extends AggregateRoot {
     }
 
     get timelock(): Date {
-        return this._timelock;
+        return this._timeLock;
     }
 
     get status(): number {

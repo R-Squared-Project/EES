@@ -1,4 +1,3 @@
-import CreateDeposit from "./CreateDeposit";
 import RepositoryInterface from "../../../Domain/RepositoryInterface";
 import {Result, Either, right, left} from "../../../../Core";
 import {UseCase} from "../../../../Core/Domain/UseCase";
@@ -6,6 +5,7 @@ import {UnexpectedError} from "../../../../Core/Logic/AppError";
 import Deposit from "../../../Domain/Deposit";
 import TxHash from "../../../Domain/TxHash";
 import RevpopAccount from "../../../Domain/RevpopAccount";
+import ConfirmDepositByUser from "./ConfirmDepositByUser";
 import {DepositAlreadyExists} from "./Errors";
 
 type Response = Either<
@@ -14,12 +14,12 @@ type Response = Either<
     Result<Deposit>
 >
 
-export default class CreateDepositHandler implements UseCase<CreateDeposit, Response> {
+export default class ConfirmDepositByUserHandler implements UseCase<ConfirmDepositByUser, Response> {
     constructor(
         private _repository: RepositoryInterface,
     ) {}
 
-    async execute(command: CreateDeposit): Promise<Response> {
+    async execute(command: ConfirmDepositByUser): Promise<Response> {
         const deposit = await this._repository.getByTxHash(command.txHash)
 
         const txHashOrError = TxHash.create(command.txHash)
@@ -32,7 +32,7 @@ export default class CreateDepositHandler implements UseCase<CreateDeposit, Resp
         }
 
         if (deposit === null) {
-            const deposit = Deposit.createByUser(
+            const deposit = Deposit.confirmByUser(
                 txHashOrError.getValue() as TxHash,
                 revpopAccountOrError.getValue() as RevpopAccount
             )

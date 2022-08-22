@@ -5,10 +5,14 @@ const RevpopAccountType: EntitySchemaColumnOptions = {
     type: String,
     name: 'revpop_account',
     transformer: {
-        to(revpopAccount: RevpopAccount): string {
-            return revpopAccount.value
+        to(revpopAccount: RevpopAccount): string | null {
+            return revpopAccount?.value || null
         },
-        from(value: string): RevpopAccount {
+        from(value: string | null): RevpopAccount | null {
+            if (value === null) {
+                return null
+            }
+
             return RevpopAccount.create(value).getValue() as RevpopAccount
         }
     }

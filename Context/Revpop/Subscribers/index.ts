@@ -1,3 +1,5 @@
-import {AfterDepositConfirmed} from "./AfterDepositConfirmed";
+import {AfterDepositConfirmedByUser} from "./AfterDepositConfirmedByUser";
+import {AfterDepositConfirmedByBlockchain} from "./AfterDepositConfirmedByBlockchain";
 
-new AfterDepositConfirmed()
+new AfterDepositConfirmedByUser()
+new AfterDepositConfirmedByBlockchain()

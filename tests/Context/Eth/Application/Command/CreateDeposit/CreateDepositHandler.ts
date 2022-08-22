@@ -84,10 +84,9 @@ describe('Eth CreateDepositHandler', () => {
                 '1000',
                 'hash_lock',
                 dayjs().add(1, 'day').unix()
-
             )
 
-            const deposit = (await handler.execute(command)).value.getValue() as Deposit
+            await handler.execute(command)
             const depositOrError = (await handler.execute(command))
             expect(depositOrError.isLeft()).true
         })

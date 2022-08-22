@@ -1,4 +1,4 @@
-export default class CreateDeposit {
+export default class ConfirmDepositByUser {
     constructor(
         private _txHash: string,
         private _revpopAccount: string

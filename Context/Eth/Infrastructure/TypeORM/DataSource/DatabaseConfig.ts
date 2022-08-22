@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import path from 'path';
 import {DataSourceOptions} from 'typeorm/data-source/DataSourceOptions';
 import DepositEntity from '../Entity/DepositEntity';
+import Subscriber from '../../../../Core/Infrastructure/TypeORM/Subscriber';
 
 dotenv.config()
 
@@ -13,7 +14,8 @@ const DatabaseConfig: DataSourceOptions = {
     password: process.env.ETH_DATABASE_PASSWORD,
     database: process.env.ETH_DATABASE,
     entities: [DepositEntity],
-    migrations: [path.join(__dirname, '..', 'migrations', '*.ts')]
+    migrations: [path.join(__dirname, '..', 'migrations', '*.ts')],
+    subscribers: [Subscriber]
 }
 
 const DatabaseConfigTest: DataSourceOptions = {

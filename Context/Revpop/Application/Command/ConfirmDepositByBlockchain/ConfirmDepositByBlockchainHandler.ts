@@ -1,4 +1,4 @@
-import ConfirmDeposit from "./ConfirmDeposit";
+import ConfirmDepositByBlockchain from "./ConfirmDepositByBlockchain";
 import RepositoryInterface from "../../../Domain/RepositoryInterface";
 import {Result, Either, right, left} from "../../../../Core";
 import {UseCase} from "../../../../Core/Domain/UseCase";
@@ -13,12 +13,12 @@ type Response = Either<
     Result<void>
 >
 
-export default class ConfirmDepositHandler implements UseCase<ConfirmDeposit, Response> {
+export default class ConfirmDepositByBlockchainHandler implements UseCase<ConfirmDepositByBlockchain, Response> {
     constructor(
         private _repository: RepositoryInterface,
     ) {}
 
-    async execute(command: ConfirmDeposit): Promise<Response> {
+    async execute(command: ConfirmDepositByBlockchain): Promise<Response> {
         const deposit = await this._repository.getByTxHash(command.txHash)
 
         if (deposit === null) {
@@ -28,7 +28,7 @@ export default class ConfirmDepositHandler implements UseCase<ConfirmDeposit, Re
                 return left(Result.fail<void>(txHashOrError.error)) as Response;
             }
 
-            const deposit = Deposit.createByBlockchain(txHashOrError.getValue() as TxHash)
+            const deposit = Deposit.confirmByBlockchain(txHashOrError.getValue() as TxHash)
             await this._repository.create(deposit)
 
             return right(Result.ok<void>());

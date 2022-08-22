@@ -50,14 +50,14 @@ export default class Deposit extends AggregateRoot {
         return this._revpopAccount;
     }
 
-    static createByUser(
+    static confirmByUser(
         txHash: TxHash,
         revpopAccount: RevpopAccount
     ): Deposit {
         return new Deposit(txHash, STATUS.CREATED_BY_USER, revpopAccount)
     }
 
-    static createByBlockchain(
+    static confirmByBlockchain(
         txHash: TxHash
     ): Deposit {
         return new Deposit(txHash, STATUS.CREATED_BY_BLOCKCHAIN, null)

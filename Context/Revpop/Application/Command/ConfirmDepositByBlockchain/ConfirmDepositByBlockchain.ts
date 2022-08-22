@@ -1,4 +1,4 @@
-export default class ConfirmDeposit {
+export default class ConfirmDepositByBlockchain {
     constructor(
         private _txHash: string
     ) {}

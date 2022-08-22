@@ -44,7 +44,7 @@ export default class CreateDepositHandler implements UseCase<CreateDeposit, Resp
             receiverOrError.getValue() as Address,
             command.value,
             command.hashLock,
-            dayjs(command.timelock).toDate()
+            dayjs.unix(command.timelock).toDate()
         )
 
         await this._repository.create(deposit)

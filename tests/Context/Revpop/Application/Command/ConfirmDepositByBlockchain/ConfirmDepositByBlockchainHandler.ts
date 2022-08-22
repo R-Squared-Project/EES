@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import StubRepository from '../../../../../../Context/Revpop/Infrastructure/StubRepository';
-import {ConfirmDeposit} from '../../../../../../Context/Revpop';
-import ConfirmDepositHandler
-    from '../../../../../../Context/Revpop/Application/Command/ConfirmDeposit/ConfirmDepositHandler';
+import {ConfirmDepositByBlockchain} from '../../../../../../Context/Revpop';
+import ConfirmDepositByBlockchainHandler
+    from '../../../../../../Context/Revpop/Application/Command/ConfirmDepositByBlockchain/ConfirmDepositByBlockchainHandler';
 import Deposit from '../../../../../../Context/Revpop/Domain/Deposit';
 import TxHash from '../../../../../../Context/Revpop/Domain/TxHash';
 import RevpopAccount from '../../../../../../Context/Revpop/Domain/RevpopAccount';
@@ -10,11 +10,11 @@ import DepositConfirmedEvent from "../../../../../../Context/Revpop/Domain/Event
 
 describe('Revpop ConfirmDepositHandler', () => {
     let repository: StubRepository;
-    let handler: ConfirmDepositHandler;
+    let handler: ConfirmDepositByBlockchainHandler;
 
     beforeEach(function() {
         repository = new StubRepository()
-        handler = new ConfirmDepositHandler(repository);
+        handler = new ConfirmDepositByBlockchainHandler(repository);
     });
 
     describe('execute', () => {
@@ -24,7 +24,7 @@ describe('Revpop ConfirmDepositHandler', () => {
             let deposit: Deposit
 
             beforeEach(async () => {
-                deposit = Deposit.createByUser(
+                deposit = Deposit.confirmByUser(
                     TxHash.create(txHash).getValue() as TxHash,
                     RevpopAccount.create('revpop_account').getValue() as RevpopAccount
                 )
@@ -32,7 +32,7 @@ describe('Revpop ConfirmDepositHandler', () => {
             })
 
             it('should confirm deposit', async () => {
-                const command = new ConfirmDeposit(txHash)
+                const command = new ConfirmDepositByBlockchain(txHash)
                 const result = await handler.execute(command)
 
                 expect(result.isLeft()).false
@@ -40,7 +40,7 @@ describe('Revpop ConfirmDepositHandler', () => {
             });
 
             it('DepositConfirmedEvent should be added', async () => {
-                const command = new ConfirmDeposit(txHash)
+                const command = new ConfirmDepositByBlockchain(txHash)
                 await handler.execute(command)
 
                 expect(deposit.domainEvents).length(1)
@@ -50,7 +50,7 @@ describe('Revpop ConfirmDepositHandler', () => {
 
         describe('deposit is not created by user', () => {
             it('should create new deposit', async () => {
-                const command = new ConfirmDeposit(txHash)
+                const command = new ConfirmDepositByBlockchain(txHash)
                 const result = await handler.execute(command)
 
                 expect(result.isLeft()).false
@@ -59,7 +59,7 @@ describe('Revpop ConfirmDepositHandler', () => {
             });
 
             it('DepositConfirmedEvent should not be added ', async () => {
-                const command = new ConfirmDeposit(txHash)
+                const command = new ConfirmDepositByBlockchain(txHash)
                 await handler.execute(command)
 
                 const deposit = await repository.getByTxHash(txHash)

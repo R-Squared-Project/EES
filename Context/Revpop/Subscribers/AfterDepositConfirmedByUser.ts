@@ -1,25 +1,25 @@
 import HandlerInterface from "../../Core/Domain/Events/HandlerInterface";
 import DomainEvents from "../../Core/Domain/Events/DomainEvents";
 import DepositConfirmedEvent from "../../Wallet/Domain/Event/DepositConfirmedEvent";
-import {CreateDeposit, createDepositHandler} from "../index";
+import {ConfirmDepositByUser, confirmDepositByUserHandler} from "../index";
 
-export class AfterDepositConfirmed implements HandlerInterface<DepositConfirmedEvent> {
+export class AfterDepositConfirmedByUser implements HandlerInterface<DepositConfirmedEvent> {
     constructor() {
         this.setupSubscriptions();
     }
 
     setupSubscriptions() {
         // @ts-ignore
-        DomainEvents.register(this.onDepositConfirmedEvent.bind(this), DepositConfirmedEvent.name);
+        DomainEvents.register(this.onDepositConfirmedByUserEvent.bind(this), DepositConfirmedEvent.name);
     }
 
-    private async onDepositConfirmedEvent(event: DepositConfirmedEvent) {
-        const command = new CreateDeposit(
+    private async onDepositConfirmedByUserEvent(event: DepositConfirmedEvent) {
+        const command = new ConfirmDepositByUser(
             event.txHash,
             event.revpopAccount
         )
 
-        const result = await createDepositHandler.execute(command)
+        const result = await confirmDepositByUserHandler.execute(command)
 
         if (result.isLeft()) {
             // Send notification

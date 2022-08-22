@@ -1,14 +1,14 @@
-import CreateDeposit from './Application/Command/CreateDeposit/CreateDeposit'
-import CreateDepositHandler from './Application/Command/CreateDeposit/CreateDepositHandler'
-import ConfirmDeposit from './Application/Command/ConfirmDeposit/ConfirmDeposit'
-import ConfirmDepositHandler from './Application/Command/ConfirmDeposit/ConfirmDepositHandler'
+import ConfirmDepositByUser from './Application/Command/ConfirmDepositByUser/ConfirmDepositByUser'
+import ConfirmDepositByUserHandler from './Application/Command/ConfirmDepositByUser/ConfirmDepositByUserHandler'
+import ConfirmDepositByBlockchain from './Application/Command/ConfirmDepositByBlockchain/ConfirmDepositByBlockchain'
+import ConfirmDepositByBlockchainHandler from './Application/Command/ConfirmDepositByBlockchain/ConfirmDepositByBlockchainHandler'
 import TypeOrmRepository from "./Infrastructure/TypeOrmRepository";
 import DataSource from "./Infrastructure/TypeORM/DataSource/DataSource";
 import "./Subscribers";
 
 const repository = new TypeOrmRepository(DataSource)
-const createDepositHandler = new CreateDepositHandler(repository)
-const confirmDepositHandler = new ConfirmDepositHandler(repository)
+const confirmDepositByUserHandler = new ConfirmDepositByUserHandler(repository)
+const confirmDepositByBlockchainHandler = new ConfirmDepositByBlockchainHandler(repository)
 
-export {CreateDeposit, createDepositHandler}
-export {ConfirmDeposit, confirmDepositHandler}
+export {ConfirmDepositByUser, confirmDepositByUserHandler}
+export {ConfirmDepositByBlockchain, confirmDepositByBlockchainHandler}
