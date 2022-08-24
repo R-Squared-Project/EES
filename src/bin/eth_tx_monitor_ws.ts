@@ -26,11 +26,11 @@ contract.events.LogHTLCNew({
         const command = new CreateDeposit(
             event.transactionHash,
             event.returnValues.contractId,
-            event.returnValues.sender,
-            event.returnValues.receiver,
-            event.returnValues.amount,
-            event.returnValues.hashlock,
-            event.returnValues.timelock,
+            // event.returnValues.sender,
+            // event.returnValues.receiver,
+            // event.returnValues.amount,
+            // event.returnValues.hashlock,
+            // event.returnValues.timelock,
         )
 
         createDepositHandler.execute(command)

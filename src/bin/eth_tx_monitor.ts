@@ -21,7 +21,7 @@ const processEvents = async () => {
     const events = await contract.getPastEvents(
         'LogHTLCNew',
         {
-            fromBlock,
+            fromBlock: 12806721,
             toBlock
         }
     )
@@ -30,21 +30,20 @@ const processEvents = async () => {
     console.log(`Found ${events.length} new events`);
 
     for (const event of events) {
+        console.log(`Process transaction ${event.transactionHash}`)
         const command = new CreateDeposit(
             event.transactionHash,
-            event.returnValues.contractId,
-            event.returnValues.sender,
-            event.returnValues.receiver,
-            event.returnValues.amount,
-            event.returnValues.hashlock,
-            event.returnValues.timelock,
+            event.returnValues.contractId
         )
 
         const result = await createDepositHandler.execute(command)
 
         if (result.isLeft()) {
-            console.log(`Error while proccessed transaction ${event.transactionHash}: `, result.value.error?.message)
+            console.log(`Error while processed transaction ${event.transactionHash}: `, result.value.error?.message)
+            continue
         }
+
+        console.log(`Successfully added new transaction ${event.transactionHash}. `)
     }
 }
 
