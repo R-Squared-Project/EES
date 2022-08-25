@@ -12,6 +12,20 @@ const DepositEntity = new EntitySchema<Deposit>({
         // @ts-ignore
         _revpopAccount: RevpopAccountType,
         _txHash: TxHashType,
+        _value: {
+            type: String,
+            name: 'value',
+            nullable: true
+        },
+        _hashLock: {
+            type: String,
+            name: 'hash_lock'
+        },
+        _revpopContractId: {
+            type: String,
+            name: 'revpop_contract_id',
+            nullable: true
+        },
         _status: {
             type: Number,
             name: 'status',

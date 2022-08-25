@@ -62,7 +62,8 @@ export default class DomainEvents {
     }
 
     private static dispatch(event: DomainEventInterface): void {
-        const eventClassName: string = event.constructor.name;
+        //@ts-ignore
+        const eventClassName: string = event.constructor.eventName();
 
         if (Object.prototype.hasOwnProperty.call(this.handlersMap, eventClassName)) {
             const handlers: any[] = this.handlersMap[eventClassName];

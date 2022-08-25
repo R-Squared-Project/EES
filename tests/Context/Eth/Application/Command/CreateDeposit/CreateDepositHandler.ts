@@ -14,7 +14,7 @@ import {
 import TxHash from "../../../../../../Context/Eth/Domain/TxHash";
 import Address from "../../../../../../Context/Eth/Domain/Address";
 
-describe('Eth CreateDepositHandler', () => {
+describe('Eth::CreateDepositHandler', () => {
     let repository: StubRepository;
     let contractRepository: StubContractRepository
     let handler: CreateDepositHandler;

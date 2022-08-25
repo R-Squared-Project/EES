@@ -8,7 +8,7 @@ import Deposit from '../../../../../../Context/Wallet/Domain/Deposit';
 import {DepositNotFoundError} from '../../../../../../Context/Wallet/Application/Command/ConfirmDeposit/Errors';
 import SessionId from '../../../../../../Context/Wallet/Domain/SessionId';
 
-describe('ConfirmDepositHandler', () => {
+describe('Wallet::ConfirmDepositHandler', () => {
     let repository: StubRepository;
     let handler: ConfirmDepositHandler;
 
@@ -27,8 +27,9 @@ describe('ConfirmDepositHandler', () => {
 
             const command = new ConfirmDeposit(
                 deposit.sessionId.value,
+                '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f',
                 'revpop_account_name',
-                '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
+                'hash_lock'
             )
             const result = await handler.execute(command)
 
@@ -37,7 +38,12 @@ describe('ConfirmDepositHandler', () => {
         });
 
         it('should return error if session id is not existed', async () => {
-            const command = new ConfirmDeposit(web3SecretGenerator.generate(), 'revpop_account_name', 'tx_hash')
+            const command = new ConfirmDeposit(
+                web3SecretGenerator.generate(),
+                'revpop_account_name',
+                'tx_hash',
+                'hash_lock'
+            )
             const result = await handler.execute(command)
 
             expect(result.isLeft()).true

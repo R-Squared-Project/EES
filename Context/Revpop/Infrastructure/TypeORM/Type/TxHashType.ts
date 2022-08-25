@@ -4,6 +4,7 @@ import TxHash from "../../../Domain/TxHash";
 const TxHashType: EntitySchemaColumnOptions = {
     type: String,
     name: 'tx_hash',
+    nullable: false,
     transformer: {
         to(txHash: TxHash): string {
             return txHash.value

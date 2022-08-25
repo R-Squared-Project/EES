@@ -28,7 +28,11 @@ export default class ConfirmDepositByBlockchainHandler implements UseCase<Confir
                 return left(Result.fail<void>(txHashOrError.error)) as Response;
             }
 
-            const deposit = Deposit.confirmByBlockchain(txHashOrError.getValue() as TxHash)
+            const deposit = Deposit.createByBlockchain(
+                txHashOrError.getValue() as TxHash,
+                command.value,
+                command.hashLock
+            )
             await this._repository.create(deposit)
 
             return right(Result.ok<void>());

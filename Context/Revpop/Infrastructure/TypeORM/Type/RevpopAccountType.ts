@@ -4,6 +4,7 @@ import RevpopAccount from "../../../Domain/RevpopAccount";
 const RevpopAccountType: EntitySchemaColumnOptions = {
     type: String,
     name: 'revpop_account',
+    nullable: true,
     transformer: {
         to(revpopAccount: RevpopAccount): string | null {
             return revpopAccount?.value || null

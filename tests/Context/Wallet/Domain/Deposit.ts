@@ -7,7 +7,7 @@ import SessionId from '../../../../Context/Wallet/Domain/SessionId';
 import RevpopAccount from '../../../../Context/Wallet/Domain/RevpopAccount';
 import TxHash from "../../../../Context/Wallet/Domain/TxHash";
 
-describe('Deposit', () => {
+describe('Wallet::Deposit', () => {
     describe('create new', () => {
         it('should contain correct secret', () => {
             const sessionId = web3SecretGenerator.generate()
@@ -20,7 +20,7 @@ describe('Deposit', () => {
     });
 
     describe('confirm', () => {
-        it('new deposit could be confirmed', () => {
+        it('new deposit should be confirmed', () => {
             const sessionId = web3SecretGenerator.generate()
             const deposit = Deposit.create(
                 SessionId.create(sessionId).getValue() as SessionId
@@ -29,7 +29,7 @@ describe('Deposit', () => {
             const revpopAccountOrError = RevpopAccount.create('revpop_account_name').getValue() as RevpopAccount
             const txHashOrError = TxHash.create('tx_hash').getValue() as TxHash
 
-            const resultOrError = deposit.confirm(revpopAccountOrError, txHashOrError)
+            const resultOrError = deposit.confirm(revpopAccountOrError, txHashOrError, 'hash_lock')
 
             expect(resultOrError.isRight()).true
             expect(deposit.domainEvents.length).equals(2)

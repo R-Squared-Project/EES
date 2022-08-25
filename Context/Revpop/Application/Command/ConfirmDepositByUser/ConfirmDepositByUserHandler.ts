@@ -32,9 +32,10 @@ export default class ConfirmDepositByUserHandler implements UseCase<ConfirmDepos
         }
 
         if (deposit === null) {
-            const deposit = Deposit.confirmByUser(
+            const deposit = Deposit.createByUser(
                 txHashOrError.getValue() as TxHash,
-                revpopAccountOrError.getValue() as RevpopAccount
+                revpopAccountOrError.getValue() as RevpopAccount,
+                command.hashLock,
             )
 
             await this._repository.create(deposit);

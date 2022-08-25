@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import TxHash from '../../../../Context/Revpop/Domain/TxHash';
 
-describe('TxHash', () => {
+describe('Revpop::TxHash', () => {
     describe('create new', () => {
         it('valid transaction hash', () => {
             const txHashOrError = TxHash.create('0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f')

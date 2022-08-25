@@ -10,12 +10,13 @@ export class AfterDepositConfirmedByUser implements HandlerInterface<DepositConf
 
     setupSubscriptions() {
         // @ts-ignore
-        DomainEvents.register(this.onDepositConfirmedByUserEvent.bind(this), DepositConfirmedEvent.name);
+        DomainEvents.register(this.onDepositConfirmedByUserEvent.bind(this), DepositConfirmedEvent.eventName());
     }
 
     private async onDepositConfirmedByUserEvent(event: DepositConfirmedEvent) {
         const command = new ConfirmDepositByUser(
             event.txHash,
+            event.hashLock,
             event.revpopAccount
         )
 

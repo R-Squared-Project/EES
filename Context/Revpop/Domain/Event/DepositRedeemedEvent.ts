@@ -1,14 +1,13 @@
 import DomainEventInterface from "../../../Core/Domain/Events/DomainEventInterface";
 
-export default class DepositConfirmedEvent implements DomainEventInterface {
+export default class DepositRedeemedEvent implements DomainEventInterface {
     public dateTimeOccurred: Date = new Date();
 
     constructor(
-        public txHash: string,
-        public revpopAccount: string
+        public txHash: string
     ) {}
 
     static eventName(): string {
-        return "revpop_deposit_confirmed_event";
+        return "revpop_deposit_redeemed_event";
     }
 }

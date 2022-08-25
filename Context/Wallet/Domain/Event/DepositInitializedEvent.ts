@@ -1,5 +1,4 @@
 import DomainEventInterface from "../../../Core/Domain/Events/DomainEventInterface";
-import DepositId from "../DepositId";
 
 export default class DepositInitializedEvent implements DomainEventInterface {
     public dateTimeOccurred: Date = new Date();
@@ -7,4 +6,8 @@ export default class DepositInitializedEvent implements DomainEventInterface {
     constructor(
         public sessionId: string
     ) {}
+
+    static eventName(): string {
+        return "wallet_deposit_initialized_event";
+    }
 }

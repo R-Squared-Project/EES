@@ -1,11 +1,11 @@
-import {expect} from "chai";
-import StubRepository from "../../../../../../Context/Wallet/Infrastructure/StubRepository";
-import {InitializeDeposit} from "../../../../../../Context/Wallet";
+import {expect} from 'chai';
+import StubRepository from '../../../../../../Context/Wallet/Infrastructure/StubRepository';
+import {InitializeDeposit} from '../../../../../../Context/Wallet';
 import InitializeDepositHandler
-    from "../../../../../../Context/Wallet/Application/Command/InitializeDeposit/InitializeDepositHandler";
-import web3SecretGenerator from "../../../../../../Context/Wallet/Infrastructure/SecretGenerator/Web3SecretGenerator";
+    from '../../../../../../Context/Wallet/Application/Command/InitializeDeposit/InitializeDepositHandler';
+import web3SecretGenerator from '../../../../../../Context/Wallet/Infrastructure/SecretGenerator/Web3SecretGenerator';
 
-describe("InitializeDepositHandler", () => {
+describe('Wallet::InitializeDepositHandler', () => {
     let repository: StubRepository;
     let handler: InitializeDepositHandler;
 
@@ -14,8 +14,8 @@ describe("InitializeDepositHandler", () => {
         handler = new InitializeDepositHandler(repository, web3SecretGenerator);
     });
 
-    describe("execute", async () => {
-        it("should save new deposit", async () => {
+    describe('execute', async () => {
+        it('should save new deposit', async () => {
             const command = new InitializeDeposit()
             const depositOrError = await handler.execute(command)
 

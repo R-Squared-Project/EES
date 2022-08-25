@@ -1,8 +1,9 @@
 export default class ConfirmDeposit {
     constructor(
         private _sessionId: string,
+        private _txHash: string,
         private _revpopAccount: string,
-        private _txHash: string
+        private _hashLock: string
     ) {}
 
     get sessionId(): string {
@@ -15,5 +16,9 @@ export default class ConfirmDeposit {
 
     get txHash(): string {
         return this._txHash;
+    }
+
+    get hashLock(): string {
+        return this._hashLock;
     }
 }

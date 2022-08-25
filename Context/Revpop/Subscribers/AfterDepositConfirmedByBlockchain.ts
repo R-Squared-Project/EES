@@ -10,11 +10,11 @@ export class AfterDepositConfirmedByBlockchain implements HandlerInterface<Depos
 
     setupSubscriptions() {
         // @ts-ignore
-        DomainEvents.register(this.onDepositConfirmedByBlockchainEvent.bind(this), DepositCreatedEvent.name);
+        DomainEvents.register(this.onDepositConfirmedByBlockchainEvent.bind(this), DepositCreatedEvent.eventName());
     }
 
     private async onDepositConfirmedByBlockchainEvent(event: DepositCreatedEvent) {
-        const command = new ConfirmDepositByBlockchain(event.txHash)
+        const command = new ConfirmDepositByBlockchain(event.txHash, event.value, event.hashLock)
 
         const result = await confirmDepositByBlockchainHandler.execute(command)
 

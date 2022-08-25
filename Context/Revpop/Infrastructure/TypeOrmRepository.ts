@@ -21,6 +21,15 @@ export default class TypeOrmRepository implements RepositoryInterface {
             .getOne()
     }
 
+    async getByRevpopContractId(contractId: string): Promise<Deposit | null> {
+        return await this._datasource.getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .where({
+                _revpopContractId: contractId
+            })
+            .getOne()
+    }
+
     async save(deposit: Deposit): Promise<void> {
         // "upsert" is used because "save" method not working: https://github.com/typeorm/typeorm/issues/4122
         await this._datasource.getRepository<Deposit>(Deposit).upsert(deposit, ['_txHash'])

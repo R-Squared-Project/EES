@@ -2,12 +2,12 @@ import {expect} from 'chai';
 import {DataSource} from 'typeorm';
 import initWalletDataSourceTest from '../../../Context/Wallet/Infrastructure/TypeORM/DataSource/WalletDataSourceTest'
 import TypeOrmRepositoryWallet from '../../../Context/Wallet/Infrastructure/TypeOrmRepository';
+import Deposit from '../../../Context/Wallet/Domain/Deposit';
+import {ConfirmDeposit, InitializeDeposit} from '../../../Context/Wallet';
 import web3SecretGenerator from '../../../Context/Wallet/Infrastructure/SecretGenerator/Web3SecretGenerator';
 import InitializeDepositHandler
     from '../../../Context/Wallet/Application/Command/InitializeDeposit/InitializeDepositHandler';
-import {ConfirmDeposit, InitializeDeposit} from '../../../Context/Wallet';
 import ConfirmDepositHandler from '../../../Context/Wallet/Application/Command/ConfirmDeposit/ConfirmDepositHandler';
-import Deposit from '../../../Context/Wallet/Domain/Deposit';
 
 describe('Wallet context integration test', async () => {
     let walletDataSourceTest: DataSource
@@ -48,8 +48,9 @@ describe('Wallet context integration test', async () => {
         //Confirm deposit in web3wallet
         const commandConfirmDeposit = new ConfirmDeposit(
             depositInitialized.sessionId.value,
+            txHash,
             'revpop_account',
-            txHash
+            'hash_lock'
         )
         const resultConfirmDeposit = await confirmDepositHandler.execute(commandConfirmDeposit)
         expect(resultConfirmDeposit.isRight(), 'Wallet:ConfirmDeposit error').true

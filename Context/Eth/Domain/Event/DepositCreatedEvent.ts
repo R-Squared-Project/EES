@@ -12,4 +12,8 @@ export default class DepositCreatedEvent implements DomainEventInterface {
         public hashLock: string,
         public timelock: number,
     ) {}
+
+    static eventName(): string {
+        return "blockchain_deposit_created_event";
+    }
 }

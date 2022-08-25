@@ -38,7 +38,8 @@ export default class ConfirmDepositHandler implements UseCase<ConfirmDeposit, Re
 
         const result = deposit.confirm(
             txHashOrError.getValue() as TxHash,
-            revpopAccountOrError.getValue() as RevpopAccount
+            revpopAccountOrError.getValue() as RevpopAccount,
+            command.hashLock
         )
 
         if (result.isLeft()) {
