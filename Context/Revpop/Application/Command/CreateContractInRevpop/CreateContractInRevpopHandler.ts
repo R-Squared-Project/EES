@@ -1,15 +1,16 @@
+import Web3 from "web3";
 import CreateContractInRevpop from "./CreateContractInRevpop";
 import RepositoryInterface from "../../../Domain/RepositoryInterface";
 import {Result, Either, right, left} from "../../../../Core";
 import {UseCase} from "../../../../Core/Domain/UseCase";
 import {UnexpectedError} from "../../../../Core/Logic/AppError";
 import {DepositNotFound} from "./Errors";
-import Web3 from "web3";
+import {RedeemUnexpectedError} from "../../../Domain/Errors";
 
 type Response = Either<
-    UnexpectedError,
+    UnexpectedError | DepositNotFound | RedeemUnexpectedError,
     Result<void>
->
+    >
 
 export default class CreateContractInRevpopHandler implements UseCase<CreateContractInRevpop, Response> {
     constructor(
@@ -20,13 +21,14 @@ export default class CreateContractInRevpopHandler implements UseCase<CreateCont
         const deposit = await this._repository.getByTxHash(command.txHash)
 
         if (deposit === null) {
-            return left(Result.fail<void>(new DepositNotFound(command.txHash))) as Response;
+            return left(new DepositNotFound(command.txHash));
         }
 
-        //Create contract in revpop
+        //Start create contract in revpop
         const revpopContractId = Web3.utils.randomHex(16)
+        //End create contract in revpop
 
-        deposit.createdInRevpopBlockchain(revpopContractId)
+        deposit.createInRevpopBlockchain(revpopContractId)
 
         await this._repository.save(deposit)
 

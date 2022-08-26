@@ -3,8 +3,11 @@ import UniqueEntityID from "../../Core/Domain/UniqueEntityID";
 import TxHash from "./TxHash";
 import RevpopAccount from "./RevpopAccount";
 import DepositConfirmedEvent from "./Event/DepositConfirmedEvent";
-import {left, Result, right} from "../../Core";
-import {DepositAlreadyRedeemed, DepositNotConfirmed, DepositNotCreatedInRevpop, RedeemUnexpectedError} from "./Errors";
+import {Either, left, Result, right} from "../../Core";
+import {
+    CreateInRevpopBlockchainUnexpectedError,
+    RedeemUnexpectedError
+} from "./Errors";
 import DepositRedeemedEvent from "./Event/DepositRedeemedEvent";
 
 enum STATUS {
@@ -50,27 +53,23 @@ export default class Deposit extends AggregateRoot {
                 this._txHash.value,
                 (this._revpopAccount as RevpopAccount).value
             ))
+
+            return right(Result.ok<void>())
         }
     }
 
-    createdInRevpopBlockchain(revpopContractId: string) {
-        this._status = STATUS.CREATED_IN_REVPOP
-        this._revpopContractId = revpopContractId
-    }
-
-    redeem() {
-        if (this._status === STATUS.CREATED_BY_USER || this._status === STATUS.CREATED_BY_BLOCKCHAIN) {
-            return left(new DepositNotConfirmed(this._txHash.value));
-        }
-
+    createInRevpopBlockchain(revpopContractId: string): Either<CreateInRevpopBlockchainUnexpectedError, Result<void>> {
         if (this._status === STATUS.CONFIRMED) {
-            return left(new DepositNotCreatedInRevpop(this._txHash.value));
+            this._status = STATUS.CREATED_IN_REVPOP
+            this._revpopContractId = revpopContractId
+
+            return right(Result.ok<void>())
         }
 
-        if (this._status === STATUS.REDEEMED) {
-            return left(new DepositAlreadyRedeemed(this._revpopContractId ?? this._txHash.value));
-        }
+        return left(new CreateInRevpopBlockchainUnexpectedError(`Deposit in tx ${this._txHash.value} can't be created in blockchain.`));
+    }
 
+    redeem(): Either<RedeemUnexpectedError, Result<void>>  {
         if (this._status === STATUS.CREATED_IN_REVPOP) {
             this._status = STATUS.REDEEMED
 
@@ -79,7 +78,7 @@ export default class Deposit extends AggregateRoot {
             return right(Result.ok<void>())
         }
 
-        return left(new RedeemUnexpectedError(this._revpopContractId ?? this._txHash.value));
+        return left(new RedeemUnexpectedError(`Deposit in tx ${this._txHash.value} can't be redeemed.`));
     }
 
     get txHash(): TxHash {

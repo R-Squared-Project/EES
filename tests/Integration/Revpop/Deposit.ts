@@ -47,7 +47,7 @@ describe('Revpop context integration test', async () => {
         }
     })
 
-    it('Confirm deposit by user -> redeem', async () => {
+    it('Confirm deposit by user -> Confirm deposit by blockchain -> Create contract in Revpop -> redeem', async () => {
         const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
         const revpopAccount = 'revpop_account'
 
