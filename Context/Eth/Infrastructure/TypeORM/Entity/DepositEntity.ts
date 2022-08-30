@@ -3,6 +3,7 @@ import Deposit from "../../../Domain/Deposit";
 import UniqueEntityIDType from "../Type/UniqueEntityIDType";
 import TxHashType from "../Type/TxHashType";
 import AddressType from "../Type/AddressType";
+import RedeemTxHashType from "../Type/RedeemTxHashType";
 
 const DepositEntity = new EntitySchema<Deposit>({
     name: "Deposit",
@@ -35,6 +36,7 @@ const DepositEntity = new EntitySchema<Deposit>({
             type: Date,
             name: 'time_lock',
         },
+        _redeemTxHash: RedeemTxHashType,
         _status: {
             type: Number,
             name: 'status',

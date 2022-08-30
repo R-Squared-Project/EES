@@ -1,12 +1,21 @@
-import AggregateRoot from "../../Core/Domain/AggregateRoot";
-import UniqueEntityID from "../../Core/Domain/UniqueEntityID";
-import TxHash from "./TxHash";
-import Address from "./Address";
-import DepositCreatedEvent from "./Event/DepositCreatedEvent";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import {Either, left, Result, right} from '../../Core';
+import AggregateRoot from '../../Core/Domain/AggregateRoot';
+import UniqueEntityID from '../../Core/Domain/UniqueEntityID';
+import TxHash from './TxHash';
+import Address from './Address';
+import RedeemTxHash from './RedeemTxHash';
+import DepositCreatedEvent from './Event/DepositCreatedEvent';
+import {RedeemUnexpectedError} from './Errors';
+
+enum STATUS {
+    CREATED = 1,
+    REDEEMED = 5
+}
 
 export default class Deposit extends AggregateRoot {
     private _status: number
+    private _redeemTxHash: RedeemTxHash | null = null
 
     constructor(
         private _txHash: TxHash,
@@ -19,7 +28,18 @@ export default class Deposit extends AggregateRoot {
         id?: UniqueEntityID
     ) {
         super(id)
-        this._status = 1
+        this._status = STATUS.CREATED
+    }
+
+    redeem(txHash: RedeemTxHash): Either<RedeemUnexpectedError, Result<void>> {
+        if (this._status === STATUS.CREATED) {
+            this._status = STATUS.REDEEMED
+            this._redeemTxHash = txHash
+
+            return right(Result.ok<void>())
+        }
+
+        return left(new RedeemUnexpectedError(this.contractId, `Wrong status`));
     }
 
     get txHash(): TxHash {

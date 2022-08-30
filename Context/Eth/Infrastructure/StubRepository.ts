@@ -10,7 +10,21 @@ export default class StubRepository implements RepositoryInterface {
         return Promise.resolve(Object.values(this._deposits).find(deposit => deposit.contractId === contractId) !== undefined)
     }
 
+    getByContractId(contractId: string): Promise<Deposit | null> {
+        const deposit = Object.values(this._deposits).find(deposit => deposit.contractId === contractId)
+
+        if (!deposit) {
+            return Promise.resolve(null)
+        }
+
+        return Promise.resolve(deposit);
+    }
+
     create(deposit: Deposit): void {
+        this._deposits[deposit.id.toValue()] = deposit
+    }
+
+    save(deposit: Deposit): void {
         this._deposits[deposit.id.toValue()] = deposit
     }
 
