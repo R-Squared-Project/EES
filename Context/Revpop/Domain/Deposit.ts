@@ -9,6 +9,7 @@ import {
     RedeemUnexpectedError
 } from "./Errors";
 import DepositRedeemedEvent from "./Event/DepositRedeemedEvent";
+import HashLock from "./HashLock";
 
 enum STATUS {
     CREATED_BY_USER = 1,
@@ -25,7 +26,7 @@ export default class Deposit extends AggregateRoot {
         private _txHash: TxHash,
         private _status: number,
         private _value: string | null,
-        private _hashLock: string | null,
+        private _hashLock: HashLock | null,
         private _revpopAccount: RevpopAccount | null,
         id?: UniqueEntityID
     ) {
@@ -96,7 +97,7 @@ export default class Deposit extends AggregateRoot {
     static createByUser(
         txHash: TxHash,
         revpopAccount: RevpopAccount,
-        hashLock: string,
+        hashLock: HashLock,
     ): Deposit {
         return new Deposit(txHash, STATUS.CREATED_BY_USER, null, hashLock, revpopAccount)
     }
@@ -104,7 +105,7 @@ export default class Deposit extends AggregateRoot {
     static createByBlockchain(
         txHash: TxHash,
         value: string,
-        hashLock: string
+        hashLock: HashLock
     ): Deposit {
         return new Deposit(txHash, STATUS.CREATED_BY_BLOCKCHAIN, value, hashLock, null)
     }

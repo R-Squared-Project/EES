@@ -16,8 +16,8 @@ export class AfterDepositConfirmedByUser implements HandlerInterface<DepositConf
     private async onDepositConfirmedByUserEvent(event: DepositConfirmedEvent) {
         const command = new ConfirmDepositByUser(
             event.txHash,
+            event.revpopAccount,
             event.hashLock,
-            event.revpopAccount
         )
 
         const result = await confirmDepositByUserHandler.execute(command)

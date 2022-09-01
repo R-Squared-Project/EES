@@ -7,6 +7,7 @@ import {UnexpectedError} from "../../../../Core/Logic/AppError";
 import {DepositAlreadyConfirmed} from "../../../Domain/Errors";
 import RevpopAccount from "../../../Domain/RevpopAccount";
 import TxHash from "../../../Domain/TxHash";
+import HashLock from "../../../Domain/HashLock";
 
 type Response = Either<
     UnexpectedError |
@@ -29,8 +30,9 @@ export default class ConfirmDepositHandler implements UseCase<ConfirmDeposit, Re
 
         const txHashOrError = TxHash.create(command.txHash)
         const revpopAccountOrError = RevpopAccount.create(command.revpopAccount)
+        const hashLockOrError = HashLock.create(command.hashLock)
 
-        const combinedPropsResult = Result.combine([ txHashOrError, revpopAccountOrError ]);
+        const combinedPropsResult = Result.combine([txHashOrError, revpopAccountOrError, hashLockOrError]);
 
         if (combinedPropsResult.isFailure) {
             return left(Result.fail<void>(combinedPropsResult.error)) as Response;
@@ -39,7 +41,7 @@ export default class ConfirmDepositHandler implements UseCase<ConfirmDeposit, Re
         const result = deposit.confirm(
             txHashOrError.getValue() as TxHash,
             revpopAccountOrError.getValue() as RevpopAccount,
-            command.hashLock
+            hashLockOrError.getValue() as HashLock
         )
 
         if (result.isLeft()) {

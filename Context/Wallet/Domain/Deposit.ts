@@ -7,12 +7,13 @@ import DepositConfirmedEvent from "./Event/DepositConfirmedEvent";
 import SessionId from "./SessionId";
 import RevpopAccount from "./RevpopAccount";
 import TxHash from "./TxHash";
+import HashLock from "./HashLock";
 
 export default class Deposit extends AggregateRoot {
     private _status: number
     private _txHash: TxHash | null = null
     private _revpopAccount: RevpopAccount | null = null
-    private _hashLock: string | null = null
+    private _hashLock: HashLock | null = null
 
     constructor(
         private _sessionId: SessionId,
@@ -38,7 +39,7 @@ export default class Deposit extends AggregateRoot {
         return this._txHash;
     }
 
-    confirm(txHash: TxHash, revpopAccount: RevpopAccount, hashLock: string) {
+    confirm(txHash: TxHash, revpopAccount: RevpopAccount, hashLock: HashLock) {
         if (this._status !== 1) {
             return left(new DepositAlreadyConfirmed());
         }
@@ -51,7 +52,7 @@ export default class Deposit extends AggregateRoot {
         this.addDomainEvent(new DepositConfirmedEvent(
             txHash.value,
             revpopAccount.value,
-            hashLock
+            hashLock.value
         ))
 
         return right(Result.ok<void>())

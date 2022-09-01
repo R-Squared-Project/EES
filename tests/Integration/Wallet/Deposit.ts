@@ -37,6 +37,7 @@ describe('Wallet context integration test', async () => {
 
     it('Initialize -> confirm', async () => {
         const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
+        const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
 
         // Initialize deposit in web3wallet
         const commandInitializeDeposit = new InitializeDeposit()
@@ -50,7 +51,7 @@ describe('Wallet context integration test', async () => {
             depositInitialized.sessionId.value,
             txHash,
             'revpop_account',
-            'hash_lock'
+            hashLock
         )
         const resultConfirmDeposit = await confirmDepositHandler.execute(commandConfirmDeposit)
         expect(resultConfirmDeposit.isRight(), 'Wallet:ConfirmDeposit error').true
