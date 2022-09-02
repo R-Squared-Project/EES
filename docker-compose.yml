@@ -6,7 +6,7 @@ services:
     build:
       dockerfile: docker/node/Dockerfile
     ports:
-      - "8080:8080"
+      - "3000:3000"
     volumes:
       - ./:/var/ees
       - node_modules:/var/ees/node_modules
