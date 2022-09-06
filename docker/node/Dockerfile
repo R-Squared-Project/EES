@@ -9,4 +9,5 @@ RUN yarn install
 
 COPY . .
 
-CMD ["yarn", "start"]
+RUN ["chmod", "+x", "docker/node/entrypoint.sh"]
+ENTRYPOINT ["docker/node/entrypoint.sh"]

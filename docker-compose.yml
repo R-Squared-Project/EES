@@ -10,6 +10,8 @@ services:
     volumes:
       - ./:/var/ees
       - node_modules:/var/ees/node_modules
+    depends_on:
+      - db
     networks:
       - ees_network
   db:

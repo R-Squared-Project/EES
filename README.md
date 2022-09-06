@@ -38,7 +38,7 @@ yarn typeorm migration:run -d Context/Revpop/Infrastructure/TypeORM/DataSource/D
 
 ## Tests
 ### Unit
-Unit tests does`t use database. Just run to launch them:
+Unit tests doesn't use database. Just run this command to execute them:
 ```
 yarn test
 ```
