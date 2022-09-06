@@ -2,10 +2,11 @@ import RepositoryInterface from "../../../Domain/RepositoryInterface";
 import {Result, Either, right, left} from "../../../../Core";
 import {UseCase} from "../../../../Core/Domain/UseCase";
 import {UnexpectedError} from "../../../../Core/Logic/AppError";
+import ConfirmDepositByUser from "./ConfirmDepositByUser";
 import Deposit from "../../../Domain/Deposit";
 import TxHash from "../../../Domain/TxHash";
 import RevpopAccount from "../../../Domain/RevpopAccount";
-import ConfirmDepositByUser from "./ConfirmDepositByUser";
+import HashLock from "../../../../Wallet/Domain/HashLock";
 import {DepositAlreadyExists} from "./Errors";
 
 type Response = Either<
@@ -24,8 +25,9 @@ export default class ConfirmDepositByUserHandler implements UseCase<ConfirmDepos
 
         const txHashOrError = TxHash.create(command.txHash)
         const revpopAccountOrError = RevpopAccount.create(command.revpopAccount)
+        const hashLockOrError = HashLock.create(command.hashLock)
 
-        const combinedPropsResult = Result.combine([txHashOrError, revpopAccountOrError]);
+        const combinedPropsResult = Result.combine([txHashOrError, revpopAccountOrError, hashLockOrError]);
 
         if (combinedPropsResult.isFailure) {
             return left(Result.fail<void>(combinedPropsResult.error)) as Response;
@@ -35,7 +37,7 @@ export default class ConfirmDepositByUserHandler implements UseCase<ConfirmDepos
             const deposit = Deposit.createByUser(
                 txHashOrError.getValue() as TxHash,
                 revpopAccountOrError.getValue() as RevpopAccount,
-                command.hashLock,
+                hashLockOrError.getValue() as HashLock,
             )
 
             await this._repository.create(deposit);

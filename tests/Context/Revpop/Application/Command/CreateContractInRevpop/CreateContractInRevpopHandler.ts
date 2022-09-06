@@ -7,11 +7,13 @@ import {CreateContractInRevpop} from "../../../../../../Context/Revpop";
 import CreateContractInRevpopHandler
     from "../../../../../../Context/Revpop/Application/Command/CreateContractInRevpop/CreateContractInRevpopHandler";
 import {DepositNotFound} from "../../../../../../Context/Revpop/Application/Command/CreateContractInRevpop/Errors";
+import HashLock from "../../../../../../Context/Revpop/Domain/HashLock";
 
 describe('Revpop::CreateContractInRevpop', () => {
     let repository: StubRepository;
     let handler: CreateContractInRevpopHandler;
     const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
+    const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
 
     beforeEach(function() {
         repository = new StubRepository()
@@ -24,7 +26,7 @@ describe('Revpop::CreateContractInRevpop', () => {
                 const deposit = Deposit.createByBlockchain(
                     TxHash.create(txHash).getValue() as TxHash,
                     '1000',
-                    'hash_lock'
+                    HashLock.create(hashLock).getValue() as HashLock
                 )
                 deposit.confirmByUser(RevpopAccount.create('revpop_account').getValue() as RevpopAccount)
                 await repository.create(deposit)

@@ -6,6 +6,7 @@ import DepositConfirmedEvent from '../../../../Context/Wallet/Domain/Event/Depos
 import SessionId from '../../../../Context/Wallet/Domain/SessionId';
 import RevpopAccount from '../../../../Context/Wallet/Domain/RevpopAccount';
 import TxHash from "../../../../Context/Wallet/Domain/TxHash";
+import HashLock from "../../../../Context/Wallet/Domain/HashLock";
 
 describe('Wallet::Deposit', () => {
     describe('create new', () => {
@@ -28,8 +29,9 @@ describe('Wallet::Deposit', () => {
 
             const revpopAccountOrError = RevpopAccount.create('revpop_account_name').getValue() as RevpopAccount
             const txHashOrError = TxHash.create('tx_hash').getValue() as TxHash
+            const hashLockOrError = HashLock.create('0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c').getValue() as HashLock
 
-            const resultOrError = deposit.confirm(revpopAccountOrError, txHashOrError, 'hash_lock')
+            const resultOrError = deposit.confirm(revpopAccountOrError, txHashOrError, hashLockOrError)
 
             expect(resultOrError.isRight()).true
             expect(deposit.domainEvents.length).equals(2)

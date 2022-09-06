@@ -3,7 +3,7 @@ import SecretGeneratorInterface from "./SecretGeneratorInterface";
 
 class Web3SecretGenerator implements SecretGeneratorInterface {
     generate(): string {
-        return Web3.utils.randomHex(16);
+        return Web3.utils.randomHex(32);
     }
 }
 

@@ -6,7 +6,8 @@ import {DepositNotFoundError} from "../../Context/Wallet/Application/Command/Con
 interface ConfirmDepositDto {
     sessionId: string,
     revpopAccount: string,
-    txHash: string
+    txHash: string,
+    hashLock: string
 }
 
 @Controller('deposit')
@@ -16,8 +17,9 @@ export default class ConfirmDepositController {
     async confirm(@Body() confirmDepositDto: ConfirmDepositDto): Promise<SuccessResponse> {
         const command = new ConfirmDeposit(
             confirmDepositDto.sessionId,
+            confirmDepositDto.txHash,
             confirmDepositDto.revpopAccount,
-            confirmDepositDto.txHash
+            confirmDepositDto.hashLock
         )
         const depositOrError = await confirmDepositHandler.execute(command)
 

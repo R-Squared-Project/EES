@@ -29,7 +29,7 @@ describe('Wallet::ConfirmDepositHandler', () => {
                 deposit.sessionId.value,
                 '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f',
                 'revpop_account_name',
-                'hash_lock'
+                '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
             )
             const result = await handler.execute(command)
 

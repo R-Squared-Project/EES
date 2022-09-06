@@ -6,6 +6,7 @@ import {UnexpectedError} from "../../../../Core/Logic/AppError";
 import {DepositNotFound} from "./Errors";
 import Deposit from "../../../Domain/Deposit";
 import TxHash from "../../../Domain/TxHash";
+import HashLock from "../../../../Wallet/Domain/HashLock";
 
 type Response = Either<
     UnexpectedError |
@@ -23,15 +24,18 @@ export default class ConfirmDepositByBlockchainHandler implements UseCase<Confir
 
         if (deposit === null) {
             const txHashOrError = TxHash.create(command.txHash)
+            const hashLockOrError = HashLock.create(command.hashLock)
 
-            if (txHashOrError.isFailure) {
-                return left(Result.fail<void>(txHashOrError.error)) as Response;
+            const combinedPropsResult = Result.combine([txHashOrError, hashLockOrError]);
+
+            if (combinedPropsResult.isFailure) {
+                return left(Result.fail<void>(combinedPropsResult.error)) as Response;
             }
 
             const deposit = Deposit.createByBlockchain(
                 txHashOrError.getValue() as TxHash,
                 command.value,
-                command.hashLock
+                hashLockOrError.getValue() as HashLock
             )
             await this._repository.create(deposit)
 
