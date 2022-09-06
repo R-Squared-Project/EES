@@ -12,8 +12,8 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
-    "test": "mocha -r ts-node/register ./tests/Context --recursive --extension ts",
-    "test:integration": "mocha -r ts-node/register ./tests/Integration --recursive --extension ts"
+    "test": "NODE_ENV=test mocha -r ts-node/register ./tests/Context --recursive --extension ts",
+    "test:integration": "NODE_ENV=test mocha -r ts-node/register ./tests/Integration --recursive --extension ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.7",

@@ -1,7 +1,9 @@
+import Web3 from 'web3';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import {Either, left, Result, right} from '../../../../Core';
 import {UseCase} from '../../../../Core/Domain/UseCase';
+import config from "../../../config";
 import CreateDeposit from './CreateDeposit';
 import RepositoryInterface from '../../../Domain/RepositoryInterface';
 import Deposit from '../../../Domain/Deposit';
@@ -19,7 +21,7 @@ import {
 } from './Errors';
 import ContractRepositoryInterface from '../../../Domain/ContractRepositoryInterface';
 import Contract from '../../../Domain/Contract';
-import Web3 from 'web3';
+
 type Response = Either<
     UnexpectedError |
     DepositAlreadyExists,
@@ -78,26 +80,26 @@ export default class CreateDepositHandler implements UseCase<CreateDeposit, Resp
     private validateContract(contract: Contract): Result<string>[] {
         const errors: Result<string>[] = []
 
-        if (contract.receiver !== process.env.ETH_RECEIVER) {
+        if (contract.receiver !== config.eth.receiver) {
             errors.push(Result.fail(new ReceiverIsInvalid()))
         }
 
-        const minimumDepositAmountWei = Web3.utils.toWei(process.env.MINIMUM_DEPOSIT_AMOUNT as string)
+        const minimumDepositAmountWei = Web3.utils.toWei(config.eth.minimum_deposit_amount as string)
         if (contract.value < minimumDepositAmountWei) {
             errors.push(Result.fail(new DepositIsToSmall(
-                process.env.MINIMUM_DEPOSIT_AMOUNT as string,
+                config.eth.minimum_deposit_amount as string,
                 Web3.utils.fromWei(contract.value, 'ether'),
             )))
         }
 
         const timeLockLimit = contract.createdAt.add(
-            parseInt(process.env.MINUMUM_TIMELOCK as string, 10),
+            config.contract.minimum_timelock,
             'minutes'
         ).unix()
 
         if (contract.timeLock < timeLockLimit) {
             errors.push(Result.fail(new TimeLockIsToSmall(
-                dayjs.duration(parseInt(process.env.MINUMUM_TIMELOCK as string, 10)).asMinutes(),
+                dayjs.duration(config.contract.minimum_timelock).asMinutes(),
                 dayjs.unix(contract.timeLock).format(),
             )))
         }

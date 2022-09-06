@@ -62,7 +62,7 @@ describe('Revpop context integration test', async () => {
         expect(resultConfirmDepositByUser.isRight(), 'Revpop:ConfirmDepositByBlockchain error').true
 
         // Create contract in revpop.
-        // TODO::should be called automatically but work db used instead of test db
+        // TODO::createContractInRevpop is async operation. Is it possible make it sync in tests?
         const commandCreateContractInRevpop = new CreateContractInRevpop(txHash)
         const resultCreateContractInRevpop = await createContractInRevpop.execute(commandCreateContractInRevpop)
         expect(resultConfirmDepositByUser.isRight(), 'Revpop:ConfirmDepositByBlockchain error').true
@@ -76,6 +76,6 @@ describe('Revpop context integration test', async () => {
         //Redeem deposit
         const commandRedeemDeposit = new RedeemDeposit(deposit.revpopContractId as string)
         const resultRedeemDeposit = await redeemDepositHandler.execute(commandRedeemDeposit)
-        expect(resultRedeemDeposit.isRight(), 'Revpop:RedeemDeposit error').true
+        expect(resultRedeemDeposit.isRight(), resultRedeemDeposit.value.error?.message).true
     })
 });
