@@ -4,6 +4,7 @@ module.exports = {
     plugins: ['@typescript-eslint'],
     root: true,
     env: {
-        node: true
+        node: true,
+        mocha: true
     }
 };
