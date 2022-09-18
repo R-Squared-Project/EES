@@ -4,6 +4,7 @@ services:
   node:
     image: revpop/ees
     build:
+      context: .
       dockerfile: docker/node/Dockerfile
     ports:
       - "3000:3000"
