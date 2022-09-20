@@ -16,6 +16,7 @@
     "test:integration": "mocha -r ts-node/register ./tests/Integration --recursive --extension ts"
   },
   "dependencies": {
+    "@nestjs/cli": "^9.1.1",
     "@nestjs/common": "^9.0.7",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.7",
