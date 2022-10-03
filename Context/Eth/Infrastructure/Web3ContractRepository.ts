@@ -2,6 +2,7 @@ import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import {Contract as ContractWeb3} from "web3-eth-contract";
 import dayjs from "dayjs";
+import config from "../config";
 import ContractRepositoryInterface from "../Domain/ContractRepositoryInterface";
 import Contract from "../Domain/Contract";
 import HashedTimelockAbi from "../../../src/assets/abi/HashedTimelock.json";
@@ -16,10 +17,10 @@ export default class Web3ContractRepository implements ContractRepositoryInterfa
         private privateKey: string
     ) {
         this.web3 = new Web3(new Web3.providers.HttpProvider(
-            `https://${process.env.ETH_NETWORK_NAME}.infura.io/v3/${process.env.INFURA_API_KEY}`
+            `https://${config.eth.network}.infura.io/v3/${config.eth_provider.infura.api_key}`
         ))
 
-        this.contract = new this.web3.eth.Contract(HashedTimelockAbi as AbiItem[], process.env.ETH_CONTRACT_ADDRESS)
+        this.contract = new this.web3.eth.Contract(HashedTimelockAbi as AbiItem[], config.eth.contract_address)
     }
 
     async isTxIncluded(txHash: string): Promise<boolean> {
@@ -68,7 +69,7 @@ export default class Web3ContractRepository implements ContractRepositoryInterfa
             data: this.contract.methods.withdraw(contractId, secret).encodeABI()
         };
 
-        const signedTx = await this.web3.eth.accounts.signTransaction(tx, process.env.ETH_PRIVATE_KEY as string);
+        const signedTx = await this.web3.eth.accounts.signTransaction(tx, config.eth.private_key);
         const result = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
 
         return result.transactionHash

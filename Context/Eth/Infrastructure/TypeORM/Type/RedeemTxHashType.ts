@@ -6,10 +6,18 @@ const RedeemTxHashType: EntitySchemaColumnOptions = {
     name: 'redeem_tx_hash',
     nullable: true,
     transformer: {
-        to(redeemTxHash: RedeemTxHash): string {
+        to(redeemTxHash: RedeemTxHash | null): string | null {
+            if (null === redeemTxHash) {
+                return null
+            }
+
             return redeemTxHash.value
         },
-        from(value: string): RedeemTxHash {
+        from(value: string | null): RedeemTxHash | null {
+            if (null === value) {
+                return value
+            }
+
             return RedeemTxHash.create(value).getValue() as RedeemTxHash
         }
     }
