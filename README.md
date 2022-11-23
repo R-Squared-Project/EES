@@ -13,37 +13,14 @@ curl -i http://localhost:3000/deposit/initialize
 HTTP 200 status and `sessionId` should be received in response
 
 ## Migrations
-### Wallet context
-#### Create migration: 
-```
-yarn typeorm migration:generate -d Context/Wallet/Infrastructure/TypeORM/DataSource/WalletDataSource.ts Context/Wallet/Infrastructure/TypeORM/migrations/__migrationName__
-```
-
-#### Execute migrations
-```
-yarn typeorm migration:run -d Context/Wallet/Infrastructure/TypeORM/DataSource/WalletDataSource.ts
-```
-
-### Eth context
 #### Create migration:
 ```
-yarn typeorm migration:generate -d Context/Eth/Infrastructure/TypeORM/DataSource/DataSource.ts Context/Eth/Infrastructure/TypeORM/migrations/__migrationName__
+yarn typeorm migration:generate -d Context/Infrastructure/TypeORM/DataSource/DataSource.ts Context/Infrastructure/TypeORM/migrations/__migrationName__
 ```
 
 #### Execute migrations
 ```
-yarn typeorm migration:run -d Context/Eth/Infrastructure/TypeORM/DataSource/DataSource.ts
-```
-
-### Revpop context
-#### Create migration:
-```
-yarn typeorm migration:generate -d Context/Revpop/Infrastructure/TypeORM/DataSource/DataSource.ts Context/Revpop/Infrastructure/TypeORM/migrations/__migrationName__
-```
-
-#### Execute migrations
-```
-yarn typeorm migration:run -d Context/Revpop/Infrastructure/TypeORM/DataSource/DataSource.ts
+yarn typeorm migration:run -d Context/Infrastructure/TypeORM/DataSource/DataSource.ts
 ```
 
 ## Tests

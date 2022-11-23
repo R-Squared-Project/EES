@@ -17,7 +17,6 @@ services:
       - ees_network
   db:
     image: mysql:5.7
-    restart: unless-stopped
     env_file: ./.env
     environment:
       MYSQL_ROOT_PASSWORD: "root_password"
