@@ -1,49 +1,40 @@
-import {Either, left, Result, right} from "../../../Core";
-import {UseCase} from "../../../Core/Domain/UseCase";
+import {UseCase} from "context/Core/Domain/UseCase";
 import SubmitDepositRequest from "./SubmitDepositRequest";
-import DepositRequestRepositoryInterface from "../../../Domain/DepositRequestRepositoryInterface";
-import RevpopAccount from "../../../Domain/ValueObject/RevpopAccount";
-import HashLock from "../../../Domain/ValueObject/HashLock";
-import {CreateDepositUnexpectedError} from "../../../Domain/Errors";
-import {DatabaseConnectionError} from "../../../Infrastructure/Errors";
-import DepositRequest from "../../../Domain/DepositRequest";
+import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepositoryInterface";
+import {DatabaseConnectionError} from "context/Infrastructure/Errors";
+import DepositRequest from "context/Domain/DepositRequest";
+import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
+import HashLock from "context/Domain/ValueObject/HashLock";
+import {
+    HashLockValidationError,
+    RevpopAccountValidationError
+} from "context/Domain/Errors";
 
-type Response = Either<
-    DatabaseConnectionError |
-    CreateDepositUnexpectedError,
-    Result<void>
->
-
-export default class SubmitDepositRequestHandler implements UseCase<SubmitDepositRequest, Response> {
+export default class SubmitDepositRequestHandler implements UseCase<SubmitDepositRequest, void> {
     constructor(
         private _repository: DepositRequestRepositoryInterface
     ) {}
 
-    async execute(command: SubmitDepositRequest): Promise<Response> {
+    async execute(command: SubmitDepositRequest): Promise<void> {
         const revpopAccountOrError = RevpopAccount.create(command.revpopAccount)
-        const hashLockOrError = HashLock.create(command.hashLock)
-
-        const combinedPropsResult = Result.combine([revpopAccountOrError, hashLockOrError]);
-
-        if (combinedPropsResult.isFailure) {
-            return left(Result.fail<void>(combinedPropsResult.error)) as Response;
+        if (revpopAccountOrError.isFailure) {
+            throw new RevpopAccountValidationError(revpopAccountOrError.error as string, command.revpopAccount)
         }
 
-        const result = DepositRequest.create(
+        const hashLockOrError = HashLock.create(command.hashLock)
+        if (hashLockOrError.isFailure) {
+            throw new HashLockValidationError(hashLockOrError.error as string, command.hashLock)
+        }
+
+        const depositRequest = DepositRequest.create(
             revpopAccountOrError.getValue() as RevpopAccount,
             hashLockOrError.getValue() as HashLock
         )
 
-        if (result.isLeft()) {
-            return left(result.value)
-        }
-
         try {
-            await this._repository.create(result.value.getValue() as DepositRequest)
+            await this._repository.create(depositRequest)
         } catch (e: unknown) {
-            return left(new DatabaseConnectionError())
+            throw new DatabaseConnectionError()
         }
-
-        return right(Result.ok<void>()) as Response;
     }
 }

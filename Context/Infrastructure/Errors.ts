@@ -1,4 +1,4 @@
-import {AppError} from "../Core/Logic/AppError";
+class InfrastructureError extends Error {}
 
-export class DatabaseConnectionError extends AppError {
-}
+export class DatabaseConnectionError extends InfrastructureError {}
+export class ExternalBlockchainConnectionError extends InfrastructureError {}

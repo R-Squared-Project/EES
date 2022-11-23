@@ -16,7 +16,7 @@ export default class HashLock extends ValueObject<TxHashProps> {
         }
 
         if (!/^0x([A-Fa-f0-9]{64})$/.test(hashLock)) {
-            return Result.fail<HashLock>('Hashlock is invalid')
+            return Result.fail<HashLock>('HashLock format is invalid')
         }
 
         return Result.ok<HashLock>(new HashLock({value: hashLock}))

@@ -1,7 +1,8 @@
 import {expect} from 'chai';
-import DepositRequestStubRepository from "../../../../../Context/Infrastructure/TypeORM/DepositRequestStubRepository";
-import SubmitDepositRequestHandler from "../../../../../Context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
-import {SubmitDepositRequest} from "../../../../../Context";
+import DepositRequestStubRepository from "context/Infrastructure/TypeORM/DepositRequestStubRepository";
+import SubmitDepositRequestHandler from "context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
+import {SubmitDepositRequest} from "context/index";
+import {HashLockValidationError, RevpopAccountValidationError} from "context/Domain/Errors";
 
 describe('SubmitDepositRequestHandler', () => {
     let repository: DepositRequestStubRepository;
@@ -19,36 +20,32 @@ describe('SubmitDepositRequestHandler', () => {
         describe('success', () => {
             it('should save new deposit', async () => {
                 const command = new SubmitDepositRequest(internalAccount, hashLock)
-                const depositOrError = await handler.execute(command)
 
-                expect(repository.size).equals(1)
-                expect(depositOrError.isRight()).true
+                await expect(handler.execute(command)).fulfilled
+                expect(repository).repositorySize(1)
             });
         })
 
         describe('error', () => {
             it('should return error if account is empty', async () => {
                 const command = new SubmitDepositRequest('', hashLock)
-                const depositOrError = await handler.execute(command)
 
-                expect(repository.size).equals(0)
-                expect(depositOrError.isLeft()).true
+                expect(repository).repositoryEmpty
+                await expect(handler.execute(command)).rejectedWith(RevpopAccountValidationError)
             });
 
             it('should return error if hashLock is empty', async () => {
                 const command = new SubmitDepositRequest(internalAccount, '')
-                const depositOrError = await handler.execute(command)
 
-                expect(repository.size).equals(0)
-                expect(depositOrError.isLeft()).true
+                expect(repository).repositoryEmpty
+                await expect(handler.execute(command)).rejectedWith(HashLockValidationError, 'HashLock "" is invalid: Must provide a hashlock')
             });
 
             it('should return error if hashLock is invalid', async () => {
                 const command = new SubmitDepositRequest(internalAccount, 'invalid_hashLock')
-                const depositOrError = await handler.execute(command)
 
-                expect(repository.size).equals(0)
-                expect(depositOrError.isLeft()).true
+                expect(repository).repositoryEmpty
+                await expect(handler.execute(command)).rejectedWith(HashLockValidationError, 'HashLock "invalid_hashLock" is invalid: HashLock format is invalid')
             });
         })
     });
