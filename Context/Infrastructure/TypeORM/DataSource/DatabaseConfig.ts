@@ -1,6 +1,7 @@
 import path from "path";
 import {DataSourceOptions} from "typeorm/data-source/DataSourceOptions";
 import DepositEntity from "../Entity/DepositEntity";
+import DepositRequestEntity from "../Entity/DepositRequestEntity";
 import config from "../../config";
 
 const DatabaseConfig: DataSourceOptions = {
@@ -10,7 +11,7 @@ const DatabaseConfig: DataSourceOptions = {
     username: config.db.user,
     password: config.db.password,
     database: config.db.name,
-    entities: [DepositEntity],
+    entities: [DepositRequestEntity],
     migrations: [path.join(__dirname, '..', 'migrations', '*.ts')],
     subscribers: [],
     migrationsRun: config.isTest,

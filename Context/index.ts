@@ -1,9 +1,9 @@
 import DataSource from "./Infrastructure/TypeORM/DataSource/DataSource";
-import CreateDeposit from "./Application/Command/CreateDeposit/CreateDeposit";
-import CreateDepositHandler from "./Application/Command/CreateDeposit/CreateDepositHandler";
-import TypeOrmRepository from "./Infrastructure/TypeORM/TypeOrmRepository";
+import SubmitDepositRequest from "./Application/Command/SubmitDepositRequest/SubmitDepositRequest";
+import SubmitDepositRequestHandler from "./Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
+import DepositRequestTypeOrmRepository from "./Infrastructure/TypeORM/DepositRequestTypeOrmRepository";
 
-const repository = new TypeOrmRepository(DataSource)
-const createDepositHandler = new CreateDepositHandler(repository)
+const repository = new DepositRequestTypeOrmRepository(DataSource)
+const submitDepositRequestHandler = new SubmitDepositRequestHandler(repository)
 
-export {CreateDeposit, createDepositHandler}
+export {SubmitDepositRequest, submitDepositRequestHandler}

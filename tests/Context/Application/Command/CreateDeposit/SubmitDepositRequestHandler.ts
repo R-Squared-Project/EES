@@ -1,24 +1,24 @@
 import {expect} from 'chai';
-import StubRepository from "../../../../../Context/Infrastructure/TypeORM/StubRepository";
-import CreateDepositHandler from "../../../../../Context/Application/Command/CreateDeposit/CreateDepositHandler";
-import {CreateDeposit} from "../../../../../Context";
+import DepositRequestStubRepository from "../../../../../Context/Infrastructure/TypeORM/DepositRequestStubRepository";
+import SubmitDepositRequestHandler from "../../../../../Context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
+import {SubmitDepositRequest} from "../../../../../Context";
 
-describe('CreateDepositHandler', () => {
-    let repository: StubRepository;
-    let handler: CreateDepositHandler;
+describe('SubmitDepositRequestHandler', () => {
+    let repository: DepositRequestStubRepository;
+    let handler: SubmitDepositRequestHandler;
 
     const internalAccount = 'revpop_account_name'
     const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
 
     beforeEach(function() {
-        repository = new StubRepository()
-        handler = new CreateDepositHandler(repository);
+        repository = new DepositRequestStubRepository()
+        handler = new SubmitDepositRequestHandler(repository);
     });
 
     describe('execute', () => {
         describe('success', () => {
             it('should save new deposit', async () => {
-                const command = new CreateDeposit(internalAccount, hashLock)
+                const command = new SubmitDepositRequest(internalAccount, hashLock)
                 const depositOrError = await handler.execute(command)
 
                 expect(repository.size).equals(1)
@@ -28,7 +28,7 @@ describe('CreateDepositHandler', () => {
 
         describe('error', () => {
             it('should return error if account is empty', async () => {
-                const command = new CreateDeposit('', hashLock)
+                const command = new SubmitDepositRequest('', hashLock)
                 const depositOrError = await handler.execute(command)
 
                 expect(repository.size).equals(0)
@@ -36,7 +36,7 @@ describe('CreateDepositHandler', () => {
             });
 
             it('should return error if hashLock is empty', async () => {
-                const command = new CreateDeposit(internalAccount, '')
+                const command = new SubmitDepositRequest(internalAccount, '')
                 const depositOrError = await handler.execute(command)
 
                 expect(repository.size).equals(0)
@@ -44,7 +44,7 @@ describe('CreateDepositHandler', () => {
             });
 
             it('should return error if hashLock is invalid', async () => {
-                const command = new CreateDeposit(internalAccount, 'invalid_hashLock')
+                const command = new SubmitDepositRequest(internalAccount, 'invalid_hashLock')
                 const depositOrError = await handler.execute(command)
 
                 expect(repository.size).equals(0)
