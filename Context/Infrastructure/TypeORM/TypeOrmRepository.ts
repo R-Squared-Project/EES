@@ -10,4 +10,8 @@ export default class TypeOrmRepository implements RepositoryInterface {
     async create(deposit: Deposit) {
         await this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
+
+    exists(contractId: string): Promise<boolean> {
+        return Promise.resolve(false);
+    }
 }

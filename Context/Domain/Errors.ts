@@ -33,3 +33,23 @@ export class HashLockValidationError extends ValidationError {
         this.error = error
     }
 }
+
+export class TxHashValidationError extends ValidationError {
+    private error: string
+
+    constructor(error: string, txHash: string) {
+        super(`Transaction hash "${txHash}" is invalid: ${error}`)
+
+        this.error = error
+    }
+}
+
+export class AddressValidationError extends ValidationError {
+    private error: string
+
+    constructor(error: string, address: string) {
+        super(`Address "${address}" is invalid: ${error}`)
+
+        this.error = error
+    }
+}
