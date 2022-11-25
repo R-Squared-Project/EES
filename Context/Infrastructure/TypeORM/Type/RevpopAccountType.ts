@@ -9,7 +9,7 @@ const RevpopAccountType: EntitySchemaColumnOptions = {
             return revpopAccount.value
         },
         from(value: string): RevpopAccount {
-            return RevpopAccount.create(value).getValue() as RevpopAccount
+            return RevpopAccount.create(value)
         }
     }
 }

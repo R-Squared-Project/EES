@@ -1,5 +1,5 @@
 import ValueObject from "../../Core/Domain/ValueObject";
-import {Result} from "../../Core";
+import {RevpopAccountValidationError} from "context/Domain/Errors";
 
 interface RevpopAccountProps {
     value: string;
@@ -10,11 +10,11 @@ export default class RevpopAccount extends ValueObject<RevpopAccountProps> {
         super(props);
     }
 
-    public static create(revpopAccount: string): Result<RevpopAccount> {
+    public static create(revpopAccount: string): RevpopAccount {
         if (revpopAccount.length === 0) {
-            return Result.fail<RevpopAccount>('Must provide a revpop account')
+            throw new RevpopAccountValidationError('Revpop account can not be empty', revpopAccount)
         }
 
-        return Result.ok<RevpopAccount>(new RevpopAccount({value: revpopAccount}))
+        return new RevpopAccount({value: revpopAccount})
     }
 }

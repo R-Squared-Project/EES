@@ -1,5 +1,5 @@
 import ValueObject from "../../Core/Domain/ValueObject";
-import {Result} from "../../Core";
+import {HashLockValidationError} from "context/Domain/Errors";
 
 interface TxHashProps {
     value: string;
@@ -10,15 +10,15 @@ export default class HashLock extends ValueObject<TxHashProps> {
         super(props);
     }
 
-    public static create(hashLock: string): Result<HashLock> {
+    public static create(hashLock: string): HashLock {
         if (!hashLock || hashLock.length === 0) {
-            return Result.fail<HashLock>('Must provide a hashlock')
+            throw new HashLockValidationError('HashLock can not be empty', hashLock)
         }
 
         if (!/^0x([A-Fa-f0-9]{64})$/.test(hashLock)) {
-            return Result.fail<HashLock>('HashLock format is invalid')
+            throw new HashLockValidationError('HashLock format is invalid', hashLock)
         }
 
-        return Result.ok<HashLock>(new HashLock({value: hashLock}))
+        return new HashLock({value: hashLock})
     }
 }

@@ -5,10 +5,6 @@ import {DatabaseConnectionError} from "context/Infrastructure/Errors";
 import DepositRequest from "context/Domain/DepositRequest";
 import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
 import HashLock from "context/Domain/ValueObject/HashLock";
-import {
-    HashLockValidationError,
-    RevpopAccountValidationError
-} from "context/Domain/Errors";
 
 export default class SubmitDepositRequestHandler implements UseCase<SubmitDepositRequest, void> {
     constructor(
@@ -16,20 +12,10 @@ export default class SubmitDepositRequestHandler implements UseCase<SubmitDeposi
     ) {}
 
     async execute(command: SubmitDepositRequest): Promise<void> {
-        const revpopAccountOrError = RevpopAccount.create(command.revpopAccount)
-        if (revpopAccountOrError.isFailure) {
-            throw new RevpopAccountValidationError(revpopAccountOrError.error as string, command.revpopAccount)
-        }
+        const revpopAccount = RevpopAccount.create(command.revpopAccount)
+        const hashLock = HashLock.create(command.hashLock)
 
-        const hashLockOrError = HashLock.create(command.hashLock)
-        if (hashLockOrError.isFailure) {
-            throw new HashLockValidationError(hashLockOrError.error as string, command.hashLock)
-        }
-
-        const depositRequest = DepositRequest.create(
-            revpopAccountOrError.getValue() as RevpopAccount,
-            hashLockOrError.getValue() as HashLock
-        )
+        const depositRequest = DepositRequest.create(revpopAccount, hashLock)
 
         try {
             await this._repository.create(depositRequest)

@@ -9,7 +9,7 @@ const HashLockType: EntitySchemaColumnOptions = {
             return hashLock.value
         },
         from(value: string): HashLock {
-            return HashLock.create(value).getValue() as HashLock
+            return HashLock.create(value)
         }
     }
 }

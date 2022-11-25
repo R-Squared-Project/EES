@@ -38,7 +38,7 @@ describe('SubmitDepositRequestHandler', () => {
                 const command = new SubmitDepositRequest(internalAccount, '')
 
                 expect(repository).repositoryEmpty
-                await expect(handler.execute(command)).rejectedWith(HashLockValidationError, 'HashLock "" is invalid: Must provide a hashlock')
+                await expect(handler.execute(command)).rejectedWith(HashLockValidationError, 'HashLock can not be empty')
             });
 
             it('should return error if hashLock is invalid', async () => {
