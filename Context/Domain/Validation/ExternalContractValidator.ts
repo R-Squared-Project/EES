@@ -1,14 +1,16 @@
 import Web3 from "web3";
 import dayjs from "dayjs";
+import {HashZero} from "@ethersproject/constants"
 import AbstractValidator from "./AbstractValidator";
 import config from "context/config";
 import Contract from "context/ExternalBlockchain/Contract";
 import {
     AlreadyRefunded,
     AlreadyWithdrawn,
-    DepositIsToSmall,
-    ReceiverIsInvalid, TimeLockIsToSmall
-} from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
+    DepositIsToSmall, PreimageNotEmpty,
+    ReceiverIsInvalid,
+    TimeLockIsToSmall
+} from "context/Domain/Errors";
 
 export default class ExternalContractValidator extends AbstractValidator {
     private externalContract: Contract
@@ -21,21 +23,20 @@ export default class ExternalContractValidator extends AbstractValidator {
 
     validate(): void {
         this.validateReceiver()
+        this.validateTimeLock()
+        this.validateValue()
+        this.validateWithdrawn()
+        this.validateRefunded()
+        this.validatePreimage()
     }
 
     private validateReceiver() {
         if (this.externalContract.receiver !== config.eth.receiver) {
             throw new ReceiverIsInvalid()
         }
+    }
 
-        const contractValue = Web3.utils.toBN(this.externalContract.value)
-        if (contractValue < config.eth.minimum_deposit_amount) {
-            throw new DepositIsToSmall(
-                config.eth.minimum_deposit_amount.toString(),
-                contractValue.toString(),
-            )
-        }
-
+    private validateTimeLock() {
         const timeLockLimit = this.externalContract.createdAt.add(
             config.contract.minimum_timelock,
             'minutes'
@@ -47,15 +48,33 @@ export default class ExternalContractValidator extends AbstractValidator {
                 dayjs.unix(this.externalContract.timeLock).format(),
             )
         }
+    }
 
+    private validateValue() {
+        const contractValue = Web3.utils.toBN(this.externalContract.value)
+        if (contractValue < config.eth.minimum_deposit_amount) {
+            throw new DepositIsToSmall(
+                config.eth.minimum_deposit_amount.toString(),
+                contractValue.toString(),
+            )
+        }
+    }
+
+    private validateWithdrawn() {
         if (this.externalContract.withdrawn) {
             throw new AlreadyWithdrawn()
         }
+    }
 
+    private validateRefunded() {
         if (this.externalContract.refunded) {
             throw new AlreadyRefunded()
         }
-
     }
 
+    private validatePreimage() {
+        if (this.externalContract.preimage !== HashZero) {
+            throw new PreimageNotEmpty()
+        }
+    }
 }

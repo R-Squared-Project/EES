@@ -23,33 +23,3 @@ export class ExternalContractNotExists extends UseCaseError {
         super(`The external contract "${contractId}" is not exists in the blockchain.`)
     }
 }
-
-export class ReceiverIsInvalid extends UseCaseError {
-    constructor() {
-        super('The receiver is invalid.')
-    }
-}
-
-export class DepositIsToSmall extends UseCaseError {
-    constructor(minValue: string, value: string) {
-        super(`The deposit ${value} is to small. Minimum deposit is ${minValue}.`)
-    }
-}
-
-export class TimeLockIsToSmall extends UseCaseError {
-    constructor(minMinutes: number, value: string) {
-        super(`TimeLock ${value} is to small. Minimum timeLock is ${minMinutes}.`)
-    }
-}
-
-export class AlreadyWithdrawn extends UseCaseError {
-    constructor() {
-        super('Contract is already withdrawn.')
-    }
-}
-
-export class AlreadyRefunded extends UseCaseError {
-    constructor() {
-        super('Contract is already refunded.')
-    }
-}

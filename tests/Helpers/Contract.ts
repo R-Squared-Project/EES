@@ -1,6 +1,6 @@
 import Contract from "context/ExternalBlockchain/Contract";
 import dayjs, {Dayjs} from "dayjs";
-import { plainToClass } from 'class-transformer';
+import {HashZero} from "@ethersproject/constants";
 
 interface ContractParams {
     contractId?: string,
@@ -23,7 +23,7 @@ const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfa
 const timeLock = dayjs().add(10, 'day').unix()
 const withdrawn = false
 const refunded = false
-const preimage = ''
+const preimage = HashZero
 const createdAt = dayjs()
 
 export function createContract(params?: ContractParams) {

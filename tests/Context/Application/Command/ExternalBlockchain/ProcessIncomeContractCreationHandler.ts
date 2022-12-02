@@ -7,6 +7,7 @@ import ProcessIncomingContractCreationHandler
 import ProcessIncomingContractCreation
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
+import * as ErrorsDomain from "context/Domain/Errors";
 import {createContract} from "../../../../Helpers/Contract";
 import dayjs from "dayjs";
 import {createDepositRequest} from "../../../../Helpers/DepositRequest";
@@ -89,7 +90,7 @@ describe('ProcessIncomeContractCreationHandler', () => {
 
                     const command = new ProcessIncomingContractCreation(txHash, contractId)
 
-                    await expect(handler.execute(command)).rejectedWith(Errors.ReceiverIsInvalid)
+                    await expect(handler.execute(command)).rejectedWith(ErrorsDomain.ReceiverIsInvalid)
                 });
 
                 it('should throw an error if deposit value is too low', async () => {
@@ -99,7 +100,7 @@ describe('ProcessIncomeContractCreationHandler', () => {
 
                     const command = new ProcessIncomingContractCreation(txHash, contractId)
 
-                    await expect(handler.execute(command)).rejectedWith(Errors.DepositIsToSmall)
+                    await expect(handler.execute(command)).rejectedWith(ErrorsDomain.DepositIsToSmall)
                 });
 
                 it('should throw an error if timeLock is too early', async () => {
@@ -109,7 +110,17 @@ describe('ProcessIncomeContractCreationHandler', () => {
 
                     const command = new ProcessIncomingContractCreation(txHash, contractId)
 
-                    await expect(handler.execute(command)).rejectedWith(Errors.TimeLockIsToSmall)
+                    await expect(handler.execute(command)).rejectedWith(ErrorsDomain.TimeLockIsToSmall)
+                });
+
+                it('should throw an error if timeLock is too early', async () => {
+                    externalBlockchainRepository._contract = createContract({
+                        preimage: '0x0000000000000000000000000000000000000000000000000000000000000001'
+                    })
+
+                    const command = new ProcessIncomingContractCreation(txHash, contractId)
+
+                    await expect(handler.execute(command)).rejectedWith(ErrorsDomain.PreimageNotEmpty)
                 });
             })
         })
