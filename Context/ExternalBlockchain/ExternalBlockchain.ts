@@ -3,9 +3,9 @@ import EthereumRepository from "./Repository/EthereumRepository";
 import StubRepository from "./Repository/StubRepository";
 
 class ExternalBlockchain {
-    private _repository?: RepositoryInterface
+    private readonly _repository: RepositoryInterface
 
-    public init(repository: Repository) {
+    public constructor(repository: Repository) {
         this._repository = this.createRepository(repository)
     }
 
@@ -29,4 +29,4 @@ class ExternalBlockchain {
     }
 }
 
-export default new ExternalBlockchain()
+export default ExternalBlockchain;

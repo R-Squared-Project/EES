@@ -1,23 +1,28 @@
 import {UseCase} from "context/Core/Domain/UseCase";
 import ProcessIncomingContractCreation
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
-import Deposit from "context/Domain/Deposit";
-import ExternalContract from "context/Domain/ExternalContract";
 import RepositoryInterface from "context/Domain/RepositoryInterface";
 import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepositoryInterface";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
-import {DatabaseConnectionError} from "context/Infrastructure/Errors";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import HashLock from "context/Domain/ValueObject/HashLock";
+import ExternalContractValidator from "context/Application/Command/ExternalBlockchain/ExternalContractValidator";
+import ExternalContract from "context/Domain/ExternalContract";
+import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
+import Deposit from "context/Domain/Deposit";
+import {DatabaseConnectionError} from "context/Infrastructure/Errors";
+import Address from "context/Domain/ValueObject/Address";
+import TimeLock from "context/Domain/ValueObject/TimeLock";
 
 export default class ProcessIncomingContractCreationHandler implements UseCase<ProcessIncomingContractCreation, void> {
     constructor(
         private repository: RepositoryInterface,
-        private depositRequestRepository: DepositRequestRepositoryInterface
+        private depositRequestRepository: DepositRequestRepositoryInterface,
+        private externalBlockchain: ExternalBlockchain
     ) {}
 
     async execute(command: ProcessIncomingContractCreation): Promise<void> {
-        const txIncluded = await ExternalBlockchain.repository.txIncluded(command.txHash)
+        const txIncluded = await this.externalBlockchain.repository.txIncluded(command.txHash)
         if (!txIncluded) {
             throw new Errors.TransactionNotFoundInBlockchain(command.txHash)
         }
@@ -27,11 +32,21 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
             throw new Errors.DepositAlreadyExists(command.contractId)
         }
 
-        const contract = await ExternalBlockchain.repository.load(command.txHash, command.contractId)
+        const contract = await this.externalBlockchain.repository.load(command.txHash, command.contractId)
         if (null === contract) {
             throw new Errors.ExternalContractNotExists(command.contractId)
         }
-        const externalContract = ExternalContract.fromContract(contract)
+
+        new ExternalContractValidator(contract).validate()
+
+        const externalContract = new ExternalContract(
+            new UniqueEntityID(contract.contractId),
+            Address.create(contract.sender),
+            Address.create(contract.receiver),
+            contract.value,
+            HashLock.create(contract.hashLock),
+            TimeLock.fromUnix(contract.timeLock)
+        )
 
         const depositRequest = await this.depositRequestRepository.load(HashLock.create(contract.hashLock))
         if (null === depositRequest) {
@@ -40,7 +55,6 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
         }
 
         const deposit = Deposit.create(depositRequest,  externalContract)
-        console.log(deposit)
 
         try {
             await this.repository.create(deposit)

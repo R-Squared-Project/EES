@@ -9,7 +9,11 @@ const DepositEntity = new EntitySchema<DepositRequest>({
     tableName: 'deposit_request',
     target: DepositRequest,
     columns: {
-        id: UniqueEntityIDType,
+        idString: {
+            name: 'id',
+            type: String,
+            primary: true
+        },
         // @ts-ignore
         _revpopAccount: RevpopAccountType,
         _hashLock: HashLockType,

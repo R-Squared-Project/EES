@@ -11,7 +11,14 @@ export default class TypeOrmRepository implements RepositoryInterface {
         await this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
 
-    exists(contractId: string): Promise<boolean> {
-        return Promise.resolve(false);
+    async exists(contractId: string): Promise<boolean> {
+        const count = await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder("deposit")
+            .leftJoinAndSelect("deposit._externalContract", "externalContract")
+            .where('externalContract.id = :contractId', { contractId: contractId })
+            .getCount()
+
+        return Promise.resolve(count > 0);
     }
 }

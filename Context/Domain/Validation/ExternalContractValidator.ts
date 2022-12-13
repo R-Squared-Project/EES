@@ -1,21 +1,14 @@
 import Web3 from "web3";
 import dayjs from "dayjs";
-import {HashZero} from "@ethersproject/constants"
 import AbstractValidator from "./AbstractValidator";
 import config from "context/config";
-import Contract from "context/ExternalBlockchain/Contract";
-import {
-    AlreadyRefunded,
-    AlreadyWithdrawn,
-    DepositIsToSmall, PreimageNotEmpty,
-    ReceiverIsInvalid,
-    TimeLockIsToSmall
-} from "context/Domain/Errors";
+import * as Errors from "context/Domain/Errors";
+import ExternalContract from "context/Domain/ExternalContract";
 
 export default class ExternalContractValidator extends AbstractValidator {
-    private externalContract: Contract
+    private externalContract: ExternalContract
 
-    constructor(externalContract: Contract) {
+    constructor(externalContract: ExternalContract) {
         super();
 
         this.externalContract = externalContract
@@ -25,27 +18,25 @@ export default class ExternalContractValidator extends AbstractValidator {
         this.validateReceiver()
         this.validateTimeLock()
         this.validateValue()
-        this.validateWithdrawn()
-        this.validateRefunded()
-        this.validatePreimage()
+
     }
 
     private validateReceiver() {
-        if (this.externalContract.receiver !== config.eth.receiver) {
-            throw new ReceiverIsInvalid()
+        if (this.externalContract.receiver.value !== config.eth.receiver) {
+            throw new Errors.ReceiverIsInvalid()
         }
     }
 
     private validateTimeLock() {
-        const timeLockLimit = this.externalContract.createdAt.add(
+        const timeLockLimit = dayjs().add(
             config.contract.minimum_timelock,
             'minutes'
         ).unix()
 
-        if (this.externalContract.timeLock < timeLockLimit) {
-            throw new TimeLockIsToSmall(
+        if (this.externalContract.timeLock.unix < timeLockLimit) {
+            throw new Errors.TimeLockIsToSmall(
                 dayjs.duration(config.contract.minimum_timelock).asMinutes(),
-                dayjs.unix(this.externalContract.timeLock).format(),
+                dayjs.unix(this.externalContract.timeLock.unix).format(),
             )
         }
     }
@@ -53,28 +44,10 @@ export default class ExternalContractValidator extends AbstractValidator {
     private validateValue() {
         const contractValue = Web3.utils.toBN(this.externalContract.value)
         if (contractValue < config.eth.minimum_deposit_amount) {
-            throw new DepositIsToSmall(
+            throw new Errors.DepositIsToSmall(
                 config.eth.minimum_deposit_amount.toString(),
                 contractValue.toString(),
             )
-        }
-    }
-
-    private validateWithdrawn() {
-        if (this.externalContract.withdrawn) {
-            throw new AlreadyWithdrawn()
-        }
-    }
-
-    private validateRefunded() {
-        if (this.externalContract.refunded) {
-            throw new AlreadyRefunded()
-        }
-    }
-
-    private validatePreimage() {
-        if (this.externalContract.preimage !== HashZero) {
-            throw new PreimageNotEmpty()
         }
     }
 }

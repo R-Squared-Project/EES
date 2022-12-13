@@ -17,6 +17,10 @@ export default class DepositRequest extends AggregateRoot {
         return this._status;
     }
 
+    get hashLock(): HashLock {
+        return this._hashLock;
+    }
+
     static create(revpopAccount: RevpopAccount, hashLock: HashLock): DepositRequest {
         const depositRequest = new DepositRequest(revpopAccount, hashLock)
 

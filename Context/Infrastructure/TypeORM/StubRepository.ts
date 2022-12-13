@@ -16,7 +16,15 @@ export default class StubRepository implements RepositoryInterface {
         return Promise.resolve(this._exists)
     }
 
+    first(): Deposit | null {
+        return Object.values(this._deposits)[0]
+    }
+
     get size(): number {
         return Object.values(this._deposits).length
+    }
+
+    reset() {
+        this._deposits = {}
     }
 }

@@ -68,8 +68,8 @@ export class DepositIsToSmall extends UseCaseError {
 }
 
 export class TimeLockIsToSmall extends UseCaseError {
-    constructor(minMinutes: number, value: string) {
-        super(`TimeLock ${value} is to small. Minimum timeLock is ${minMinutes}.`)
+    constructor(contractTimeLock: string, minMinutes: string) {
+        super(`TimeLock ${contractTimeLock} is to small. Minimum timeLock is ${minMinutes}.`)
     }
 }
 

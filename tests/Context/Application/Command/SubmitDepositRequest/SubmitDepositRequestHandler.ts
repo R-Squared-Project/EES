@@ -3,6 +3,8 @@ import DepositRequestStubRepository from "context/Infrastructure/TypeORM/Deposit
 import SubmitDepositRequestHandler from "context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
 import {SubmitDepositRequest} from "context/index";
 import {HashLockValidationError, RevpopAccountValidationError} from "context/Domain/Errors";
+import {createDepositRequest} from "../../../../Helpers/DepositRequest";
+import {DepositRequestAlreadyExists} from "context/Application/Command/SubmitDepositRequest/Errors";
 
 describe('SubmitDepositRequestHandler', () => {
     let repository: DepositRequestStubRepository;
@@ -30,22 +32,26 @@ describe('SubmitDepositRequestHandler', () => {
             it('should return error if account is empty', async () => {
                 const command = new SubmitDepositRequest('', hashLock)
 
-                expect(repository).repositoryEmpty
                 await expect(handler.execute(command)).rejectedWith(RevpopAccountValidationError)
             });
 
             it('should return error if hashLock is empty', async () => {
                 const command = new SubmitDepositRequest(internalAccount, '')
 
-                expect(repository).repositoryEmpty
                 await expect(handler.execute(command)).rejectedWith(HashLockValidationError, 'HashLock can not be empty')
             });
 
             it('should return error if hashLock is invalid', async () => {
                 const command = new SubmitDepositRequest(internalAccount, 'invalid_hashLock')
 
-                expect(repository).repositoryEmpty
                 await expect(handler.execute(command)).rejectedWith(HashLockValidationError, 'HashLock "invalid_hashLock" is invalid: HashLock format is invalid')
+            });
+
+            it('should return error if hashLock already exists', async () => {
+                const command = new SubmitDepositRequest(internalAccount, hashLock)
+                repository.create(createDepositRequest(internalAccount, hashLock))
+
+                await expect(handler.execute(command)).rejectedWith(DepositRequestAlreadyExists)
             });
         })
     });

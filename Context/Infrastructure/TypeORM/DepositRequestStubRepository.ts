@@ -3,8 +3,6 @@ import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepo
 import HashLock from "context/Domain/ValueObject/HashLock";
 
 export default class DepositRequestStubRepository implements DepositRequestRepositoryInterface {
-    public _exists = true
-
     private _depositRequests: {
         [index: string]: DepositRequest
     } = {}
@@ -23,5 +21,9 @@ export default class DepositRequestStubRepository implements DepositRequestRepos
 
     get size(): number {
         return Object.values(this._depositRequests).length
+    }
+
+    reset() {
+        this._depositRequests = {}
     }
 }

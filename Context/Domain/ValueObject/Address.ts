@@ -1,5 +1,5 @@
-import ValueObject from "../../Core/Domain/ValueObject";
-import {Result} from "../../Core";
+import ValueObject from "context/Core/Domain/ValueObject";
+import {AddressValidationError} from "context/Domain/Errors";
 
 interface AddressProps {
     value: string;
@@ -10,15 +10,15 @@ export default class Address extends ValueObject<AddressProps> {
         super(props);
     }
 
-    public static create(address: string): Result<Address> {
+    public static create(address: string): Address {
         if (address.length === 0) {
-            return Result.fail<Address>('Must provide an address')
+            throw new AddressValidationError('Must provide an address', address)
         }
 
         if (!/^0x([A-Fa-f0-9]{40})$/.test(address)) {
-            return Result.fail<Address>('Address is invalid')
+            throw new AddressValidationError('Address is invalid', address)
         }
 
-        return Result.ok<Address>(new Address({value: address}))
+        return new Address({value: address})
     }
 }

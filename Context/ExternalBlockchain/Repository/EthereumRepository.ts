@@ -1,7 +1,6 @@
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
-import {Contract as ContractWeb3} from "web3-eth-contract";
-import dayjs from "dayjs";
+import {Contract as ContractWeb3, EventData} from "web3-eth-contract";
 import HashedTimelockAbi from "../../../src/assets/abi/HashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
@@ -30,9 +29,6 @@ export default class EthereumRepository implements RepositoryInterface {
             from: config.eth.contract_address
         })
 
-        const tx = await this.loadTx(txHash)
-        const block = await this.loadBlock(tx.blockNumber as number)
-
         return new Contract(
             contractId,
             contractData.sender,
@@ -42,10 +38,25 @@ export default class EthereumRepository implements RepositoryInterface {
             contractData.timelock,
             contractData.withdrawn,
             contractData.refunded,
-            contractData.preimage,
-            dayjs.unix(block.timestamp as number)
+            contractData.preimage
         )
     }
+
+    async getLastBlockNumber(): Promise<number> {
+        return await this._web3.eth.getBlockNumber();
+    }
+
+    async loadEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return await this._contract.getPastEvents(
+            'LogHTLCNew',
+            {
+                // fromBlock: 7965089,
+                fromBlock: fromBlock,
+                toBlock
+            }
+        )
+    }
+
 
     private async loadTx(txHash: string) {
         return await this._web3.eth.getTransaction(txHash)

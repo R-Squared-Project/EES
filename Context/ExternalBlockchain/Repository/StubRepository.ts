@@ -1,5 +1,6 @@
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
+import {EventData} from "web3-eth-contract";
 
 export default class StubRepository implements RepositoryInterface {
     public _txIncluded = true
@@ -11,6 +12,14 @@ export default class StubRepository implements RepositoryInterface {
 
     async load(txHash: string, contractId: string): Promise<Contract | null> {
         return this._contract
+    }
+
+    getLastBlockNumber(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
+    loadEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return Promise.resolve([]);
     }
 
     reset() {

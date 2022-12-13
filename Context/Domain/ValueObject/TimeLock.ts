@@ -1,16 +1,20 @@
+import dayjs, {Dayjs} from "dayjs";
 import ValueObject from "../../Core/Domain/ValueObject";
-import {Result} from "../../Core";
 
-interface TxHashProps {
-    value: Date;
+interface TimeLockProps {
+    value: Dayjs;
 }
 
-export default class TimeLock extends ValueObject<TxHashProps> {
-    private constructor(props: TxHashProps) {
+export default class TimeLock extends ValueObject<TimeLockProps> {
+    private constructor(props: TimeLockProps) {
         super(props);
     }
 
-    public static create(timeLock: Date): Result<TimeLock> {
-        return Result.ok<TimeLock>(new TimeLock({value: timeLock}))
+    public static fromUnix(timeLock: number): TimeLock {
+        return new TimeLock({value: dayjs.unix(timeLock)})
+    }
+
+    get unix(): number {
+        return this.value.unix()
     }
 }

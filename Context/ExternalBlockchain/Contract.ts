@@ -1,5 +1,3 @@
-import {Dayjs} from "dayjs";
-
 export default class Contract {
     constructor(
         private _contractId: string,
@@ -10,8 +8,7 @@ export default class Contract {
         private _timeLock: number,
         private _withdrawn: boolean,
         private _refunded: boolean,
-        private _preimage: string,
-        private _createdAt: Dayjs
+        private _preimage: string
     ) {}
 
     get contractId(): string {
@@ -48,9 +45,5 @@ export default class Contract {
 
     get preimage(): string {
         return this._preimage;
-    }
-
-    get createdAt(): Dayjs {
-        return this._createdAt;
     }
 }

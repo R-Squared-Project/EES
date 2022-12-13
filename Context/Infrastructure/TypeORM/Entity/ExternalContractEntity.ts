@@ -1,5 +1,4 @@
 import {EntitySchema} from "typeorm"
-import UniqueEntityIDType from "context/Infrastructure/TypeORM/Type/UniqueEntityIDType";
 import ExternalContract from "context/Domain/ExternalContract";
 
 const ExternalContractEntity = new EntitySchema<ExternalContract>({
@@ -7,8 +6,12 @@ const ExternalContractEntity = new EntitySchema<ExternalContract>({
     tableName: 'external_contract',
     target: ExternalContract,
     columns: {
+        idString: {
+            name: 'id',
+            type: String,
+            primary: true
+        },
         // @ts-ignore
-        id: UniqueEntityIDType,
         _status: {
             type: Number,
             name: 'status',

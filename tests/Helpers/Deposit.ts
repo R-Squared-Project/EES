@@ -5,10 +5,8 @@ import {createDepositRequest} from "./DepositRequest";
 import {createExternalContract} from "./ExternalContract";
 
 export function createDeposit(depositRequest?: DepositRequest, externalContract?: ExternalContract) {
-    const deposit = Deposit.create(
+    return Deposit.create(
         depositRequest ?? createDepositRequest(),
         externalContract ?? createExternalContract()
     )
-
-    return deposit
 }

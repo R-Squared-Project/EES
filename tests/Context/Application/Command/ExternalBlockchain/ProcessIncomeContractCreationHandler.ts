@@ -12,35 +12,74 @@ import {createContract} from "../../../../Helpers/Contract";
 import dayjs from "dayjs";
 import {createDepositRequest} from "../../../../Helpers/DepositRequest";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
+import HashLock from "context/Domain/ValueObject/HashLock";
 
 describe('ProcessIncomeContractCreationHandler', () => {
     let depositRepository: StubRepository;
     let depositRequestRepository: DepositRequestStubRepository;
+    let externalBlockchain: ExternalBlockchain;
     let externalBlockchainRepository: ExternalBlockchainStubRepository;
     let handler: ProcessIncomingContractCreationHandler;
 
     const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
+    const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
     const contractId = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
 
     beforeEach(function() {
         depositRepository = new StubRepository()
         depositRequestRepository = new DepositRequestStubRepository()
-        externalBlockchainRepository = ExternalBlockchain.repository as ExternalBlockchainStubRepository
-        externalBlockchainRepository.reset()
+        externalBlockchain = new ExternalBlockchain('stub')
+        externalBlockchainRepository = externalBlockchain.repository as ExternalBlockchainStubRepository
 
         handler = new ProcessIncomingContractCreationHandler(
             depositRepository,
-            depositRequestRepository
+            depositRequestRepository,
+            externalBlockchain
         );
     });
 
     describe('execute', () => {
         describe('success', () => {
-            // it('should save new deposit', async () => {
-            //     const command = new ProcessIncomingContractCreation(txHash, contractId)
-            //
-            //     await expect(handler.execute(command)).fulfilled
-            // });
+            beforeEach(() => {
+                depositRepository.reset()
+                depositRequestRepository.reset()
+                externalBlockchainRepository.reset()
+
+                externalBlockchainRepository._contract = createContract({
+                    contractId,
+                    hashLock: hashLock
+                })
+                depositRequestRepository.create(createDepositRequest(
+                    undefined,
+                    hashLock
+                ))
+            })
+
+            it('should save new deposit', async () => {
+                const command = new ProcessIncomingContractCreation(txHash, contractId)
+                await expect(handler.execute(command)).fulfilled
+                expect(depositRepository).repositorySize(1)
+            });
+
+            it('should use correct deposit request', async () => {
+                const command = new ProcessIncomingContractCreation(txHash, contractId)
+                await expect(handler.execute(command)).fulfilled
+
+                const deposit = depositRepository.first()
+
+                const depositRequest = deposit?._depositRequest
+                expect(depositRequest?.hashLock.equals(HashLock.create(hashLock))).true
+            });
+
+            it('should use correct external contract', async () => {
+                const command = new ProcessIncomingContractCreation(txHash, contractId)
+                await expect(handler.execute(command)).fulfilled
+
+                const deposit = depositRepository.first()
+
+                const externalContract = deposit?._externalContract
+                expect(externalContract?.hashLock.equals(HashLock.create(hashLock))).true
+            });
         })
 
         describe('error', () => {

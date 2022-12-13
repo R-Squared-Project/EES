@@ -1,6 +1,6 @@
 import {EntitySchema} from 'typeorm'
 import Deposit from 'context/Domain/Deposit';
-import UniqueEntityIDType from '../Type/UniqueEntityIDType';
+import UniqueEntityIDType from "context/Infrastructure/TypeORM/Type/UniqueEntityIDType";
 
 const DepositEntity = new EntitySchema<Deposit>({
     name: 'Deposit',
@@ -11,16 +11,17 @@ const DepositEntity = new EntitySchema<Deposit>({
             type: 'one-to-one',
             joinColumn: {
                 name: 'deposit_request_id',
-                referencedColumnName: 'id'
-            }
+                referencedColumnName: 'idString'
+            },
         },
         _externalContract: {
             target: 'ExternalContract',
             type: 'one-to-one',
             joinColumn: {
                 name: 'external_contract_id',
-                referencedColumnName: 'id'
-            }
+                referencedColumnName: 'idString'
+            },
+            cascade: ['insert']
         }
     },
     columns: {

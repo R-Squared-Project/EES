@@ -13,7 +13,6 @@ export default class DepositRequestTypeOrmRepository implements DepositRequestRe
     }
 
     async load(hashLock: HashLock): Promise<DepositRequest | null> {
-        console.log(hashLock)
         return await this._datasource.getRepository<DepositRequest>(DepositRequest)
             .createQueryBuilder('deposit_request')
             .where({
