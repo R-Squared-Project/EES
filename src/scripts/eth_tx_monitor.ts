@@ -1,36 +1,37 @@
-import Web3 from 'web3';
 import dayjs from "dayjs";
-import {AbiItem} from 'web3-utils';
-import HashedTimelockAbi from '../assets/abi/HashedTimelock.json'
+import yargs from "yargs"
 import {ProcessIncomingContractCreation, processIncomingContractCreationHandler} from '../../Context';
+import GetLastContracts from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContracts";
+import GetLastContractsHandler
+    from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 
-ExternalBlockchain.init('ethereum')
+const argv = yargs(process.argv.slice(2))
+    .option('block-number', {
+        alias: 'bn',
+        describe: 'Block to search',
+        default: null,
+        type: "number"
+    })
+    .help()
+    .argv
 
-const fromBlock = process.env.DEPLOY_CONTRACT_BLOCK
+//@ts-ignore
+const blockNumber = argv.blockNumber
 
-const web3 = new Web3(new Web3.providers.HttpProvider(
-    `https://${process.env.ETH_NETWORK_NAME}.infura.io/v3/${process.env.INFURA_API_KEY}`
-))
-const contract = new web3.eth.Contract(HashedTimelockAbi as AbiItem[], process.env.ETH_CONTRACT_ADDRESS)
+const externalBlockchain = new ExternalBlockchain('ethereum')
+const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain)
 
 const processEvents = async () => {
-    const toBlock = (await web3.eth.getBlockNumber()) - parseInt(process.env.ETH_BLOCK_CONFIRMATION_NUMBER as string, 10)
+    const query = new GetLastContracts(blockNumber);
+    const result = await getLastContractsHandler.execute(query)
 
-    const events = await contract.getPastEvents(
-        'LogHTLCNew',
-        {
-            fromBlock: 7965089,
-            toBlock
-        }
-    )
+    console.log(`LogHTLCNew: ${dayjs().format()}. From ${result.fromBlock} to ${result.toBlock} blocks`);
+    console.log(`Found ${result.events.length} new events`);
 
-    console.log(`LogHTLCNew: ${dayjs().format()}. From ${fromBlock} to ${toBlock} blocks`);
-    console.log(`Found ${events.length} new events`);
-
-    for (const event of events) {
-        // console.log(event)
+    for (const event of result.events) {
         console.log(`Process transaction ${event.transactionHash}`)
+
         const command = new ProcessIncomingContractCreation(
             event.transactionHash,
             event.returnValues.contractId
@@ -47,8 +48,5 @@ const processEvents = async () => {
     }
 }
 
-processEvents().then(() => {
-    console.log('LogHTLCNew: Finished');
-    process.exit()
-})
+setInterval(processEvents, 10000)
 

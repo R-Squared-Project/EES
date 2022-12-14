@@ -50,7 +50,6 @@ export default class EthereumRepository implements RepositoryInterface {
         return await this._contract.getPastEvents(
             'LogHTLCNew',
             {
-                // fromBlock: 7965089,
                 fromBlock: fromBlock,
                 toBlock
             }
