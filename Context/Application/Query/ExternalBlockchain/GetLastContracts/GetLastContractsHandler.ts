@@ -13,8 +13,6 @@ export default class GetLastContractsHandler implements UseCase<GetLastContracts
         const fromBlock = query.blockNumber ?? this.fromBlock()
         const toBlock = query.blockNumber ?? await this.toBlock()
 
-        console.log(fromBlock, toBlock)
-
         const events = await this.externalBlockchain.repository.loadEvents(fromBlock, toBlock)
 
         return new Response(

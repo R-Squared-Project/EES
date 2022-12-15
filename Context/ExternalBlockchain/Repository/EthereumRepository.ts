@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import {Contract as ContractWeb3, EventData} from "web3-eth-contract";
-import HashedTimelockAbi from "../../../src/assets/abi/HashedTimelock.json";
+import HashedTimeLockAbi from "../../../src/assets/abi/HashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import config from "context/config";
@@ -15,13 +15,17 @@ export default class EthereumRepository implements RepositoryInterface {
             `https://${config.eth?.network as string}.infura.io/v3/${config.eth?.providers.infura.api_key}`
         ))
 
-        this._contract = new this._web3.eth.Contract(HashedTimelockAbi as AbiItem[], config.eth?.contract_address)
+        this._contract = new this._web3.eth.Contract(HashedTimeLockAbi as AbiItem[], config.eth?.contract_address)
     }
 
     async txIncluded(txHash: string): Promise<boolean> {
         const tx = await this._web3.eth.getTransaction(txHash)
+        const txReceipt = await this._web3.eth.getTransactionReceipt(txHash)
+        const log = txReceipt.logs[0]
 
-        return tx.blockNumber !== null;
+        //log.removed doesn't exist in the interface
+        //@ts-ignore
+        return tx.blockNumber !== null && txReceipt.status && !log.removed;
     }
 
     async load(txHash: string, contractId: string): Promise<Contract | null> {

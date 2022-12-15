@@ -48,5 +48,10 @@ const processEvents = async () => {
     }
 }
 
-setInterval(processEvents, 10000)
-
+if (!blockNumber) {
+    setInterval(processEvents, 1000)
+} else {
+    processEvents().then(() => {
+        process.exit()
+    })
+}
