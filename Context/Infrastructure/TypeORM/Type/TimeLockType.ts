@@ -2,9 +2,8 @@ import {EntitySchemaColumnOptions} from "typeorm/entity-schema/EntitySchemaColum
 import TimeLock from "context/Domain/ValueObject/TimeLock";
 
 const TimeLockType: EntitySchemaColumnOptions = {
-    type: Number,
+    type: 'datetime',
     name: 'time_lock',
-    nullable: true,
     transformer: {
         to(timeLock: TimeLock): number {
             return timeLock.value.format('YYYY-MM-DD hh:mm:ss')
