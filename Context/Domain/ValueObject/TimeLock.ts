@@ -14,6 +14,10 @@ export default class TimeLock extends ValueObject<TimeLockProps> {
         return new TimeLock({value: dayjs.unix(timeLock)})
     }
 
+    public static fromDate(timeLock: Date): TimeLock {
+        return new TimeLock({value: dayjs(timeLock)})
+    }
+
     get unix(): number {
         return this.value.unix()
     }

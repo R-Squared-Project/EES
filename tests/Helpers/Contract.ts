@@ -15,7 +15,7 @@ interface ContractParams {
 }
 
 const contractId = 'contract_id'
-const sender = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198E'
+const sender = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198D'
 const receiver = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198E'
 const value = '10000000000000000'
 const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'

@@ -13,6 +13,8 @@ import dayjs from "dayjs";
 import {createDepositRequest} from "../../../../Helpers/DepositRequest";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import HashLock from "context/Domain/ValueObject/HashLock";
+import Deposit from "context/Domain/Deposit";
+import Address from "context/Domain/ValueObject/Address";
 
 describe('ProcessIncomeContractCreationHandler', () => {
     let depositRepository: StubRepository;
@@ -23,7 +25,11 @@ describe('ProcessIncomeContractCreationHandler', () => {
 
     const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
     const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+    const timeLock = dayjs().add(10, 'day').unix()
     const contractId = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+    const value = '10000000000000000'
+    const sender = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198D'
+    const receiver = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198E'
 
     beforeEach(function() {
         depositRepository = new StubRepository()
@@ -47,7 +53,9 @@ describe('ProcessIncomeContractCreationHandler', () => {
 
                 externalBlockchainRepository._contract = createContract({
                     contractId,
-                    hashLock: hashLock
+                    hashLock: hashLock,
+                    timeLock: timeLock,
+                    value: value
                 })
                 depositRequestRepository.create(createDepositRequest(
                     undefined,
@@ -65,9 +73,10 @@ describe('ProcessIncomeContractCreationHandler', () => {
                 const command = new ProcessIncomingContractCreation(txHash, contractId)
                 await expect(handler.execute(command)).fulfilled
 
-                const deposit = depositRepository.first()
+                const deposit = depositRepository.first() as Deposit
+                expect(deposit).not.null
 
-                const depositRequest = deposit?._depositRequest
+                const depositRequest = deposit._depositRequest
                 expect(depositRequest?.hashLock.equals(HashLock.create(hashLock))).true
             });
 
@@ -75,10 +84,16 @@ describe('ProcessIncomeContractCreationHandler', () => {
                 const command = new ProcessIncomingContractCreation(txHash, contractId)
                 await expect(handler.execute(command)).fulfilled
 
-                const deposit = depositRepository.first()
+                const deposit = depositRepository.first() as Deposit
+                expect(deposit).not.null
 
-                const externalContract = deposit?._externalContract
-                expect(externalContract?.hashLock.equals(HashLock.create(hashLock))).true
+                const externalContract = deposit._externalContract
+
+                expect(externalContract.hashLock.equals(HashLock.create(hashLock))).true
+                expect(externalContract.timeLock.unix).equals(timeLock)
+                expect(externalContract.value).equals(value)
+                expect(externalContract.sender.equals(Address.create(sender)), 'Sender is invalid.').true
+                expect(externalContract.receiver.equals(Address.create(receiver)), 'Receiver is invalid.').true
             });
         })
 
