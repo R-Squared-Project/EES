@@ -1,26 +1,38 @@
-import dayjs from "dayjs";
-import yargs from "yargs"
+import dayjs from 'dayjs';
+import yargs from 'yargs'
 import {ProcessIncomingContractCreation, processIncomingContractCreationHandler} from '../../Context';
-import GetLastContracts from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContracts";
+import GetLastContracts from 'context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContracts';
 import GetLastContractsHandler
-    from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler";
-import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
+    from 'context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler';
+import ExternalBlockchain from 'context/ExternalBlockchain/ExternalBlockchain';
+import Setting from 'context/Setting/Setting';
+import DataSource from 'context/Infrastructure/TypeORM/DataSource/DataSource';
 
 const argv = yargs(process.argv.slice(2))
     .option('block-number', {
-        alias: 'bn',
+        alias: 'b',
         describe: 'Block to search',
         default: null,
-        type: "number"
+        type: 'number'
+    })
+    .option('interval', {
+        alias: 'i',
+        describe: 'Launch interval (seconds)',
+        default: 10,
+        type: 'number'
     })
     .help()
-    .argv
+    .parseSync()
 
-//@ts-ignore
 const blockNumber = argv.blockNumber
+const interval = argv.interval
 
 const externalBlockchain = new ExternalBlockchain('ethereum')
-const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain)
+const setting = Setting.init({
+    repository: 'typeorm',
+    dataSource: DataSource
+})
+const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, setting)
 
 const processEvents = async () => {
     const query = new GetLastContracts(blockNumber);
@@ -48,8 +60,10 @@ const processEvents = async () => {
     }
 }
 
+console.log(`Run event tracking at ${interval} second intervals`);
+
 if (!blockNumber) {
-    setInterval(processEvents, 1000)
+    setInterval(processEvents, interval * 1000)
 } else {
     processEvents().then(() => {
         process.exit()
