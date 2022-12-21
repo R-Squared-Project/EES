@@ -21,4 +21,8 @@ export default class TypeOrmRepository implements RepositoryInterface {
 
         return Promise.resolve(count > 0);
     }
+
+    getById(id: string): Promise<Deposit | null> {
+        return Promise.resolve(null);
+    }
 }

@@ -13,12 +13,16 @@ export default class DepositRequest extends AggregateRoot {
         this._status = 1
     }
 
-    get status(): number {
-        return this._status;
+    get revpopAccount(): RevpopAccount {
+        return this._revpopAccount;
     }
 
     get hashLock(): HashLock {
         return this._hashLock;
+    }
+
+    get status(): number {
+        return this._status;
     }
 
     static create(revpopAccount: RevpopAccount, hashLock: HashLock): DepositRequest {

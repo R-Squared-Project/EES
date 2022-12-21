@@ -21,6 +21,12 @@ const config = {
         receiver: process.env.ETH_RECEIVER as string,
         required_block_confirmations: parseInt(process.env.ETH_REQUIRED_BLOCK_CONFIRMATIONS as string, 10)
     },
+    revpop: {
+        node_url: process.env.REVPOP_NODE_URL,
+        account_from: process.env.REVPOP_ACCOUNT_FROM,
+        asset_symbol: process.env.REVPOP_ASSET_SYMBOL,
+        account_private_key: process.env.REVPOP_ACCOUNT_PRIVATE_KEY
+    },
     db: {
         name: process.env.DATABASE,
         host: process.env.DATABASE_HOST,
