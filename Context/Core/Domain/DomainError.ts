@@ -1,11 +1,8 @@
-interface DomainErrorInterface {
-    message: string;
-}
-
-export abstract class DomainError implements DomainErrorInterface {
+export abstract class DomainError extends Error {
     public readonly message: string;
 
     constructor(message: string) {
+        super(message)
         this.message = message;
     }
 }
