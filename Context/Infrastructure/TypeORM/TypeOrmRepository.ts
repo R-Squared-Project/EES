@@ -1,6 +1,6 @@
-import {DataSource} from "typeorm";
-import RepositoryInterface from "../../Domain/RepositoryInterface";
-import Deposit from "../../Domain/Deposit";
+import {DataSource} from 'typeorm';
+import RepositoryInterface from '../../Domain/RepositoryInterface';
+import Deposit from '../../Domain/Deposit';
 
 export default class TypeOrmRepository implements RepositoryInterface {
     constructor(
@@ -14,15 +14,23 @@ export default class TypeOrmRepository implements RepositoryInterface {
     async exists(contractId: string): Promise<boolean> {
         const count = await this._datasource
             .getRepository<Deposit>(Deposit)
-            .createQueryBuilder("deposit")
-            .leftJoinAndSelect("deposit._externalContract", "externalContract")
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
             .where('externalContract.id = :contractId', { contractId: contractId })
             .getCount()
 
-        return Promise.resolve(count > 0);
+        return count > 0;
     }
 
-    getById(id: string): Promise<Deposit | null> {
-        return Promise.resolve(null);
+    async getById(id: string): Promise<Deposit | null> {
+        const deposit = await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .where('deposit.id = :depositId', { depositId: id })
+            .getOne()
+
+        return deposit
     }
 }

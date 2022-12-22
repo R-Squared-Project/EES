@@ -3,6 +3,9 @@ import DepositRequest from "./DepositRequest";
 import ExternalContract from "./ExternalContract";
 import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
 
+const STATUS_CREATED = 1
+const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
+
 export default class Deposit extends AggregateRoot {
     private _status: number
 
@@ -11,7 +14,7 @@ export default class Deposit extends AggregateRoot {
         public _externalContract: ExternalContract
     ) {
         super()
-        this._status = 1
+        this._status = STATUS_CREATED
     }
 
     get status(): number {
@@ -27,4 +30,9 @@ export default class Deposit extends AggregateRoot {
 
         return deposit
     }
+
+    public submittedToInternalBlockchain() {
+        this._status = STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
+    }
+
 }

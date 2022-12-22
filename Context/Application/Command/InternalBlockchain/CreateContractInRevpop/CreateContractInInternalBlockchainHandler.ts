@@ -4,6 +4,7 @@ import RepositoryInterface from "context/Domain/RepositoryInterface";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/Errors";
 import ConverterInterface from "context/Domain/ConverterInterface";
+import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 
 export default class CreateContractInInternalBlockchainHandler implements UseCase<CreateContractInInternalBlockchain, void> {
     constructor(
@@ -21,11 +22,17 @@ export default class CreateContractInInternalBlockchainHandler implements UseCas
 
         const rvEthAmount = this.converter.convert(deposit._externalContract.value)
 
-        await this.internalBlockchain.createContract(
-            deposit._depositRequest.revpopAccount.value,
-            rvEthAmount,
-            deposit._depositRequest.hashLock.value.substring(2),
-            deposit._externalContract.timeLock.value
-        )
+        try {
+            await this.internalBlockchain.createContract(
+                deposit._depositRequest.revpopAccount.value,
+                rvEthAmount,
+                deposit._depositRequest.hashLock.value.substring(2),
+                deposit._externalContract.timeLock.value
+            )
+
+            deposit.submittedToInternalBlockchain()
+        } catch (e: unknown) {
+            throw new InternalBlockchainConnectionError()
+        }
     }
 }

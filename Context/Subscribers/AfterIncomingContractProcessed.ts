@@ -8,7 +8,7 @@ export class AfterIncomingContractProcessed implements HandlerInterface<Incoming
 
     constructor() {
         this.sender = new RabbitMQ()
-        this.sender.init('create_in_internal_blockchain').then(() => {
+        this.sender.initProduce().then(() => {
             this.setupSubscriptions();
         })
     }

@@ -1,6 +1,6 @@
 import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
-import {Manager} from "@revolutionpopuli/revpopjs-ws";
+import {Apis} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
 import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
 import {IssueAssetError} from "context/InternalBlockchain/Errors";
@@ -83,20 +83,6 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     private async connect() {
-        const connectionManager = new Manager({
-            url: this.nodeUrl,
-            urls: [],
-            optionalApis: {enableOrders: false},
-        });
-
-        return new Promise((resolve, reject) => {
-            connectionManager.connect(true, this.nodeUrl)
-                .then(async () => {
-                    resolve(true)
-                })
-                .catch((e: unknown) => {
-                    reject()
-                });
-        })
+        await Apis.instance(this.nodeUrl, true).init_promise
     }
 }
