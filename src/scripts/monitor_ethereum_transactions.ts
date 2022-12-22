@@ -7,6 +7,7 @@ import GetLastContractsHandler
 import ExternalBlockchain from 'context/ExternalBlockchain/ExternalBlockchain';
 import Setting from 'context/Setting/Setting';
 import DataSource from 'context/Infrastructure/TypeORM/DataSource/DataSource';
+import {AfterIncomingContractProcessed} from "context/Subscribers/AfterIncomingContractProcessed";
 
 const argv = yargs(process.argv.slice(2))
     .option('block-number', {
@@ -27,11 +28,13 @@ const argv = yargs(process.argv.slice(2))
 const blockNumber = argv.blockNumber
 const interval = argv.interval
 
+new AfterIncomingContractProcessed()
 const externalBlockchain = new ExternalBlockchain('ethereum')
 const setting = Setting.init({
     repository: 'typeorm',
     dataSource: DataSource
 })
+
 const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, setting)
 
 const processEvents = async () => {

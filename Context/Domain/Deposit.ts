@@ -1,7 +1,7 @@
 import AggregateRoot from "context/Core/Domain/AggregateRoot";
 import DepositRequest from "./DepositRequest";
 import ExternalContract from "./ExternalContract";
-import DepositCreatedEvent from "context/Domain/Event/DepositCreatedEvent";
+import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
 
 export default class Deposit extends AggregateRoot {
     private _status: number
@@ -21,7 +21,7 @@ export default class Deposit extends AggregateRoot {
     static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
         const deposit = new Deposit(depositRequest, externalContract)
 
-        deposit.addDomainEvent(new DepositCreatedEvent(
+        deposit.addDomainEvent(new IncomingContractProcessedEvent(
             deposit.id.toValue()
         ))
 

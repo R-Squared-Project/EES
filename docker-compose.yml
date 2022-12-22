@@ -28,6 +28,12 @@ services:
       - ./docker/initdb_test.sh:/initdb_test.sh
     networks:
       - ees_network
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "15672:15672"
+    networks:
+      - ees_network
 
 volumes:
   db:

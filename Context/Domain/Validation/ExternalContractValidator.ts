@@ -35,8 +35,8 @@ export default class ExternalContractValidator extends AbstractValidator {
 
         if (this.externalContract.timeLock.unix < timeLockLimit) {
             throw new Errors.TimeLockIsToSmall(
-                dayjs.duration(config.contract.minimum_timelock).asMinutes(),
                 dayjs.unix(this.externalContract.timeLock.unix).format(),
+                dayjs.duration(config.contract.minimum_timelock).format(),
             )
         }
     }

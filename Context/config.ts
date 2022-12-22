@@ -33,6 +33,9 @@ const config = {
         port: parseInt(process.env.DATABASE_PORT as string, 10),
         user: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWORD
+    },
+    rabbitmq: {
+        url: process.env.RABBITMQ_URL as string
     }
 }
 
