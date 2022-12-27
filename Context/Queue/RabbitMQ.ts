@@ -28,9 +28,9 @@ export default class RabbitMQ {
             }
 
             console.log(" [x] %s:'%s'", msg.fields.routingKey, msg.content.toString());
-            onMessage(JSON.parse(msg.content.toString()), (() => {
+            onMessage(JSON.parse(msg.content.toString()), () => {
                 channel.ack(msg)
-            }))
+            })
         }, {
             noAck: false
         });

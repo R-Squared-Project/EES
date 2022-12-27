@@ -23,14 +23,12 @@ export default class TypeOrmRepository implements RepositoryInterface {
     }
 
     async getById(id: string): Promise<Deposit | null> {
-        const deposit = await this._datasource
+        return await this._datasource
             .getRepository<Deposit>(Deposit)
             .createQueryBuilder('deposit')
             .leftJoinAndSelect('deposit._externalContract', 'externalContract')
             .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
-            .where('deposit.id = :depositId', { depositId: id })
+            .where('deposit.id = :depositId', {depositId: id})
             .getOne()
-
-        return deposit
     }
 }

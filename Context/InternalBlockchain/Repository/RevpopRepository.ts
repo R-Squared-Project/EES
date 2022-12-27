@@ -3,31 +3,44 @@ import RepositoryInterface from "./RepositoryInterface";
 import {Apis} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
 import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
-import {IssueAssetError} from "context/InternalBlockchain/Errors";
+import * as Errors from "context/InternalBlockchain/Errors";
 import dayjs from "dayjs";
+import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 
 export default class RevpopRepository implements RepositoryInterface {
     public constructor(
-        private readonly nodeUrl: string,
         private readonly accountFrom: string,
         private readonly accountPrivateKey: string,
         private readonly assetSymbol: string
     ) {}
 
-    async createContract(accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        await this.connect()
+    public static async init(
+        nodeUrl: string,
+        accountFrom: string,
+        accountPrivateKey: string,
+        assetSymbol: string
+    ): Promise<RevpopRepository> {
+        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol)
+        await repository.connect(nodeUrl)
+        return repository
+    }
 
+    async createContract(accountToName: string, amount: number, hashLock: string, timeLock: number) {
         const accountFrom = await FetchChain("getAccount", this.accountFrom)
         const accountTo = await FetchChain("getAccount", accountToName)
+
+        if (null === accountTo) {
+            throw new Errors.AccountNotFound(accountToName)
+        }
 
         const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
 
         const asset = await FetchChain("getAsset", this.assetSymbol)
 
         if (asset === null) {
-            return null
+            throw new Errors.AssetNotFoundError(this.assetSymbol)
         }
 
         const amountWithPrecision = amount * Math.pow(10, asset.get('precision'))
@@ -51,7 +64,7 @@ export default class RevpopRepository implements RepositoryInterface {
         try {
             await txIssueAsset.broadcast()
         } catch (e: unknown) {
-            throw new IssueAssetError()
+            throw new Errors.IssueAssetError()
         }
 
         const txHtlcCreate = new TransactionBuilder();
@@ -69,7 +82,15 @@ export default class RevpopRepository implements RepositoryInterface {
             preimage_hash: [PREIMAGE_HASH_CIPHER_SHA256, hashLock],
             preimage_size: hashLock.length,
             // claim_period_seconds: 86400,
-            claim_period_seconds: timeLock - dayjs().unix()
+            claim_period_seconds: timeLock,
+            extensions: {
+                memo: {
+                    from: "RVP6JaiMEZZ57Q75Xh3kVbJ4owX13p7f1kkV76B3xLNFuWHVbRSyZ",
+                    to: "RVP6JaiMEZZ57Q75Xh3kVbJ4owX13p7f1kkV76B3xLNFuWHVbRSyZ",
+                    nonce: "3892776441801919394",
+                    message: "8f36e5f855d4bc12ebb56083bddff2aa"
+                }
+            }
         });
 
         txHtlcCreate.set_required_fees()
@@ -78,11 +99,15 @@ export default class RevpopRepository implements RepositoryInterface {
         try {
             await txHtlcCreate.broadcast()
         } catch (e: unknown) {
-            throw new IssueAssetError()
+            throw new Errors.CreateHtlcError()
         }
     }
 
-    private async connect() {
-        await Apis.instance(this.nodeUrl, true).init_promise
+    public async connect(nodeUrl: string) {
+        try {
+            await Apis.instance(nodeUrl, true).init_promise
+        } catch (e: unknown) {
+            throw new InternalBlockchainConnectionError(`Can't connect to the url ${nodeUrl}`)
+        }
     }
 }

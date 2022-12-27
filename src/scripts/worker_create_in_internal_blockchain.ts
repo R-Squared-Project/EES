@@ -8,27 +8,28 @@ import CreateContractInInternalBlockchain
 import Converter from "context/Infrastructure/Converter";
 import RabbitMQ from "context/Queue/RabbitMQ";
 
-const depositRepository = new TypeOrmRepository(DataSource)
-const internalRepository = InternalBlockchain.init({
-    repository: 'revpop'
-})
-const converter = new Converter()
-const getLastContractsHandler = new CreateContractInInternalBlockchainHandler(depositRepository, internalRepository, converter)
-
 interface CreateInInternalBlockchainMessage {
     deposit_id: string
 }
 
 async function main() {
+    const depositRepository = new TypeOrmRepository(DataSource)
+    const internalBlockchain = await InternalBlockchain.init({
+        repository: 'revpop'
+    })
+    const converter = new Converter()
+    const handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter)
     const messenger = new RabbitMQ()
+
     messenger.consume<CreateInInternalBlockchainMessage>(
         'create_in_internal_blockchain',
         async (message: CreateInInternalBlockchainMessage, ack) => {
-            const query = new CreateContractInInternalBlockchain(message.deposit_id)
+            const command = new CreateContractInInternalBlockchain(message.deposit_id)
 
             try {
-                await getLastContractsHandler.execute(query)
-                // ack()
+                await handler.execute(command)
+                ack()
+                console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
             } catch (e: unknown) {
                 console.log(e)
                 //TODO::nack?

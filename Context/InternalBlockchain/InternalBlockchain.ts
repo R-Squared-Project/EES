@@ -10,20 +10,20 @@ interface Config {
 }
 
 class InternalBlockchain {
-    private readonly repository: RepositoryInterface
+    public constructor(
+        private readonly repository: RepositoryInterface
+    ) {}
 
-    public constructor(config: Config) {
-        this.repository = this.createRepository(config.repository)
+    public static async init(config: Config) {
+        const repository = await InternalBlockchain.createRepository(config.repository)
+
+        return new InternalBlockchain(repository)
     }
 
-    public static init(config: Config) {
-        return new InternalBlockchain(config)
-    }
-
-    private createRepository(repository: Repository): RepositoryInterface {
+    static async createRepository(repository: Repository): Promise<RepositoryInterface> {
         switch (repository) {
             case 'revpop':
-                return new RevpopRepository(
+                return await RevpopRepository.init(
                     config.revpop.node_url as string,
                     config.revpop.account_from as string,
                     config.revpop.account_private_key as string,
@@ -36,8 +36,8 @@ class InternalBlockchain {
         }
     }
 
-    createContract(accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        this.repository.createContract(accountToName, amount, hashLock, timeLock)
+    async createContract(accountToName: string, amount: number, hashLock: string, timeLock: number) {
+        await this.repository.createContract(accountToName, amount, hashLock, timeLock)
     }
 }
 
