@@ -4,7 +4,6 @@ import {Apis} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
 import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
 import * as Errors from "context/InternalBlockchain/Errors";
-import dayjs from "dayjs";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
@@ -27,7 +26,7 @@ export default class RevpopRepository implements RepositoryInterface {
         return repository
     }
 
-    async createContract(accountToName: string, amount: number, hashLock: string, timeLock: number) {
+    async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
         const accountFrom = await FetchChain("getAccount", this.accountFrom)
         const accountTo = await FetchChain("getAccount", accountToName)
 
@@ -88,7 +87,7 @@ export default class RevpopRepository implements RepositoryInterface {
                     from: "RVP6JaiMEZZ57Q75Xh3kVbJ4owX13p7f1kkV76B3xLNFuWHVbRSyZ",
                     to: "RVP6JaiMEZZ57Q75Xh3kVbJ4owX13p7f1kkV76B3xLNFuWHVbRSyZ",
                     nonce: "3892776441801919394",
-                    message: "8f36e5f855d4bc12ebb56083bddff2aa"
+                    message: externalId
                 }
             }
         });

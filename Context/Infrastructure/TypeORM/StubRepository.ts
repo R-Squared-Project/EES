@@ -12,6 +12,10 @@ export default class StubRepository implements RepositoryInterface {
         this._deposits[deposit.id.toValue()] = deposit
     }
 
+    save(deposit: Deposit): void {
+        this._deposits[deposit.id.toValue()] = deposit
+    }
+
     exists(contractId: string): Promise<boolean> {
         return Promise.resolve(this._exists)
     }

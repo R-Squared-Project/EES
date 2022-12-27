@@ -36,8 +36,8 @@ class InternalBlockchain {
         }
     }
 
-    async createContract(accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        await this.repository.createContract(accountToName, amount, hashLock, timeLock)
+    async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
+        await this.repository.createContract(externalId, accountToName, amount, hashLock, timeLock)
     }
 }
 

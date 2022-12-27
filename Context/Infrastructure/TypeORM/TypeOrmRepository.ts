@@ -11,6 +11,10 @@ export default class TypeOrmRepository implements RepositoryInterface {
         await this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
 
+    async save(deposit: Deposit) {
+        await this._datasource.getRepository<Deposit>(Deposit).upsert(deposit, ['id'])
+    }
+
     async exists(contractId: string): Promise<boolean> {
         const count = await this._datasource
             .getRepository<Deposit>(Deposit)

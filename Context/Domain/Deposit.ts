@@ -34,5 +34,4 @@ export default class Deposit extends AggregateRoot {
     public submittedToInternalBlockchain() {
         this._status = STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
     }
-
 }

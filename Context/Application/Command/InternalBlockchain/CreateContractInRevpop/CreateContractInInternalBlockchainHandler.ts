@@ -1,11 +1,10 @@
+import dayjs from "dayjs";
 import {UseCase} from "context/Core/Domain/UseCase";
 import CreateContractInInternalBlockchain from "./CreateContractInInternalBlockchain";
 import RepositoryInterface from "context/Domain/RepositoryInterface";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/Errors";
 import ConverterInterface from "context/Domain/ConverterInterface";
-import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
-import dayjs from "dayjs";
 
 export default class CreateContractInInternalBlockchainHandler implements UseCase<CreateContractInInternalBlockchain, void> {
     constructor(
@@ -24,6 +23,7 @@ export default class CreateContractInInternalBlockchainHandler implements UseCas
         const rvEthAmount = this.converter.convert(deposit._externalContract.value)
 
         await this.internalBlockchain.createContract(
+            deposit._externalContract.idString,
             deposit._depositRequest.revpopAccount.value,
             rvEthAmount,
             deposit._depositRequest.hashLock.value.substring(2),
@@ -31,5 +31,7 @@ export default class CreateContractInInternalBlockchainHandler implements UseCas
         )
 
         deposit.submittedToInternalBlockchain()
+
+        await this.repository.save(deposit)
     }
 }

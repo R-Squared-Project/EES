@@ -46,7 +46,10 @@ export default class RabbitMQ {
     }
 
     private async connect() {
-        const connection = await amqp.connect(config.rabbitmq.url);
+        const connection = await amqp.connect({
+            hostname: config.rabbitmq.host,
+            port: config.rabbitmq.port
+        });
         this.channel = await connection.createChannel();
         await this.channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, EXCHANGE_OPTION);
     }

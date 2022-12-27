@@ -26,7 +26,7 @@ export default class ExternalContract extends Entity {
         this._preimage = HashZero
         this._status = 1
 
-        // TODO::TypeORM tries validate empty contract wher read metadata
+        // TODO::TypeORM tries validate empty contract when read metadata
         // new ExternalContractValidator(this).validate()
     }
 

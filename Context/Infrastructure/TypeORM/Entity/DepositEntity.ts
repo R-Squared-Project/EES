@@ -20,8 +20,7 @@ const DepositEntity = new EntitySchema<Deposit>({
             joinColumn: {
                 name: 'external_contract_id',
                 referencedColumnName: 'idString'
-            },
-            cascade: ['insert']
+            }
         }
     },
     columns: {
