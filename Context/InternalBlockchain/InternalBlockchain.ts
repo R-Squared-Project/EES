@@ -2,6 +2,7 @@ import RepositoryInterface from "./Repository/RepositoryInterface";
 import RevpopRepository from "./Repository/RevpopRepository";
 import StubRepository from "./Repository/StubRepository";
 import config from "context/config";
+import Contract from "context/InternalBlockchain/Contract";
 
 type Repository = 'revpop' | 'stub'
 
@@ -41,11 +42,19 @@ class InternalBlockchain {
     }
 
     get repository(): RepositoryInterface {
-        return this._repository;
+        if (!this._repository) {
+            throw new Error('Repository is not initialized')
+        }
+
+        return this._repository
     }
 
     async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
         await this._repository.createContract(externalId, accountToName, amount, hashLock, timeLock)
+    }
+
+    async getIncomingContracts(): Promise<Contract[]> {
+        return await this.repository.getIncomingContracts(config.revpop.account_from);
     }
 }
 

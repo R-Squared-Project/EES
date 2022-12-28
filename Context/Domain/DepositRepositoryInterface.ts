@@ -5,4 +5,5 @@ export default interface DepositRepositoryInterface {
     save: (deposit: Deposit) => void
     exists: (contractId: string) => Promise<boolean>
     getById: (id: string) => Promise<Deposit | null>
+    getByExternalId: (externalId: string) => Promise<Deposit | null>
 }

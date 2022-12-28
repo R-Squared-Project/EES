@@ -6,6 +6,7 @@ import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/re
 import * as Errors from "context/InternalBlockchain/Errors";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
+import Contract from "context/InternalBlockchain/Contract";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 
@@ -99,6 +100,20 @@ export default class RevpopRepository implements RepositoryInterface {
         } catch (e: unknown) {
             throw new Errors.CreateHtlcError()
         }
+    }
+
+    async getIncomingContracts(accountFromName: string): Promise<Contract[]> {
+        const revpopContracts = await Apis.instance()
+            .db_api()
+            .exec("get_htlc_by_from", [accountFromName, "1.16.0", 100]);
+
+        const contracts = []
+
+        for (const contract of revpopContracts) {
+            contracts.push(new Contract(contract.id, contract.memo.message))
+        }
+
+       return contracts
     }
 
     public async connect(nodeUrl: string) {

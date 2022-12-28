@@ -22,6 +22,14 @@ const DepositEntity = new EntitySchema<Deposit>({
                 referencedColumnName: 'idString'
             },
             cascade: ['insert']
+        },
+        _internalContract: {
+            target: 'InternalContract',
+            type: 'one-to-one',
+            joinColumn: {
+                name: 'internal_contract_id',
+                referencedColumnName: 'id'
+            }
         }
     },
     columns: {

@@ -8,7 +8,7 @@ import ProcessIncomingContractCreation
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
 import * as ErrorsDomain from "context/Domain/Errors";
-import {createContract} from "../../../../Helpers/Contract";
+import {createContract} from "../../../../Helpers/ExternalBlockchain/Contract";
 import dayjs from "dayjs";
 import {createDepositRequest} from "../../../../Helpers/DepositRequest";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
