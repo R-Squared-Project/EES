@@ -11,6 +11,14 @@ export default abstract class Entity {
         this._id = id ? id : new UniqueEntityID();
     }
 
+    get idString(): string {
+        return this._id.toString()
+    }
+
+    set idString(id: string) {
+        this._id = new UniqueEntityID(id)
+    }
+
     public equals(object?: Entity): boolean {
         if (object === null || object === undefined) {
             return false;

@@ -1,4 +1,5 @@
 import {DomainError} from "../Core/Domain/DomainError";
+import {UseCaseError} from "context/Core/Logic/UseCaseError";
 
 export class CreateDepositUnexpectedError extends DomainError {
     constructor() {
@@ -12,7 +13,7 @@ export class CreateDepositRequestUnexpectedError extends DomainError {
     }
 }
 
-export class ValidationError extends Error {}
+export class ValidationError extends DomainError {}
 
 export class RevpopAccountValidationError extends ValidationError {
     private error: string
@@ -31,5 +32,61 @@ export class HashLockValidationError extends ValidationError {
         super(`HashLock "${hashLock}" is invalid: ${error}`)
 
         this.error = error
+    }
+}
+
+export class TxHashValidationError extends ValidationError {
+    private error: string
+
+    constructor(error: string, txHash: string) {
+        super(`Transaction hash "${txHash}" is invalid: ${error}`)
+
+        this.error = error
+    }
+}
+
+export class AddressValidationError extends ValidationError {
+    private error: string
+
+    constructor(error: string, address: string) {
+        super(`Address "${address}" is invalid: ${error}`)
+
+        this.error = error
+    }
+}
+
+export class ReceiverIsInvalid extends UseCaseError {
+    constructor() {
+        super('The receiver is invalid.')
+    }
+}
+
+export class DepositIsToSmall extends UseCaseError {
+    constructor(minValue: string, value: string) {
+        super(`The deposit ${value} is to small. Minimum deposit is ${minValue}.`)
+    }
+}
+
+export class TimeLockIsToSmall extends UseCaseError {
+    constructor(contractTimeLock: string, minMinutes: string) {
+        super(`TimeLock ${contractTimeLock} is to small. Minimum timeLock is ${minMinutes}.`)
+    }
+}
+
+export class AlreadyWithdrawn extends UseCaseError {
+    constructor() {
+        super('Contract is already withdrawn.')
+    }
+}
+
+export class AlreadyRefunded extends UseCaseError {
+    constructor() {
+        super('Contract is already refunded.')
+    }
+}
+
+export class PreimageNotEmpty extends UseCaseError {
+    constructor() {
+        super('Preimage is not empty.')
     }
 }

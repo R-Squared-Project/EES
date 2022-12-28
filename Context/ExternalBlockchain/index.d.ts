@@ -1,0 +1,1 @@
+type Repository = 'ethereum' | 'stub'

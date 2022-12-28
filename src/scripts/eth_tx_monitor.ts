@@ -1,12 +1,11 @@
 import Web3 from 'web3';
 import dayjs from "dayjs";
-import dotenv from 'dotenv'
 import {AbiItem} from 'web3-utils';
 import HashedTimelockAbi from '../assets/abi/HashedTimelock.json'
-import {CreateDeposit, createDepositHandler} from '../../Context/Eth';
-import '../../Context'
+import {ProcessIncomingContractCreation, processIncomingContractCreationHandler} from '../../Context';
+import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 
-dotenv.config()
+ExternalBlockchain.init('ethereum')
 
 const fromBlock = process.env.DEPLOY_CONTRACT_BLOCK
 
@@ -21,7 +20,7 @@ const processEvents = async () => {
     const events = await contract.getPastEvents(
         'LogHTLCNew',
         {
-            fromBlock: 12806721,
+            fromBlock: 7965089,
             toBlock
         }
     )
@@ -30,16 +29,17 @@ const processEvents = async () => {
     console.log(`Found ${events.length} new events`);
 
     for (const event of events) {
+        // console.log(event)
         console.log(`Process transaction ${event.transactionHash}`)
-        const command = new CreateDeposit(
+        const command = new ProcessIncomingContractCreation(
             event.transactionHash,
             event.returnValues.contractId
         )
 
-        const result = await createDepositHandler.execute(command)
-
-        if (result.isLeft()) {
-            console.log(`Error while processed transaction ${event.transactionHash}: `, result.value.error?.message)
+        try {
+            await processIncomingContractCreationHandler.execute(command)
+        } catch (error: any) {
+            console.log(`Error while processed transaction ${event.transactionHash}: `, error.message)
             continue
         }
 

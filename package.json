@@ -6,7 +6,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "script:ethereum_tx_monitoring": "ts-node -r tsconfig-paths/register src/scripts/eth_tx_monitor.ts",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",

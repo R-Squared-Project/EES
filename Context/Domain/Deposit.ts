@@ -1,15 +1,14 @@
-import {Either, Result, right} from "../Core";
-import AggregateRoot from "../Core/Domain/AggregateRoot";
-import RevpopAccount from "./ValueObject/RevpopAccount";
-import HashLock from "./ValueObject/HashLock";
-import {CreateDepositUnexpectedError} from "./Errors";
+import AggregateRoot from "context/Core/Domain/AggregateRoot";
+import DepositRequest from "./DepositRequest";
+import ExternalContract from "./ExternalContract";
+import DepositCreatedEvent from "context/Domain/Event/DepositCreatedEvent";
 
 export default class Deposit extends AggregateRoot {
     private _status: number
 
     constructor(
-        private _revpopAccount: RevpopAccount,
-        private _hashLock: HashLock
+        public _depositRequest: DepositRequest,
+        public _externalContract: ExternalContract
     ) {
         super()
         this._status = 1
@@ -19,9 +18,13 @@ export default class Deposit extends AggregateRoot {
         return this._status;
     }
 
-    static create(revpopAccount: RevpopAccount, hashLock: HashLock): Either<CreateDepositUnexpectedError, Result<Deposit>> {
-        const deposit = new Deposit(revpopAccount, hashLock)
+    static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
+        const deposit = new Deposit(depositRequest, externalContract)
 
-        return right(Result.ok(deposit))
+        deposit.addDomainEvent(new DepositCreatedEvent(
+            deposit.id.toValue()
+        ))
+
+        return deposit
     }
 }

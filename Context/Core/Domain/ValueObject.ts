@@ -11,7 +11,7 @@ export default abstract class ValueObject<T extends ValueObjectProps> {
         this.props = Object.freeze(props);
     }
 
-    get value(): string {
+    get value(): any {
         return this.props.value;
     }
 

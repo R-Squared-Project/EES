@@ -1,7 +1,7 @@
-import {UseCaseError} from "../../../Core/Logic/UseCaseError";
+import {UseCaseError} from "context/Core/Logic/UseCaseError";
 
-export class DepositNotFoundError extends UseCaseError {
-    constructor(sessionId: string) {
-        super(`The deposit with sessionId ${sessionId} is not found`)
+export class DepositRequestAlreadyExists extends UseCaseError {
+    constructor(hashLock: string) {
+        super(`The deposit request with hashLock ${hashLock} already exists.`)
     }
 }
