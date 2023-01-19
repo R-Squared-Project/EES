@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import DataSource from "./Infrastructure/TypeORM/DataSource/DataSource";
-import TypeOrmRepository from "context/Infrastructure/TypeORM/TypeOrmRepository";
-import DepositRequestTypeOrmRepository from "./Infrastructure/TypeORM/DepositRequestTypeOrmRepository";
+import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
+import DepositRequestTypeOrmRepository from "./Infrastructure/TypeORM/DepositRequestRepository";
 import SubmitDepositRequest from "./Application/Command/SubmitDepositRequest/SubmitDepositRequest";
 import SubmitDepositRequestHandler from "./Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
 import ProcessIncomingContractCreation
@@ -13,7 +13,7 @@ import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 
 dayjs.extend(duration)
 
-const depositRepository = new TypeOrmRepository(DataSource)
+const depositRepository = new DepositTypeOrmRepository(DataSource)
 const depositRequestRepository = new DepositRequestTypeOrmRepository(DataSource)
 const externalBlockchain = new ExternalBlockchain('ethereum')
 

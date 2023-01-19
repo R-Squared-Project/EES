@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import StubRepository from "context/Infrastructure/TypeORM/StubRepository";
-import DepositRequestStubRepository from "context/Infrastructure/TypeORM/DepositRequestStubRepository";
+import DepositStubRepository from "context/Infrastructure/Stub/DepositRepository";
+import DepositRequestStubRepository from "context/Infrastructure/Stub/DepositRequestRepository";
 import ExternalBlockchainStubRepository from "context/ExternalBlockchain/Repository/StubRepository";
 import ProcessIncomingContractCreationHandler
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
@@ -17,7 +17,7 @@ import Deposit from "context/Domain/Deposit";
 import Address from "context/Domain/ValueObject/Address";
 
 describe('ProcessIncomeContractCreationHandler', () => {
-    let depositRepository: StubRepository;
+    let depositRepository: DepositStubRepository;
     let depositRequestRepository: DepositRequestStubRepository;
     let externalBlockchain: ExternalBlockchain;
     let externalBlockchainRepository: ExternalBlockchainStubRepository;
@@ -32,7 +32,7 @@ describe('ProcessIncomeContractCreationHandler', () => {
     const receiver = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198E'
 
     beforeEach(function() {
-        depositRepository = new StubRepository()
+        depositRepository = new DepositStubRepository()
         depositRequestRepository = new DepositRequestStubRepository()
         externalBlockchain = new ExternalBlockchain('stub')
         externalBlockchainRepository = externalBlockchain.repository as ExternalBlockchainStubRepository

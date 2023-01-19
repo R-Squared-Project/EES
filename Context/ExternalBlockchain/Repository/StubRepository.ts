@@ -18,7 +18,7 @@ export default class StubRepository implements RepositoryInterface {
         return Promise.resolve(0);
     }
 
-    loadEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return Promise.resolve([]);
     }
 

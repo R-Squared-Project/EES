@@ -1,8 +1,8 @@
 import {DataSource} from 'typeorm';
-import RepositoryInterface from '../../Domain/RepositoryInterface';
+import DepositRepositoryInterface from '../../Domain/DepositRepositoryInterface';
 import Deposit from '../../Domain/Deposit';
 
-export default class TypeOrmRepository implements RepositoryInterface {
+export default class TypeOrmRepository implements DepositRepositoryInterface {
     constructor(
         private _datasource: DataSource
     ) {}

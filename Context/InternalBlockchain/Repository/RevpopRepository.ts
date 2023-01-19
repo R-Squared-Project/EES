@@ -5,15 +5,19 @@ import {Apis} from "@revolutionpopuli/revpopjs-ws";
 import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
 import * as Errors from "context/InternalBlockchain/Errors";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
+import Memo from "context/InternalBlockchain/Memo";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 
 export default class RevpopRepository implements RepositoryInterface {
+    private memo: Memo
     public constructor(
         private readonly accountFrom: string,
         private readonly accountPrivateKey: string,
         private readonly assetSymbol: string
-    ) {}
+    ) {
+        this.memo = new Memo()
+    }
 
     public static async init(
         nodeUrl: string,
@@ -83,12 +87,7 @@ export default class RevpopRepository implements RepositoryInterface {
             // claim_period_seconds: 86400,
             claim_period_seconds: timeLock,
             extensions: {
-                memo: {
-                    from: "RVP6JaiMEZZ57Q75Xh3kVbJ4owX13p7f1kkV76B3xLNFuWHVbRSyZ",
-                    to: "RVP6JaiMEZZ57Q75Xh3kVbJ4owX13p7f1kkV76B3xLNFuWHVbRSyZ",
-                    nonce: "3892776441801919394",
-                    message: externalId
-                }
+                memo: this.memo.generate(externalId, accountFrom, accountTo)
             }
         });
 

@@ -50,7 +50,11 @@ export default class EthereumRepository implements RepositoryInterface {
         return await this._web3.eth.getBlockNumber();
     }
 
-    async loadEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    async loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        if (toBlock < fromBlock) {
+            return []
+        }
+
         return await this._contract.getPastEvents(
             'LogHTLCNew',
             {

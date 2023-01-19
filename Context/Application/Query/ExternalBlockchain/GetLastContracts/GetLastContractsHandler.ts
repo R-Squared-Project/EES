@@ -5,7 +5,7 @@ import config from "context/config";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import Response from "./Response";
 
-const ETH_LAST_BLOCK_NAME = 'eth_last_block'
+const ETH_LAST_BLOCK_NAME = 'eth_htlc_new_events_last_block'
 
 export default class GetLastContractsHandler implements UseCase<GetLastContracts, Response> {
     public constructor(
@@ -17,7 +17,7 @@ export default class GetLastContractsHandler implements UseCase<GetLastContracts
         const fromBlock = query.blockNumber ?? await this.fromBlock()
         const toBlock = query.blockNumber ?? await this.toBlock()
 
-        const events = await this.externalBlockchain.repository.loadEvents(fromBlock, toBlock)
+        const events = await this.externalBlockchain.repository.loadHTLCNewEvents(fromBlock, toBlock)
 
         if (!query.blockNumber) {
             await this.setting.save(ETH_LAST_BLOCK_NAME, toBlock)

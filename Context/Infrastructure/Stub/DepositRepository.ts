@@ -1,7 +1,7 @@
-import RepositoryInterface from "../../Domain/RepositoryInterface";
+import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import Deposit from "../../Domain/Deposit";
 
-export default class StubRepository implements RepositoryInterface {
+export default class StubRepository implements DepositRepositoryInterface {
     public _exists = false
 
     private _deposits: {

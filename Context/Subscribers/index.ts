@@ -1,3 +1,3 @@
-import {AfterIncomigContractProcessed} from "./AfterIncomigContractProcessed";
+import {AfterIncomingContractProcessed} from "./AfterIncomingContractProcessed";
 
-new AfterIncomigContractProcessed()
+new AfterIncomingContractProcessed()

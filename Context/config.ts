@@ -4,7 +4,8 @@ import Web3 from "web3";
 const config = {
     ...Config.config(),
     contract: {
-        minimum_timelock: parseInt(process.env.MINUMUM_TIMELOCK as string, 10)
+        minimum_timelock: parseInt(process.env.MINUMUM_TIMELOCK as string, 10),
+        timelock_frame: parseInt(process.env.TIMELOCK_FRAME as string, 10)
     },
     eth: {
         providers: {

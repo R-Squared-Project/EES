@@ -1,11 +1,11 @@
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import CreateContractInInternalBlockchainHandler
     from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchainHandler";
-import TypeOrmRepository from "context/Infrastructure/TypeORM/TypeOrmRepository";
+import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import CreateContractInInternalBlockchain
     from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchain";
-import Converter from "context/Infrastructure/Converter";
+import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import RabbitMQ from "context/Queue/RabbitMQ";
 
 interface CreateInInternalBlockchainMessage {
@@ -13,11 +13,11 @@ interface CreateInInternalBlockchainMessage {
 }
 
 async function main() {
-    const depositRepository = new TypeOrmRepository(DataSource)
+    const depositRepository = new DepositTypeOrmRepository(DataSource)
     const internalBlockchain = await InternalBlockchain.init({
         repository: 'revpop'
     })
-    const converter = new Converter()
+    const converter = new EtherToWrappedEtherConverter()
     const handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter)
     const messenger = new RabbitMQ()
 

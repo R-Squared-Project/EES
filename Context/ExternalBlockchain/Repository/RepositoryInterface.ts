@@ -5,5 +5,5 @@ export default interface RepositoryInterface {
     txIncluded: (txHash: string) => Promise<boolean>
     load: (txHash: string, contractId: string) => Promise<Contract | null>
     getLastBlockNumber: () => Promise<number>
-    loadEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>
+    loadHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>
 }
