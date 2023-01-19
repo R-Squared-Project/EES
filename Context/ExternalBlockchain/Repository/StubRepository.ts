@@ -1,6 +1,7 @@
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import {EventData} from "web3-eth-contract";
+import {BlockTransactionString} from "web3-eth";
 
 export default class StubRepository implements RepositoryInterface {
     public _txIncluded = true
@@ -16,6 +17,11 @@ export default class StubRepository implements RepositoryInterface {
 
     getLastBlockNumber(): Promise<number> {
         return Promise.resolve(0);
+    }
+
+    async getBlock(number: number): Promise<BlockTransactionString | null> {
+        //@ts-ignore
+        return {}
     }
 
     loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {

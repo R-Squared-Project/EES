@@ -4,6 +4,8 @@ import {ProcessIncomingContractCreation, processIncomingContractCreationHandler}
 import GetLastContracts from 'context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContracts';
 import GetLastContractsHandler
     from 'context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler';
+import Response from "context/Application/Query/ExternalBlockchain/GetLastContracts/Response";
+import * as GetLastContractsErrors from "context/Application/Query/ExternalBlockchain/GetLastContracts/Errors";
 import ExternalBlockchain from 'context/ExternalBlockchain/ExternalBlockchain';
 import Setting from 'context/Setting/Setting';
 import DataSource from 'context/Infrastructure/TypeORM/DataSource/DataSource';
@@ -39,10 +41,24 @@ const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, 
 
 const processEvents = async () => {
     const query = new GetLastContracts(blockNumber);
-    const result = await getLastContractsHandler.execute(query)
 
-    console.log(`LogHTLCNew: ${dayjs().format()}. From ${result.fromBlock} to ${result.toBlock} blocks`);
-    console.log(`Found ${result.events.length} new events`);
+    let result: Response
+
+    try {
+        result = await getLastContractsHandler.execute(query)
+
+        console.log(`LogHTLCNew: ${dayjs().format()}. From ${result.fromBlock} to ${result.toBlock} blocks`);
+        console.log(`Found ${result.events.length} new events`);
+    } catch (e: unknown) {
+        if (e instanceof GetLastContractsErrors.BlockNotExists ||
+                e instanceof GetLastContractsErrors.FromBlockLargerThanToBlock ||
+                e instanceof GetLastContractsErrors.FromBlockHashEqualsToBlockHash) {
+            console.log(e.message)
+            return
+        }
+
+        throw e
+    }
 
     for (const event of result.events) {
         console.log(`Process transaction ${event.transactionHash}`)

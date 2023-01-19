@@ -18,7 +18,7 @@ export default class Setting {
         return new Setting(config)
     }
 
-    public async load(name: string, defaultValue?: any): Promise<unknown> {
+    public async load(name: string, defaultValue?: any): Promise<string> {
         const value = await this.repository.load(name)
 
         return value ?? defaultValue
