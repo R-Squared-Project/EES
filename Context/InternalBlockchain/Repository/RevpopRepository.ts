@@ -30,6 +30,7 @@ export default class RevpopRepository implements RepositoryInterface {
         return repository
     }
 
+
     async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
         const accountFrom = await FetchChain("getAccount", this.accountFrom)
         const accountTo = await FetchChain("getAccount", accountToName)
@@ -107,5 +108,9 @@ export default class RevpopRepository implements RepositoryInterface {
         } catch (e: unknown) {
             throw new InternalBlockchainConnectionError(`Can't connect to the url ${nodeUrl}`)
         }
+    }
+
+    public async disconnect() {
+        Apis.close()
     }
 }

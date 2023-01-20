@@ -12,9 +12,11 @@ interface CreateInInternalBlockchainMessage {
     deposit_id: string
 }
 
+let internalBlockchain: InternalBlockchain
+
 async function main() {
     const depositRepository = new DepositTypeOrmRepository(DataSource)
-    const internalBlockchain = await InternalBlockchain.init({
+    internalBlockchain = await InternalBlockchain.init({
         repository: 'revpop'
     })
     const converter = new EtherToWrappedEtherConverter()
@@ -37,5 +39,9 @@ async function main() {
         }
     )
 }
+
+process.on('SIGINT', () => {
+    internalBlockchain.disconnect()
+});
 
 main()

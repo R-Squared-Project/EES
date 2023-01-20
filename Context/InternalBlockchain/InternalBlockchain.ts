@@ -20,6 +20,10 @@ class InternalBlockchain {
         return new InternalBlockchain(repository)
     }
 
+    public disconnect() {
+        this.repository.disconnect()
+    }
+
     static async createRepository(repository: Repository): Promise<RepositoryInterface> {
         switch (repository) {
             case 'revpop':
