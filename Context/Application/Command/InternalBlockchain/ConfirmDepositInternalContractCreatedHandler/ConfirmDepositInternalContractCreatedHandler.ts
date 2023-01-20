@@ -1,16 +1,16 @@
 import {UseCase} from "context/Core/Domain/UseCase";
 import ConfirmDepositInternalContractCreated from "./ConfirmDepositInternalContractCreated";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
-import RepositoryInterface from "context/Domain/RepositoryInterface";
+import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import InternalContract from "context/Domain/InternalContract";
 
 export default class ConfirmDepositInternalContractCreatedHandler implements UseCase<ConfirmDepositInternalContractCreated, void> {
     public constructor(
-        private readonly depositRepository: RepositoryInterface,
+        private readonly depositRepository: DepositRepositoryInterface,
         private readonly internalBlockchain: InternalBlockchain
     ) {}
 
-    public async execute(query: ConfirmDepositInternalContractCreated): Promise<void> {
+    public async execute(command: ConfirmDepositInternalContractCreated): Promise<void> {
         const contracts = await this.internalBlockchain.getIncomingContracts()
 
         for (const contract of contracts) {

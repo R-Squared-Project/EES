@@ -4,6 +4,8 @@ import ExternalContract from "./ExternalContract";
 import InternalContract from "context/Domain/InternalContract";
 import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
 import CreateContractInInternalBlockchainValidator from "./Validation/CreateContractInInternalBlockchainValidator";
+import ConfirmDepositInternalContractCreatedValidator
+    from "context/Domain/Validation/ConfirmDepositInternalContractCreatedValidator";
 
 export const STATUS_CREATED = 1
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
@@ -46,6 +48,8 @@ export default class Deposit extends AggregateRoot {
     }
 
     public createdInInternalBlockchain(internalContract: InternalContract) {
+        new ConfirmDepositInternalContractCreatedValidator(this).validate()
+
         this._internalContract = internalContract
         this._status = STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN
     }

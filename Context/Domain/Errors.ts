@@ -103,3 +103,9 @@ export class CreateContractInInternalBlockchainTimeLockError extends DomainError
         super(`External blockchain timeLock ${externalContractTimeLock.format()} is invalid.`)
     }
 }
+
+export class ConfirmDepositInternalContractCreatedStatusError extends DomainError {
+    constructor(status: number) {
+        super(`Status ${status} is invalid.`)
+    }
+}

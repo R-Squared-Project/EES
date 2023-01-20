@@ -1,8 +1,7 @@
 import {EntitySchema} from "typeorm"
-import ExternalContract from "context/Domain/ExternalContract";
 import InternalContract from "context/Domain/InternalContract";
 
-const InternalContractEntity = new EntitySchema<ExternalContract>({
+const InternalContractEntity = new EntitySchema<InternalContract>({
     name: "InternalContract",
     tableName: 'internal_contract',
     target: InternalContract,

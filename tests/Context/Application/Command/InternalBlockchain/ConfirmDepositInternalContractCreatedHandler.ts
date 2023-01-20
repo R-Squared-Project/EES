@@ -4,12 +4,13 @@ import ConfirmDepositInternalContractCreatedHandler
     from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreatedHandler";
 import ConfirmDepositInternalContractCreated
     from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreated";
-import DepositStubRepository from "context/Infrastructure/TypeORM/StubRepository";
+import DepositStubRepository from "context/Infrastructure/Stub/DepositRepository";
 import InternalBlockchainStubRepository from "context/InternalBlockchain/Repository/StubRepository";
 import {createExternalContract} from "../../../../Helpers/ExternalContract";
 import {createContract} from "../../../../Helpers/InternalBlockchain/Contract";
 import {createDeposit} from "../../../../Helpers/Deposit";
 import InternalContract from "context/Domain/InternalContract";
+import {HashLockValidationError} from "context/Domain/Errors";
 
 describe('ConfirmDepositInternalContractCreatedHandler', () => {
     let depositRepository: DepositStubRepository
@@ -41,6 +42,7 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                 const deposit = createDeposit({
                     externalContract: createExternalContract(externalContractId)
                 })
+                deposit.submittedToInternalBlockchain()
                 depositRepository._depositByExternalId = deposit
 
                 const command = new ConfirmDepositInternalContractCreated()
@@ -56,6 +58,20 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
         })
 
         describe('error', () => {
+            it('should throw error if deposit status is invalid', async () => {
+                internalBlockchainRepository.addInternalContract(createContract({
+                    externalId: externalContractId
+                }))
+                const deposit = createDeposit({
+                    externalContract: createExternalContract(externalContractId)
+                })
+
+                const command = new ConfirmDepositInternalContractCreated()
+                await expect(handler.execute(command))
+                    .rejectedWith(HashLockValidationError, 'HashLock "invalid_hashLock" is invalid: HashLock format is invalid')
+
+            })
+
             it('should doing something if deposit with external id does not exist', async () => {
                 internalBlockchainRepository.addInternalContract(createContract({
                     externalId: externalContractId
