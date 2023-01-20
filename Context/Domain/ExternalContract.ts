@@ -1,6 +1,5 @@
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 import Entity from "context/Core/Domain/Entity";
-import ExternalContractValidator from "context/Domain/Validation/ExternalContractValidator";
 import {HashZero} from "@ethersproject/constants";
 import HashLock from "context/Domain/ValueObject/HashLock";
 import Address from "context/Domain/ValueObject/Address";

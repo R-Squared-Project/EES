@@ -1,4 +1,4 @@
-import {Dayjs} from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 import config from "context/config";
 import {UseCase} from "context/Core/Domain/UseCase";
 import CreateContractInInternalBlockchain from "./CreateContractInInternalBlockchain";
@@ -23,20 +23,20 @@ export default class CreateContractInInternalBlockchainHandler implements UseCas
 
         const rvEthAmount = this.converter.convert(deposit._externalContract.value)
 
+        deposit.submittedToInternalBlockchain()
+
         await this.internalBlockchain.createContract(
             deposit._externalContract.idString,
             deposit._depositRequest.revpopAccount.value,
             rvEthAmount,
             deposit._depositRequest.hashLock.value.substring(2),
-            this.timeLock(deposit._externalContract.timeLock.value).unix()
+            this.timeLock()
         )
-
-        deposit.submittedToInternalBlockchain()
 
         await this.repository.save(deposit)
     }
 
-    private timeLock(externalContractTimeLock: Dayjs): Dayjs {
-        return externalContractTimeLock.subtract(config.contract.timelock_frame, 'minutes')
+    private timeLock(): number {
+        return dayjs().add(config.revpop.redeem_timeframe, 'minutes').diff(dayjs(), 'minutes')
     }
 }

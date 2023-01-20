@@ -2,7 +2,7 @@ import {expect} from "chai";
 import {dataSourceTest} from "../../hooks";
 import {SubmitDepositRequest} from "context/index";
 import SubmitDepositRequestHandler from "context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
-import DepositRequestTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRequestTypeOrmRepository";
+import DepositRequestTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRequestRepository";
 
 describe('Create deposit', async () => {
     let repository: DepositRequestTypeOrmRepository

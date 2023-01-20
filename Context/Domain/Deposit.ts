@@ -1,9 +1,10 @@
 import AggregateRoot from "context/Core/Domain/AggregateRoot";
 import DepositRequest from "./DepositRequest";
 import ExternalContract from "./ExternalContract";
-import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
+import IncomingContractProcessedEvent from "./Event/IncomingContractProcessedEvent";
+import CreateContractInInternalBlockchainValidator from "./Validation/CreateContractInInternalBlockchainValidator";
 
-const STATUS_CREATED = 1
+export const STATUS_CREATED = 1
 const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
 
 export default class Deposit extends AggregateRoot {
@@ -32,6 +33,8 @@ export default class Deposit extends AggregateRoot {
     }
 
     public submittedToInternalBlockchain() {
+        new CreateContractInInternalBlockchainValidator(this).validate()
+
         this._status = STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
     }
 }
