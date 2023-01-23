@@ -1,11 +1,11 @@
-import dayjs, {Dayjs} from "dayjs";
+import dayjs from "dayjs";
 import config from "context/config";
 import {UseCase} from "context/Core/Domain/UseCase";
 import CreateContractInInternalBlockchain from "./CreateContractInInternalBlockchain";
 import RepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
-import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/Errors";
 import ConverterInterface from "context/Domain/ConverterInterface";
+import * as Errors from "./Errors";
 
 export default class CreateContractInInternalBlockchainHandler implements UseCase<CreateContractInInternalBlockchain, void> {
     constructor(

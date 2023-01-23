@@ -1,11 +1,16 @@
 import yargs from "yargs";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
-import TypeOrmRepository from "context/Infrastructure/TypeORM/TypeOrmRepository";
+import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import ConfirmDepositInternalContractCreated
     from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreated";
 import ConfirmDepositInternalContractCreatedHandler
     from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreatedHandler";
+import Setting from "context/Setting/Setting";
+import GetLastDepositContractsHandler
+    from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContractsHandler";
+import GetLastDepositContracts
+    from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContracts";
 
 const argv = yargs(process.argv.slice(2))
     .option('interval', {
@@ -18,21 +23,35 @@ const argv = yargs(process.argv.slice(2))
     .parseSync()
 
 const interval = argv.interval
-let depositRepository: TypeOrmRepository
+let depositRepository: DepositTypeOrmRepository
 let internalBlockchain: InternalBlockchain
+let settings: Setting
+let getLastDepositContractsHandler: GetLastDepositContractsHandler
 let confirmDepositInternalContractCreatedHandler: ConfirmDepositInternalContractCreatedHandler
 
 async function init() {
-    depositRepository = new TypeOrmRepository(DataSource)
+    depositRepository = new DepositTypeOrmRepository(DataSource)
     internalBlockchain = await InternalBlockchain.init({
         repository: 'revpop'
     })
-    confirmDepositInternalContractCreatedHandler = new ConfirmDepositInternalContractCreatedHandler(depositRepository, internalBlockchain)
+    settings = Setting.init({
+        repository: 'typeorm',
+        dataSource: DataSource
+    })
+    getLastDepositContractsHandler = new GetLastDepositContractsHandler(internalBlockchain, settings)
+    confirmDepositInternalContractCreatedHandler = new ConfirmDepositInternalContractCreatedHandler(depositRepository)
 }
 
 async function main() {
-    const query = new ConfirmDepositInternalContractCreated()
-    await confirmDepositInternalContractCreatedHandler.execute(query)
+    const queryGetLastDepositContracts = new GetLastDepositContracts()
+    const depositInternalContracts = await getLastDepositContractsHandler.execute(queryGetLastDepositContracts)
+
+    console.log(`Found ${depositInternalContracts.contracts.length} internal contracts to processed.`)
+
+    for (const contract of depositInternalContracts.contracts) {
+        const query = new ConfirmDepositInternalContractCreated(contract.externalId, contract.id)
+        await confirmDepositInternalContractCreatedHandler.execute(query)
+    }
 }
 
 init().then(() => {

@@ -25,7 +25,7 @@ export default class StubRepository implements RepositoryInterface {
         this._internalContracts.push(contract)
     }
 
-    getIncomingContracts(accountFromName: string): Promise<Contract[]> {
+    getIncomingContracts(accountFromName: string, start: string): Promise<Contract[]> {
         return Promise.resolve(this._internalContracts)
     }
 

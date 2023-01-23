@@ -53,8 +53,8 @@ class InternalBlockchain {
         await this._repository.createContract(externalId, accountToName, amount, hashLock, timeLock)
     }
 
-    async getIncomingContracts(): Promise<Contract[]> {
-        return await this.repository.getIncomingContracts(config.revpop.account_from);
+    async getIncomingContracts(start: string): Promise<Contract[]> {
+        return await this.repository.getIncomingContracts(config.revpop.account_from, start);
     }
 }
 

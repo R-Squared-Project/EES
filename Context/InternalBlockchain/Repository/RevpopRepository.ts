@@ -102,10 +102,10 @@ export default class RevpopRepository implements RepositoryInterface {
         }
     }
 
-    async getIncomingContracts(accountFromName: string): Promise<Contract[]> {
+    async getIncomingContracts(accountFromName: string, start: string): Promise<Contract[]> {
         const revpopContracts = await Apis.instance()
             .db_api()
-            .exec("get_htlc_by_from", [accountFromName, "1.16.0", 100]);
+            .exec("get_htlc_by_from", [accountFromName, start, 100]);
 
         const contracts = []
 

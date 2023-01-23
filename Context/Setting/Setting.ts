@@ -1,17 +1,22 @@
 import {DataSource} from "typeorm";
-import RepositoryInterface from "./Infrastructure/Repository/RepositoryInterface";
-import TypeOrmRepository from "./Infrastructure/Repository/TypeOrmRepository";
+import RepositoryInterface from "./Domain/RepositoryInterface";
+import TypeOrmRepository from "./Infrastructure/TypeOrm/Repository";
+import StubRepository from "./Infrastructure/Stub/Repository";
 
 interface Config {
-    repository: 'typeorm',
-    dataSource: DataSource
+    repository: 'typeorm' | 'stub',
+    dataSource?: DataSource
 }
 
 export default class Setting {
     private repository: RepositoryInterface;
 
     constructor(config: Config) {
-        this.repository = new TypeOrmRepository(config.dataSource)
+        if (config.repository === 'typeorm' && config.dataSource) {
+            this.repository = new TypeOrmRepository(config.dataSource)
+        } else {
+            this.repository = new StubRepository()
+        }
     }
 
     public static init(config: Config): Setting {

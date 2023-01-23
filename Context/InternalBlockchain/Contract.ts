@@ -11,4 +11,8 @@ export default class Contract {
     get externalId(): string {
         return this._externalId;
     }
+
+    hasExternalId(): boolean {
+        return this._externalId !== ''
+    }
 }
