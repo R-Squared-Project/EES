@@ -1,4 +1,4 @@
-export default class Contract {
+export default class HtlcContract {
     constructor(
         private _id: string,
         private _externalId: string

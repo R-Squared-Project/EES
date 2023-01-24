@@ -1,11 +1,11 @@
-import Contract from "context/InternalBlockchain/Contract";
+import InternalHtlcContract from "context/InternalBlockchain/HtlcContract";
 
 export default class Response {
     constructor(
-        private readonly _contracts: Contract[]
+        private readonly _contracts: InternalHtlcContract[]
     ) {}
 
-    get contracts(): Contract[] {
+    get contracts(): InternalHtlcContract[] {
         return this._contracts;
     }
 }

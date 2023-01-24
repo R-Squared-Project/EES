@@ -24,7 +24,7 @@ const config = {
     },
     revpop: {
         node_url: process.env.REVPOP_NODE_URL,
-        account_from: process.env.REVPOP_ACCOUNT_FROM as string,
+        ees_account: process.env.REVPOP_EES_ACCOUNT as string,
         asset_symbol: process.env.REVPOP_ASSET_SYMBOL,
         account_private_key: process.env.REVPOP_ACCOUNT_PRIVATE_KEY,
         redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_INTERNAL_BLOCKCHAIN as string, 10),

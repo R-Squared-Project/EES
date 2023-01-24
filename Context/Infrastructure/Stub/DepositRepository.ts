@@ -3,7 +3,6 @@ import Deposit from "../../Domain/Deposit";
 
 export default class DepositRepository implements DepositRepositoryInterface {
     public _exists = false
-    public _depositByExternalId: Deposit | null = null
 
     private _deposits: {
         [index: string]: Deposit
@@ -26,7 +25,13 @@ export default class DepositRepository implements DepositRepositoryInterface {
     }
 
     getByExternalId(externalId: string): Promise<Deposit | null> {
-        return Promise.resolve(this._depositByExternalId)
+        for (const deposit of Object.values(this._deposits)) {
+            if (deposit._externalContract.idString === externalId) {
+                return Promise.resolve(deposit)
+            }
+        }
+
+        return Promise.resolve(null)
     }
 
     first(): Deposit | null {

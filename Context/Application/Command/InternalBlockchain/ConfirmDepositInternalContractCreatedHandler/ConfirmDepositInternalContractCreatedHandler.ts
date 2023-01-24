@@ -10,15 +10,24 @@ export default class ConfirmDepositInternalContractCreatedHandler implements Use
     ) {}
 
     public async execute(command: ConfirmDepositInternalContractCreated): Promise<void> {
-        const deposit = await this.depositRepository.getByExternalId(command.externalId)
+        const externalId = this.ensureHasPrefix(command.externalId)
+        const deposit = await this.depositRepository.getByExternalId(externalId)
 
         if (null === deposit) {
-            throw new DepositNotFound(command.externalId)
+            throw new DepositNotFound(externalId)
         }
 
-        const internalContract = new InternalContract(command.internalId, command.externalId)
+        const internalContract = new InternalContract(command.internalId, externalId)
         deposit.createdInInternalBlockchain(internalContract)
 
         this.depositRepository.save(deposit)
+    }
+
+    public ensureHasPrefix(externalId: string): string {
+        if (externalId.substring(0, 2) !== "0x") {
+            externalId = "0x" + externalId
+        }
+
+        return externalId
     }
 }

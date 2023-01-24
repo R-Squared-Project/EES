@@ -34,7 +34,10 @@ async function main() {
                 console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
             } catch (e: unknown) {
                 console.log(e)
-                //TODO::nack?
+                /*
+                 * If infrastructure error then process again
+                 * If domain or command error then ack and save somewhere
+                 */
             }
         }
     )

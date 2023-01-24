@@ -6,14 +6,14 @@ import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/re
 import * as Errors from "context/InternalBlockchain/Errors";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
-import Contract from "context/InternalBlockchain/Contract";
+import Contract from "context/InternalBlockchain/HtlcContract";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 
 export default class RevpopRepository implements RepositoryInterface {
     private memo: Memo
     public constructor(
-        private readonly accountFrom: string,
+        private readonly eesAccount: string,
         private readonly accountPrivateKey: string,
         private readonly assetSymbol: string
     ) {
@@ -33,7 +33,7 @@ export default class RevpopRepository implements RepositoryInterface {
 
 
     async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        const accountFrom = await FetchChain("getAccount", this.accountFrom)
+        const accountFrom = await FetchChain("getAccount", this.eesAccount)
         const accountTo = await FetchChain("getAccount", accountToName)
 
         if (null === accountTo) {
@@ -88,7 +88,7 @@ export default class RevpopRepository implements RepositoryInterface {
             preimage_size: hashLock.length,
             claim_period_seconds: timeLock,
             extensions: {
-                memo: this.memo.generate(externalId, privateKey, accountFrom, accountTo)
+                memo: this.memo.generate(externalId.slice(2), privateKey, accountFrom, accountTo)
             }
         });
 
@@ -102,10 +102,10 @@ export default class RevpopRepository implements RepositoryInterface {
         }
     }
 
-    async getIncomingContracts(accountFromName: string, start: string): Promise<Contract[]> {
+    async getIncomingContracts(start: string): Promise<Contract[]> {
         const revpopContracts = await Apis.instance()
             .db_api()
-            .exec("get_htlc_by_from", [accountFromName, start, 100]);
+            .exec("get_htlc_by_from", [this.eesAccount, start, 100]);
 
         const contracts = []
 

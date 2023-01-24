@@ -2,7 +2,7 @@ import RepositoryInterface from "./Repository/RepositoryInterface";
 import RevpopRepository from "./Repository/RevpopRepository";
 import StubRepository from "./Repository/StubRepository";
 import config from "context/config";
-import Contract from "context/InternalBlockchain/Contract";
+import Contract from "context/InternalBlockchain/HtlcContract";
 
 type Repository = 'revpop' | 'stub'
 
@@ -30,7 +30,7 @@ class InternalBlockchain {
             case 'revpop':
                 return await RevpopRepository.init(
                     config.revpop.node_url as string,
-                    config.revpop.account_from as string,
+                    config.revpop.ees_account as string,
                     config.revpop.account_private_key as string,
                     config.revpop.asset_symbol as string
                 )
@@ -54,7 +54,7 @@ class InternalBlockchain {
     }
 
     async getIncomingContracts(start: string): Promise<Contract[]> {
-        return await this.repository.getIncomingContracts(config.revpop.account_from, start);
+        return await this.repository.getIncomingContracts(start);
     }
 }
 

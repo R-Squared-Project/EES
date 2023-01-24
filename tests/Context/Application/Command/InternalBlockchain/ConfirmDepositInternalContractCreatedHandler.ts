@@ -15,6 +15,7 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
     let handler: ConfirmDepositInternalContractCreatedHandler
 
     const externalContractId = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+    const externalContractIdInternalBlockchain = externalContractId.substring(2)
 
     beforeEach(async () => {
         depositRepository = new DepositStubRepository()
@@ -28,9 +29,9 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                     externalContract: createExternalContract(externalContractId)
                 })
                 deposit.submittedToInternalBlockchain()
-                depositRepository._depositByExternalId = deposit
+                depositRepository.create(deposit)
 
-                const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
+                const command = new ConfirmDepositInternalContractCreated(externalContractIdInternalBlockchain, '1.16.1')
                 await handler.execute(command)
 
                 const updatedDeposit = await depositRepository.getById(deposit.id.toValue())
@@ -52,7 +53,7 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                 const deposit = createDeposit({
                     externalContract: createExternalContract(externalContractId)
                 })
-                depositRepository._depositByExternalId = deposit
+                depositRepository.create(deposit)
 
                 const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
                 await expect(handler.execute(command)).rejectedWith(DomainErrors.ConfirmDepositInternalContractCreatedStatusError)

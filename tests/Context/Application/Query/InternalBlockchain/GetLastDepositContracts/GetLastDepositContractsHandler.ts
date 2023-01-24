@@ -42,14 +42,14 @@ describe('GetLastDepositContractsHandler', () => {
             it('should return contract with correct parameters', async () => {
                 internalBlockchainRepository.addInternalContract(createContract({
                     id: '1.16.2',
-                    externalId: '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+                    externalId: '14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
                 }))
                 const query = new GetLastDepositContracts()
                 const result = await handler.execute(query)
 
                 const contract = result.contracts[0]
                 expect(contract.id).equals('1.16.2')
-                expect(contract.externalId).equals('0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c')
+                expect(contract.externalId).equals('14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c')
             })
 
             it('should return only deposit contracts', async () => {
@@ -59,7 +59,7 @@ describe('GetLastDepositContractsHandler', () => {
                 }))
                 internalBlockchainRepository.addInternalContract(createContract({
                     id: '1.16.3',
-                    externalId: '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+                    externalId: '14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
                 }))
                 const query = new GetLastDepositContracts()
                 const result = await handler.execute(query)
@@ -68,17 +68,17 @@ describe('GetLastDepositContractsHandler', () => {
 
                 const contract = result.contracts[0]
                 expect(contract.id).equals('1.16.3')
-                expect(contract.externalId).equals('0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c')
+                expect(contract.externalId).equals('14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c')
             })
 
             it('should return only new contract', async () => {
                 internalBlockchainRepository.addInternalContract(createContract({
                     id: '1.16.2',
-                    externalId: '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55b'
+                    externalId: '14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55b'
                 }))
                 internalBlockchainRepository.addInternalContract(createContract({
                     id: '1.16.3',
-                    externalId: '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+                    externalId: '14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
                 }))
                 settings.save('deposit_last_processed_internal_contract', '1.16.2')
 
@@ -89,7 +89,7 @@ describe('GetLastDepositContractsHandler', () => {
 
                 const contract = result.contracts[0]
                 expect(contract.id).equals('1.16.3')
-                expect(contract.externalId).equals('0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c')
+                expect(contract.externalId).equals('14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c')
             })
         })
 
@@ -101,7 +101,7 @@ describe('GetLastDepositContractsHandler', () => {
                 }))
                 internalBlockchainRepository.addInternalContract(createContract({
                     id: '1.16.3',
-                    externalId: '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+                    externalId: '14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
                 }))
                 const query = new GetLastDepositContracts()
                 await handler.execute(query)
