@@ -1,5 +1,6 @@
 import {DomainError} from "../Core/Domain/DomainError";
 import {UseCaseError} from "context/Core/Logic/UseCaseError";
+import {Dayjs} from "dayjs";
 
 export class CreateDepositUnexpectedError extends DomainError {
     constructor() {
@@ -88,5 +89,17 @@ export class AlreadyRefunded extends UseCaseError {
 export class PreimageNotEmpty extends UseCaseError {
     constructor() {
         super('Preimage is not empty.')
+    }
+}
+
+export class CreateContractInInternalBlockchainStatusError extends DomainError {
+    constructor(status: number) {
+        super(`Status ${status} is invalid.`)
+    }
+}
+
+export class CreateContractInInternalBlockchainTimeLockError extends DomainError {
+    constructor(externalContractTimeLock: Dayjs) {
+        super(`External blockchain timeLock ${externalContractTimeLock.format()} is invalid.`)
     }
 }

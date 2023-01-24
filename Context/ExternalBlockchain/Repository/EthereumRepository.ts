@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
+import {BlockTransactionString} from "web3-eth";
 import {Contract as ContractWeb3, EventData} from "web3-eth-contract";
 import HashedTimeLockAbi from "../../../src/assets/abi/HashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
@@ -50,7 +51,11 @@ export default class EthereumRepository implements RepositoryInterface {
         return await this._web3.eth.getBlockNumber();
     }
 
-    async loadEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    async getBlock(number: number): Promise<BlockTransactionString | null> {
+        return await this._web3.eth.getBlock(number)
+    }
+
+    async loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return await this._contract.getPastEvents(
             'LogHTLCNew',
             {

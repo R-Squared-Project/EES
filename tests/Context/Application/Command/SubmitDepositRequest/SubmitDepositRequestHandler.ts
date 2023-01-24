@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import DepositRequestStubRepository from "context/Infrastructure/TypeORM/DepositRequestStubRepository";
+import DepositRequestStubRepository from "context/Infrastructure/Stub/DepositRequestRepository";
 import SubmitDepositRequestHandler from "context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
 import {SubmitDepositRequest} from "context/index";
 import {HashLockValidationError, RevpopAccountValidationError} from "context/Domain/Errors";

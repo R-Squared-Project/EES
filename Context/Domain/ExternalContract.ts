@@ -1,6 +1,5 @@
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 import Entity from "context/Core/Domain/Entity";
-import ExternalContractValidator from "context/Domain/Validation/ExternalContractValidator";
 import {HashZero} from "@ethersproject/constants";
 import HashLock from "context/Domain/ValueObject/HashLock";
 import Address from "context/Domain/ValueObject/Address";
@@ -26,7 +25,7 @@ export default class ExternalContract extends Entity {
         this._preimage = HashZero
         this._status = 1
 
-        // TODO::TypeORM tries validate empty contract wher read metadata
+        // TODO::TypeORM tries validate empty contract when read metadata
         // new ExternalContractValidator(this).validate()
     }
 

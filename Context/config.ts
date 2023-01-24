@@ -19,7 +19,15 @@ const config = {
         contract_address: process.env.ETH_CONTRACT_ADDRESS as string,
         deploy_block_number: parseInt(process.env.ETH_DEPLOY_CONTRACT_BLOCK as string, 10),
         receiver: process.env.ETH_RECEIVER as string,
-        required_block_confirmations: parseInt(process.env.ETH_REQUIRED_BLOCK_CONFIRMATIONS as string, 10)
+        required_block_confirmations: parseInt(process.env.ETH_REQUIRED_BLOCK_CONFIRMATIONS as string, 10),
+        redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_EXTERNAL_BLOCKCHAIN as string, 10),
+    },
+    revpop: {
+        node_url: process.env.REVPOP_NODE_URL,
+        account_from: process.env.REVPOP_ACCOUNT_FROM,
+        asset_symbol: process.env.REVPOP_ASSET_SYMBOL,
+        account_private_key: process.env.REVPOP_ACCOUNT_PRIVATE_KEY,
+        redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_INTERNAL_BLOCKCHAIN as string, 10),
     },
     db: {
         name: process.env.DATABASE,
@@ -27,6 +35,10 @@ const config = {
         port: parseInt(process.env.DATABASE_PORT as string, 10),
         user: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWORD
+    },
+    rabbitmq: {
+        host: process.env.RABBITMQ_HOST as string,
+        port: parseInt(process.env.RABBITMQ_PORT as string, 10)
     }
 }
 

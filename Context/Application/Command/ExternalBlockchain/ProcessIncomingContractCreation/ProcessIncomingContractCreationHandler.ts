@@ -1,7 +1,7 @@
 import {UseCase} from "context/Core/Domain/UseCase";
 import ProcessIncomingContractCreation
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
-import RepositoryInterface from "context/Domain/RepositoryInterface";
+import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepositoryInterface";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
@@ -16,7 +16,7 @@ import TimeLock from "context/Domain/ValueObject/TimeLock";
 
 export default class ProcessIncomingContractCreationHandler implements UseCase<ProcessIncomingContractCreation, void> {
     constructor(
-        private repository: RepositoryInterface,
+        private repository: DepositRepositoryInterface,
         private depositRequestRepository: DepositRequestRepositoryInterface,
         private externalBlockchain: ExternalBlockchain
     ) {}

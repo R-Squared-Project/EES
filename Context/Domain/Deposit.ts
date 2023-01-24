@@ -1,7 +1,11 @@
 import AggregateRoot from "context/Core/Domain/AggregateRoot";
 import DepositRequest from "./DepositRequest";
 import ExternalContract from "./ExternalContract";
-import DepositCreatedEvent from "context/Domain/Event/DepositCreatedEvent";
+import IncomingContractProcessedEvent from "./Event/IncomingContractProcessedEvent";
+import CreateContractInInternalBlockchainValidator from "./Validation/CreateContractInInternalBlockchainValidator";
+
+export const STATUS_CREATED = 1
+const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
 
 export default class Deposit extends AggregateRoot {
     private _status: number
@@ -11,7 +15,7 @@ export default class Deposit extends AggregateRoot {
         public _externalContract: ExternalContract
     ) {
         super()
-        this._status = 1
+        this._status = STATUS_CREATED
     }
 
     get status(): number {
@@ -21,10 +25,16 @@ export default class Deposit extends AggregateRoot {
     static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
         const deposit = new Deposit(depositRequest, externalContract)
 
-        deposit.addDomainEvent(new DepositCreatedEvent(
+        deposit.addDomainEvent(new IncomingContractProcessedEvent(
             deposit.id.toValue()
         ))
 
         return deposit
+    }
+
+    public submittedToInternalBlockchain() {
+        new CreateContractInInternalBlockchainValidator(this).validate()
+
+        this._status = STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
     }
 }

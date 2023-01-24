@@ -1,6 +1,6 @@
 import DomainEventInterface from "../../Core/Domain/Events/DomainEventInterface";
 
-export default class DepositCreatedEvent implements DomainEventInterface {
+export default class IncomingContractProcessedEvent implements DomainEventInterface {
     public dateTimeOccurred: Date = new Date();
 
     constructor(
@@ -8,6 +8,6 @@ export default class DepositCreatedEvent implements DomainEventInterface {
     ) {}
 
     static eventName(): string {
-        return "deposit_created_event";
+        return "incoming_contract_processed_event";
     }
 }
