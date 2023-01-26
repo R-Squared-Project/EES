@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common';
-import DepositModule from './Wallet/WalletModule';
+import WalletModule from './Wallet/WalletModule';
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import {TransformInterceptor} from "./Interceptor/TransformInterceptor";
 
 @Module({
     imports: [
-        DepositModule
+        WalletModule
     ],
     providers: [
         {

@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import CreateDepositController from './CreateDepositController';
+import GetSettingsController from './GetSettingsController';
+import SubmitDepositRequestController from "./SubmitDepositRequestController";
 
 @Module({
     controllers: [
-        CreateDepositController
+        GetSettingsController,
+        SubmitDepositRequestController
     ],
 })
 export default class WalletModule {}
