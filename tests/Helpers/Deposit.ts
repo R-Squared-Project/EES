@@ -4,7 +4,7 @@ import ExternalContract from "context/Domain/ExternalContract";
 import {createDepositRequest} from "./DepositRequest";
 import {createExternalContract} from "./ExternalContract";
 
-export function createDeposit(depositRequest?: DepositRequest, externalContract?: ExternalContract) {
+export function createDeposit(depositRequest?: DepositRequest, externalContract?: ExternalContract): Deposit {
     return Deposit.create(
         depositRequest ?? createDepositRequest(),
         externalContract ?? createExternalContract()

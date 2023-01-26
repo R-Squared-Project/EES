@@ -4,6 +4,7 @@ import DepositStubRepository from "context/Infrastructure/Stub/DepositRepository
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import InternalBlockchainStubRepository from "context/InternalBlockchain/Repository/StubRepository";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
+import {STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN} from "context/Domain/Deposit";
 import CreateContractInInternalBlockchain
     from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
@@ -32,16 +33,28 @@ describe('CreateContractInInternalBlockchainHandler', () => {
         describe('success', () => {
             it('should be completed without errors', async () => {
                 const deposit = createDeposit()
-                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 depositRepository.create(deposit)
 
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
+
                 await expect(handler.execute(command)).fulfilled
+            });
+            it('should change deposit status', async () => {
+                const deposit = createDeposit()
+                depositRepository.create(deposit)
+
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
+                await handler.execute(command)
+
+                const updatedDeposit = await depositRepository.getById(deposit.idString)
+                expect(updatedDeposit?.status).equals(STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN)
             });
 
             it('should create one contract in internal blockchain', async () => {
                 const deposit = createDeposit()
-                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 depositRepository.create(deposit)
+
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 await handler.execute(command)
 
                 const internalContracts = internalBlockchainRepository.contracts
@@ -50,8 +63,9 @@ describe('CreateContractInInternalBlockchainHandler', () => {
 
             it('should create contract with correct parameters', async () => {
                 const deposit = createDeposit()
-                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 depositRepository.create(deposit)
+
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 await handler.execute(command)
 
                 const internalContract = internalBlockchainRepository.contracts[0]
@@ -68,8 +82,9 @@ describe('CreateContractInInternalBlockchainHandler', () => {
                     timeLock: dayjs().add(10, 'days').unix()
                 })
                 const deposit = createDeposit(undefined, externalContract)
-                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 depositRepository.create(deposit)
+
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 await handler.execute(command)
 
                 const internalContract = internalBlockchainRepository.contracts[0]
@@ -87,8 +102,9 @@ describe('CreateContractInInternalBlockchainHandler', () => {
             it('should throw error if deposit has invalid state', async () => {
                 const deposit = createDeposit()
                 deposit.submittedToInternalBlockchain()
-                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 depositRepository.create(deposit)
+
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
 
                 await expect(handler.execute(command)).rejectedWith(DomainErrors.CreateContractInInternalBlockchainStatusError)
             });
@@ -98,8 +114,9 @@ describe('CreateContractInInternalBlockchainHandler', () => {
                     timeLock: dayjs().unix()
                 })
                 const deposit = createDeposit(undefined, externalContract)
-                const command = new CreateContractInInternalBlockchain(deposit.idString)
                 depositRepository.create(deposit)
+
+                const command = new CreateContractInInternalBlockchain(deposit.idString)
 
                 await expect(handler.execute(command)).rejectedWith(DomainErrors.CreateContractInInternalBlockchainTimeLockError)
             });
