@@ -85,10 +85,9 @@ export default class RevpopRepository implements RepositoryInterface {
             },
             preimage_hash: [PREIMAGE_HASH_CIPHER_SHA256, hashLock],
             preimage_size: hashLock.length,
-            // claim_period_seconds: 86400,
             claim_period_seconds: timeLock,
             extensions: {
-                memo: this.memo.generate(externalId, accountFrom, accountTo)
+                memo: this.memo.generate(externalId, privateKey, accountFrom, accountTo)
             }
         });
 

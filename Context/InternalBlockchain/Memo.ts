@@ -1,25 +1,35 @@
 // @ts-ignore
-import { TransactionHelper } from "@revolutionpopuli/revpopjs";
+import { Aes, TransactionHelper } from "@revolutionpopuli/revpopjs";
 
 export default class Memo {
-    public generate(message: string, accountFrom: any, accountTo: any) {
-        const fromPublicKey = this.getMemoPublicKey(accountFrom)
-        const toPublicKey = this.getMemoPublicKey(accountTo)
+    public generate(message: string, accountFromPrivateKey: any, accountFrom: any, accountTo: any) {
+        const accountFromPublicKey = this.getPublicKey(accountFrom)
+        const accountToPublicKey = this.getPublicKey(accountTo)
+        const nonce = TransactionHelper.unique_nonce_uint64()
 
         return {
-            from: fromPublicKey,
-            to: toPublicKey,
-            nonce: TransactionHelper.unique_nonce_uint64(),
-            message: message
+            from: accountFromPublicKey,
+            to: accountToPublicKey,
+            nonce: nonce,
+            message: this.encryptMessage(accountFromPrivateKey, accountToPublicKey, nonce, message)
         }
     }
 
-    private getMemoPublicKey(account: any) {
+    private getPublicKey(account: any) {
         let publicKey = account.getIn(["options", "memo_key"]);
         if (/111111111111111111111/.test(publicKey)) {
             publicKey = null;
         }
 
         return publicKey;
+    }
+
+    private encryptMessage(accountFromPrivateKey: any, accountToPublicKey: any, nonce: number, message: string) {
+        return Aes.encrypt_with_checksum(
+            accountFromPrivateKey,
+            accountToPublicKey,
+            nonce,
+            message
+        )
     }
 }
