@@ -2,6 +2,7 @@ import yargs from "yargs";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
+import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import ConfirmDepositInternalContractCreated
     from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreated";
 import ConfirmDepositInternalContractCreatedHandler
@@ -28,6 +29,7 @@ let internalBlockchain: InternalBlockchain
 let settings: Setting
 let getLastDepositContractsHandler: GetLastDepositContractsHandler
 let confirmDepositInternalContractCreatedHandler: ConfirmDepositInternalContractCreatedHandler
+const errorHandler = new ErrorHandler('MonitorDepositInternalContractCreated');
 
 async function init() {
     depositRepository = new DepositTypeOrmRepository(DataSource)
@@ -50,7 +52,12 @@ async function main() {
 
     for (const contract of depositInternalContracts.contracts) {
         const query = new ConfirmDepositInternalContractCreated(contract.externalId, contract.id)
-        await confirmDepositInternalContractCreatedHandler.execute(query)
+
+        try {
+            await confirmDepositInternalContractCreatedHandler.execute(query)
+        } catch (e) {
+            errorHandler.handle(e)
+        }
     }
 }
 

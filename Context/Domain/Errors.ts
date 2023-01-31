@@ -105,7 +105,7 @@ export class CreateContractInInternalBlockchainTimeLockError extends DomainError
 }
 
 export class ConfirmDepositInternalContractCreatedStatusError extends DomainError {
-    constructor(status: number) {
-        super(`Status ${status} is invalid.`)
+    constructor(id: string, status: number) {
+        super(`DepositId: ${id}. Status ${status} is invalid.`)
     }
 }

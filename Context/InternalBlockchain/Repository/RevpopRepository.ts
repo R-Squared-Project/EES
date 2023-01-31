@@ -2,7 +2,7 @@ import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
 import {Apis} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
-import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
+import { Aes, FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
 import * as Errors from "context/InternalBlockchain/Errors";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
@@ -40,7 +40,7 @@ export default class RevpopRepository implements RepositoryInterface {
             throw new Errors.AccountNotFound(accountToName)
         }
 
-        const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
 
         const asset = await FetchChain("getAsset", this.assetSymbol)
 
@@ -105,12 +105,20 @@ export default class RevpopRepository implements RepositoryInterface {
     async getIncomingContracts(start: string): Promise<Contract[]> {
         const revpopContracts = await Apis.instance()
             .db_api()
-            .exec("get_htlc_by_from", [this.eesAccount, start, 100]);
+            .exec("get_htlc_by_from", [this.eesAccount, start, 100])
+
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
 
         const contracts = []
-
         for (const contract of revpopContracts) {
-            contracts.push(new Contract(contract.id, contract.memo.message))
+            const message = Aes.decrypt_with_checksum(
+                privateKey,
+                contract.memo.to,
+                contract.memo.nonce,
+                contract.memo.message
+            ).toString("utf-8")
+
+            contracts.push(new Contract(contract.id, message))
         }
 
        return contracts

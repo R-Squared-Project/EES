@@ -17,7 +17,7 @@ export default class ConfirmDepositInternalContractCreatedValidator extends Abst
 
     private validateStatus() {
         if (this.deposit.status !== STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN) {
-            throw new Errors.ConfirmDepositInternalContractCreatedStatusError(this.deposit.status)
+            throw new Errors.ConfirmDepositInternalContractCreatedStatusError(this.deposit.id.toValue(), this.deposit.status)
         }
     }
 }
