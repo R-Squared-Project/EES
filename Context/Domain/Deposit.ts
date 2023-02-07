@@ -5,7 +5,7 @@ import IncomingContractProcessedEvent from "./Event/IncomingContractProcessedEve
 import CreateContractInInternalBlockchainValidator from "./Validation/CreateContractInInternalBlockchainValidator";
 
 export const STATUS_CREATED = 1
-const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
+export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
 
 export default class Deposit extends AggregateRoot {
     private _status: number

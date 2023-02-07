@@ -37,6 +37,6 @@ export default class CreateContractInInternalBlockchainHandler implements UseCas
     }
 
     private timeLock(): number {
-        return dayjs().add(config.revpop.redeem_timeframe, 'minutes').diff(dayjs(), 'minutes')
+        return dayjs().add(config.revpop.redeem_timeframe, 'minutes').diff(dayjs(), 'seconds')
     }
 }

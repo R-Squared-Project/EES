@@ -1,7 +1,7 @@
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import Deposit from "../../Domain/Deposit";
 
-export default class StubRepository implements DepositRepositoryInterface {
+export default class DepositRepository implements DepositRepositoryInterface {
     public _exists = false
 
     private _deposits: {
@@ -21,7 +21,7 @@ export default class StubRepository implements DepositRepositoryInterface {
     }
 
     getById(id: string): Promise<Deposit | null> {
-        return Promise.resolve(null);
+        return Promise.resolve(this._deposits[id]?? null)
     }
 
     first(): Deposit | null {

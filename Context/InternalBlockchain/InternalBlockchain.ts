@@ -11,7 +11,7 @@ interface Config {
 
 class InternalBlockchain {
     public constructor(
-        private readonly repository: RepositoryInterface
+        private readonly _repository: RepositoryInterface
     ) {}
 
     public static async init(config: Config) {
@@ -21,7 +21,7 @@ class InternalBlockchain {
     }
 
     public disconnect() {
-        this.repository.disconnect()
+        this._repository.disconnect()
     }
 
     static async createRepository(repository: Repository): Promise<RepositoryInterface> {
@@ -40,8 +40,12 @@ class InternalBlockchain {
         }
     }
 
+    get repository(): RepositoryInterface {
+        return this._repository;
+    }
+
     async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        await this.repository.createContract(externalId, accountToName, amount, hashLock, timeLock)
+        await this._repository.createContract(externalId, accountToName, amount, hashLock, timeLock)
     }
 }
 
