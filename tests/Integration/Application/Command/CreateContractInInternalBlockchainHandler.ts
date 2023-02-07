@@ -7,9 +7,9 @@ import InternalBlockchainStubRepository from "context/InternalBlockchain/Reposit
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import {STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN} from "context/Domain/Deposit";
 import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchain";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchainHandler";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchainHandler";
 import {createDeposit} from "../../../Helpers/Deposit";
 import {createDepositRequest} from "../../../Helpers/DepositRequest";
 
@@ -35,7 +35,7 @@ describe('CreateContractInInternalBlockchainHandler', () => {
             it('should change deposit status', async () => {
                 const depositRequest = createDepositRequest()
                 await depositRequestRepository.create(depositRequest)
-                const deposit = createDeposit(depositRequest)
+                const deposit = createDeposit({depositRequest})
                 await depositRepository.create(deposit)
 
                 const command = new CreateContractInInternalBlockchain(deposit.idString)

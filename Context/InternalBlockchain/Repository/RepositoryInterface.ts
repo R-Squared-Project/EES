@@ -1,4 +1,4 @@
-import Contract from "context/InternalBlockchain/Contract";
+import Contract from "context/InternalBlockchain/HtlcContract";
 
 export default interface RepositoryInterface {
     createContract: (externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) => void

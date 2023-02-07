@@ -6,10 +6,10 @@ import InternalBlockchainStubRepository from "context/InternalBlockchain/Reposit
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import {STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN} from "context/Domain/Deposit";
 import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchain";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchainHandler";
-import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/Errors";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchainHandler";
+import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/Errors";
 import * as DomainErrors from "context/Domain/Errors";
 import {createDeposit} from "../../../../../Helpers/Deposit";
 import {createExternalContract} from "../../../../../Helpers/ExternalContract";
@@ -81,7 +81,7 @@ describe('CreateContractInInternalBlockchainHandler', () => {
                 const externalContract = createExternalContract({
                     timeLock: dayjs().add(10, 'days').unix()
                 })
-                const deposit = createDeposit(undefined, externalContract)
+                const deposit = createDeposit({externalContract})
                 depositRepository.create(deposit)
 
                 const command = new CreateContractInInternalBlockchain(deposit.idString)
@@ -113,7 +113,7 @@ describe('CreateContractInInternalBlockchainHandler', () => {
                 const externalContract = createExternalContract({
                     timeLock: dayjs().unix()
                 })
-                const deposit = createDeposit(undefined, externalContract)
+                const deposit = createDeposit({externalContract})
                 depositRepository.create(deposit)
 
                 const command = new CreateContractInInternalBlockchain(deposit.idString)

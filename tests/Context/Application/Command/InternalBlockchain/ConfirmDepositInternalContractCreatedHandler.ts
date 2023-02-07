@@ -15,7 +15,6 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
     let handler: ConfirmDepositInternalContractCreatedHandler
 
     const externalContractId = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
-    const externalContractIdInternalBlockchain = externalContractId.substring(2)
 
     beforeEach(async () => {
         depositRepository = new DepositStubRepository()
@@ -26,12 +25,12 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
         describe('success', () => {
             it('should change status to STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN', async () => {
                 const deposit = createDeposit({
-                    externalContract: createExternalContract(externalContractId)
+                    externalContract: createExternalContract({id: externalContractId})
                 })
                 deposit.submittedToInternalBlockchain()
                 depositRepository.create(deposit)
 
-                const command = new ConfirmDepositInternalContractCreated(externalContractIdInternalBlockchain, '1.16.1')
+                const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
                 await handler.execute(command)
 
                 const updatedDeposit = await depositRepository.getById(deposit.id.toValue())
@@ -51,7 +50,7 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
 
             it('should throw error if deposit status is invalid', async () => {
                 const deposit = createDeposit({
-                    externalContract: createExternalContract(externalContractId)
+                    externalContract: createExternalContract({id: externalContractId})
                 })
                 depositRepository.create(deposit)
 

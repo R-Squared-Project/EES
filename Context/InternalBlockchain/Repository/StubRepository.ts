@@ -25,13 +25,8 @@ export default class StubRepository implements RepositoryInterface {
         this._internalContracts.push(contract)
     }
 
-<<<<<<< HEAD
-    getIncomingContracts(accountFromName: string, start: string): Promise<Contract[]> {
-        return Promise.resolve(this._internalContracts)
-=======
     getIncomingContracts(start: string): Promise<Contract[]> {
-        return Promise.resolve(this.contracts)
->>>>>>> 985d81b (feature/confirm_deposit_internal_contract_creation / 4)
+        return Promise.resolve(this._internalContracts)
     }
 
     public async disconnect() {
