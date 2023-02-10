@@ -17,7 +17,8 @@ export default class ExternalContract extends Entity {
         private _receiver: Address,
         private _value: string,
         private _hashLock: HashLock,
-        private _timeLock: TimeLock
+        private _timeLock: TimeLock,
+        private _txHash: string
     ) {
         super(contractId);
         this._withdrawn = false
@@ -47,5 +48,9 @@ export default class ExternalContract extends Entity {
 
     get timeLock(): TimeLock {
         return this._timeLock;
+    }
+
+    get txHash(): string {
+        return this._txHash
     }
 }
