@@ -45,7 +45,8 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
             Address.create(contract.receiver),
             contract.value,
             HashLock.create(contract.hashLock),
-            TimeLock.fromUnix(contract.timeLock)
+            TimeLock.fromUnix(contract.timeLock),
+            command.txHash
         )
 
         const depositRequest = await this.depositRequestRepository.load(HashLock.create(contract.hashLock))
@@ -54,7 +55,7 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
             throw new Errors.DepositRequestNotExists(contract.hashLock)
         }
 
-        const deposit = Deposit.create(depositRequest,  externalContract)
+        const deposit = Deposit.create(depositRequest, externalContract)
 
         try {
             await this.repository.create(deposit)
