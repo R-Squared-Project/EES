@@ -70,7 +70,7 @@ describe('CreateContractInInternalBlockchainHandler', () => {
 
                 const internalContract = internalBlockchainRepository.contracts[0]
 
-                expect(internalContract.externalId).equals(deposit._externalContract.idString)
+                expect(internalContract.externalId).equals(deposit._externalContract.txHash)
                 expect(internalContract.accountToName).equals(deposit._depositRequest.revpopAccount.value)
                 //TODO::check value
                 //expect(internalContract.amount).equals(Web3.utils.fromWei(deposit._externalContract.value))

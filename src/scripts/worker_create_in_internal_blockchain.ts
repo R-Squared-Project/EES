@@ -1,3 +1,4 @@
+import yargs from 'yargs'
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import CreateContractInInternalBlockchain
     from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchain";
@@ -8,11 +9,17 @@ import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import RabbitMQ from "context/Queue/RabbitMQ";
 
+yargs(process.argv.slice(2))
+    .usage('Connect to a RabbitMQ server and consume new messages. Create new contract in an internal blockchain')
+    .help()
+    .parseSync()
+
 interface CreateInInternalBlockchainMessage {
     deposit_id: string
 }
 
 let internalBlockchain: InternalBlockchain
+let messenger: RabbitMQ
 
 async function main() {
     const depositRepository = new DepositTypeOrmRepository(DataSource)
@@ -21,11 +28,11 @@ async function main() {
     })
     const converter = new EtherToWrappedEtherConverter()
     const handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter)
-    const messenger = new RabbitMQ()
+    messenger = new RabbitMQ()
 
     messenger.consume<CreateInInternalBlockchainMessage>(
         'create_in_internal_blockchain',
-        async (message: CreateInInternalBlockchainMessage, ack) => {
+        async (message: CreateInInternalBlockchainMessage, ack, nack) => {
             const command = new CreateContractInInternalBlockchain(message.deposit_id)
 
             try {
@@ -33,17 +40,15 @@ async function main() {
                 ack()
                 console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
             } catch (e: unknown) {
-                console.log(e)
-                /*
-                 * If infrastructure error then process again
-                 * If domain or command error then ack and save somewhere
-                 */
+                nack()
+                console.log(`Error occurred while HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
             }
         }
     )
 }
 
 process.on('SIGINT', () => {
+    messenger.disconnect()
     internalBlockchain.disconnect()
 });
 

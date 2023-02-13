@@ -1,4 +1,4 @@
-import amqp, {Channel} from "amqplib";
+import amqp, {Channel, Connection} from "amqplib";
 import config from "context/config";
 import {ConsumeMessage} from "amqplib/properties";
 
@@ -10,12 +10,13 @@ const EXCHANGE_OPTION = {
 
 export default class RabbitMQ {
     private channel: Channel | null = null;
+    private connection: Connection | null = null
 
     public async initProduce() {
         await this.connect()
     }
 
-    public async consume<T>(queueName: string, onMessage: (msg: T, ack: () => void) => void) {
+    public async consume<T>(queueName: string, onMessage: (msg: T, ack: () => void, nack: () => void) => void) {
         await this.connect()
         const channel = this.channel as Channel
 
@@ -30,6 +31,8 @@ export default class RabbitMQ {
             console.log(" [x] %s:'%s'", msg.fields.routingKey, msg.content.toString());
             onMessage(JSON.parse(msg.content.toString()), () => {
                 channel.ack(msg)
+            }, () => {
+                channel.nack(msg)
             })
         }, {
             noAck: false
@@ -46,11 +49,15 @@ export default class RabbitMQ {
     }
 
     private async connect() {
-        const connection = await amqp.connect({
+        this.connection = await amqp.connect({
             hostname: config.rabbitmq.host,
             port: config.rabbitmq.port
         });
-        this.channel = await connection.createChannel();
+        this.channel = await this.connection.createChannel();
         await this.channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, EXCHANGE_OPTION);
+    }
+
+    public async disconnect() {
+        this.connection?.close()
     }
 }
