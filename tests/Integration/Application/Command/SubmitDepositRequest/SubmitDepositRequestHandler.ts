@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {dataSourceTest} from "../../hooks";
+import {dataSourceTest} from "../../../hooks";
 import {SubmitDepositRequest} from "context/index";
 import SubmitDepositRequestHandler from "context/Application/Command/SubmitDepositRequest/SubmitDepositRequestHandler";
 import DepositRequestTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRequestRepository";

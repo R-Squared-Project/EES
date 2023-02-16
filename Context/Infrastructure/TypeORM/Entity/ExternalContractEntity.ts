@@ -29,6 +29,10 @@ const ExternalContractEntity = new EntitySchema<ExternalContract>({
         },
         _hashLock: HashLockType,
         _timeLock: TimeLockType,
+        _txHash: {
+            type: String,
+            name: 'tx_hash',
+        },
         _status: {
             type: Number,
             name: 'status',

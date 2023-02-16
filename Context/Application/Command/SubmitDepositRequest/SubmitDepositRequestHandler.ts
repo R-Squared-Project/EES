@@ -7,12 +7,12 @@ import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
 import HashLock from "context/Domain/ValueObject/HashLock";
 import * as Errors from "./Errors";
 
-export default class SubmitDepositRequestHandler implements UseCase<SubmitDepositRequest, void> {
+export default class SubmitDepositRequestHandler implements UseCase<SubmitDepositRequest, string> {
     constructor(
         private _repository: DepositRequestRepositoryInterface
     ) {}
 
-    async execute(command: SubmitDepositRequest): Promise<void> {
+    async execute(command: SubmitDepositRequest): Promise<string> {
         const revpopAccount = RevpopAccount.create(command.revpopAccount)
         const hashLock = HashLock.create(command.hashLock)
 
@@ -29,5 +29,7 @@ export default class SubmitDepositRequestHandler implements UseCase<SubmitDeposi
         } catch (e: unknown) {
             throw new DatabaseConnectionError()
         }
+
+        return depositRequest.id.toString()
     }
 }

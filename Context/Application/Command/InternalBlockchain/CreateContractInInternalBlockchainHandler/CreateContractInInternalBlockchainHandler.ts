@@ -26,7 +26,7 @@ export default class CreateContractInInternalBlockchainHandler implements UseCas
         deposit.submittedToInternalBlockchain()
 
         await this.internalBlockchain.createContract(
-            deposit._externalContract.idString,
+            deposit._externalContract.txHash,
             deposit._depositRequest.revpopAccount.value,
             rvEthAmount,
             deposit._depositRequest.hashLock.value.substring(2),
