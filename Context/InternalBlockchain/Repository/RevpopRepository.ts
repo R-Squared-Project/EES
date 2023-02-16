@@ -111,14 +111,18 @@ export default class RevpopRepository implements RepositoryInterface {
 
         const contracts = []
         for (const contract of revpopContracts) {
-            const message = Aes.decrypt_with_checksum(
-                privateKey,
-                contract.memo.to,
-                contract.memo.nonce,
-                contract.memo.message
-            ).toString("utf-8")
+            try {
+                const message = Aes.decrypt_with_checksum(
+                    privateKey,
+                    contract.memo.to,
+                    contract.memo.nonce,
+                    contract.memo.message
+                ).toString("utf-8")
 
-            contracts.push(new Contract(contract.id, message))
+                contracts.push(new Contract(contract.id, message))
+            } catch (e: unknown) {
+                continue;
+            }
         }
 
        return contracts

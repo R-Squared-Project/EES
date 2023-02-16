@@ -13,10 +13,10 @@ export default class GetLastDepositContractsHandler implements UseCase<GetLastDe
     ) {}
 
     public async execute(query: GetLastDepositContracts): Promise<Response> {
-        const lastProcessesContract = await this.getLastProcessedContract()
-        const [firstContractToProcessedId, firstContractToProcessedNumber] = await this.getFirstContractToProcessed(lastProcessesContract)
+        const lastProcessedContract = await this.getLastProcessedContract()
+        const [nextContractToProcessId, getNextContractToProcess] = this.getNextContractToProcess(lastProcessedContract)
 
-        const contracts = await this.internalBlockchain.getIncomingContracts(firstContractToProcessedId)
+        const contracts = await this.internalBlockchain.getIncomingContracts(nextContractToProcessId)
         const contractsToProcessed = []
 
         for(const contract of contracts) {
@@ -24,9 +24,7 @@ export default class GetLastDepositContractsHandler implements UseCase<GetLastDe
                 continue
             }
 
-            const contractNumber = parseInt(contract.id.split('.')[2], 10)
-
-            if (contractNumber < firstContractToProcessedNumber) {
+            if (this.parseContractIdLastNumber(contract.id) < getNextContractToProcess) {
                 continue
             }
 
@@ -42,24 +40,22 @@ export default class GetLastDepositContractsHandler implements UseCase<GetLastDe
     }
 
     private async getLastProcessedContract(): Promise<string | null> {
-        const lastProcessesContractId = await this.setting.load(DEPOSIT_LAST_PROCESSED_INTERNAL_CONTRACT, false)
-
-        if (!lastProcessesContractId) {
-            return '1.16.0'
-        }
-
-        return lastProcessesContractId
+        return await this.setting.load(DEPOSIT_LAST_PROCESSED_INTERNAL_CONTRACT, null)
     }
 
-    private async getFirstContractToProcessed(lastProcessedContract: string | null): Promise<[string, number]> {
+    private getNextContractToProcess(lastProcessedContract: string | null): [string, number] {
         if (null === lastProcessedContract) {
             return ['1.16.0', 0]
         }
 
         const lastProcessedIdParts = lastProcessedContract.split('.');
-        const firstContractToProcessedNumber = parseInt(lastProcessedIdParts[2], 10) + 1
-        lastProcessedIdParts[2] = firstContractToProcessedNumber.toString()
+        const nextContractToProcessedNumber = parseInt(lastProcessedIdParts[2], 10) + 1
+        lastProcessedIdParts[2] = nextContractToProcessedNumber.toString()
 
-        return [lastProcessedIdParts.join('.'), firstContractToProcessedNumber]
+        return [lastProcessedIdParts.join('.'), nextContractToProcessedNumber]
+    }
+
+    private parseContractIdLastNumber(id: string): number {
+        return parseInt(id.split('.')[2], 10)
     }
 }
