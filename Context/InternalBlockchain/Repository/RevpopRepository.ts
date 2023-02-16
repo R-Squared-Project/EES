@@ -2,17 +2,18 @@ import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
 import {Apis} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
-import { FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
+import { Aes, FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
 import * as Errors from "context/InternalBlockchain/Errors";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
+import Contract from "context/InternalBlockchain/HtlcContract";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 
 export default class RevpopRepository implements RepositoryInterface {
     private memo: Memo
     public constructor(
-        private readonly accountFrom: string,
+        private readonly eesAccount: string,
         private readonly accountPrivateKey: string,
         private readonly assetSymbol: string
     ) {
@@ -32,14 +33,14 @@ export default class RevpopRepository implements RepositoryInterface {
 
 
     async createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        const accountFrom = await FetchChain("getAccount", this.accountFrom)
+        const accountFrom = await FetchChain("getAccount", this.eesAccount)
         const accountTo = await FetchChain("getAccount", accountToName)
 
         if (null === accountTo) {
             throw new Errors.AccountNotFound(accountToName)
         }
 
-        const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
 
         const asset = await FetchChain("getAsset", this.assetSymbol)
 
@@ -87,7 +88,7 @@ export default class RevpopRepository implements RepositoryInterface {
             preimage_size: hashLock.length,
             claim_period_seconds: timeLock,
             extensions: {
-                memo: this.memo.generate(externalId, privateKey, accountFrom, accountTo)
+                memo: this.memo.generate(externalId.slice(2), privateKey, accountFrom, accountTo)
             }
         });
 
@@ -99,6 +100,32 @@ export default class RevpopRepository implements RepositoryInterface {
         } catch (e: unknown) {
             throw new Errors.CreateHtlcError()
         }
+    }
+
+    async getIncomingContracts(start: string): Promise<Contract[]> {
+        const revpopContracts = await Apis.instance()
+            .db_api()
+            .exec("get_htlc_by_from", [this.eesAccount, start, 100])
+
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
+
+        const contracts = []
+        for (const contract of revpopContracts) {
+            try {
+                const message = Aes.decrypt_with_checksum(
+                    privateKey,
+                    contract.memo.to,
+                    contract.memo.nonce,
+                    contract.memo.message
+                ).toString("utf-8")
+
+                contracts.push(new Contract(contract.id, message))
+            } catch (e: unknown) {
+                continue;
+            }
+        }
+
+       return contracts
     }
 
     public async connect(nodeUrl: string) {

@@ -1,10 +1,10 @@
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
+import CreateContractInInternalBlockchain
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchainHandler";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchainHandler";
 import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
-import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchain";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import RabbitMQ from "context/Queue/RabbitMQ";
 
@@ -34,7 +34,10 @@ async function main() {
                 console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
             } catch (e: unknown) {
                 console.log(e)
-                //TODO::nack?
+                /*
+                 * If infrastructure error then process again
+                 * If domain or command error then ack and save somewhere
+                 */
             }
         }
     )

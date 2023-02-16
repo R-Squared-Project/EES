@@ -6,6 +6,7 @@ import DepositRequestEntity from "../Entity/DepositRequestEntity";
 import ExternalContractEntity from "context/Infrastructure/TypeORM/Entity/ExternalContractEntity";
 import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/SettingEntity";
 import config from "../../../config";
+import InternalContractEntity from "context/Infrastructure/TypeORM/Entity/InternalContractEntity";
 
 const DatabaseConfig: DataSourceOptions = {
     type: 'mysql',
@@ -14,7 +15,7 @@ const DatabaseConfig: DataSourceOptions = {
     username: config.db.user,
     password: config.db.password,
     database: config.db.name,
-    entities: [DepositRequestEntity, DepositEntity, ExternalContractEntity, SettingEntity],
+    entities: [DepositRequestEntity, DepositEntity, ExternalContractEntity, InternalContractEntity, SettingEntity],
     migrations: [path.join(__dirname, '..', 'migrations', '*.ts')],
     subscribers: [Subscriber],
     migrationsRun: config.isTest,

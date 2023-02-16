@@ -2,7 +2,7 @@ import DepositRequest from "context/Domain/DepositRequest";
 import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepositoryInterface";
 import HashLock from "context/Domain/ValueObject/HashLock";
 
-export default class DepositRequestStubRepository implements DepositRequestRepositoryInterface {
+export default class DepositRequestRepository implements DepositRequestRepositoryInterface {
     private _depositRequests: {
         [index: string]: DepositRequest
     } = {}

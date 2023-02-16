@@ -1,8 +1,8 @@
 import {DataSource} from "typeorm";
-import RepositoryInterface from "./RepositoryInterface";
+import RepositoryInterface from "../../Domain/RepositoryInterface";
 import Setting from "../../Domain/Setting";
 
-export default class TypeOrmRepository implements RepositoryInterface{
+export default class Repository implements RepositoryInterface{
     constructor(
         private _datasource: DataSource
     ) {}

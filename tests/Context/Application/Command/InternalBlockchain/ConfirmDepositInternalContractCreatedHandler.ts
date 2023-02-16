@@ -1,0 +1,63 @@
+import {expect} from 'chai';
+import ConfirmDepositInternalContractCreatedHandler
+    from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreatedHandler";
+import ConfirmDepositInternalContractCreated
+    from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreated";
+import DepositStubRepository from "context/Infrastructure/Stub/DepositRepository";
+import {createExternalContract} from "../../../../Helpers/ExternalContract";
+import {createDeposit} from "../../../../Helpers/Deposit";
+import InternalContract from "context/Domain/InternalContract";
+import * as Errors from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/Errors";
+import * as DomainErrors from "context/Domain/Errors";
+
+describe('ConfirmDepositInternalContractCreatedHandler', () => {
+    let depositRepository: DepositStubRepository
+    let handler: ConfirmDepositInternalContractCreatedHandler
+
+    const externalContractId = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+
+    beforeEach(async () => {
+        depositRepository = new DepositStubRepository()
+        handler = new ConfirmDepositInternalContractCreatedHandler(depositRepository)
+    });
+
+    describe('execute', () => {
+        describe('success', () => {
+            it('should change status to STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN', async () => {
+                const deposit = createDeposit({
+                    externalContract: createExternalContract({id: externalContractId})
+                })
+                deposit.submittedToInternalBlockchain()
+                depositRepository.create(deposit)
+
+                const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
+                await handler.execute(command)
+
+                const updatedDeposit = await depositRepository.getById(deposit.id.toValue())
+                expect(updatedDeposit?.status).equals(10)
+                expect(updatedDeposit?.internalContract).not.null
+
+                const internalContract = deposit.internalContract as InternalContract
+                expect(internalContract.externalId).equals(externalContractId)
+            })
+        })
+
+        describe('error', () => {
+            it('should throw error if deposit with external id does not exist', async () => {
+                const command = new ConfirmDepositInternalContractCreated('invalid_external_id', '1.16.1')
+                await expect(handler.execute(command)).rejectedWith(Errors.DepositNotFound)
+            })
+
+            it('should throw error if deposit status is invalid', async () => {
+                const deposit = createDeposit({
+                    externalContract: createExternalContract({id: externalContractId})
+                })
+                depositRepository.create(deposit)
+
+                const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
+                await expect(handler.execute(command)).rejectedWith(DomainErrors.ConfirmDepositInternalContractCreatedStatusError)
+
+            })
+        })
+    });
+});

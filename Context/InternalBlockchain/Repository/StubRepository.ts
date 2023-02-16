@@ -1,4 +1,5 @@
 import RepositoryInterface from "./RepositoryInterface";
+import Contract from "context/InternalBlockchain/HtlcContract";
 
 interface ContractInfo {
     externalId: string,
@@ -9,16 +10,25 @@ interface ContractInfo {
 }
 
 export default class StubRepository implements RepositoryInterface {
-    private _contracts: ContractInfo[] = []
+    private _newContracts: ContractInfo[] = []
+    private _internalContracts: Contract[] = []
 
     createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        this._contracts.push({externalId, accountToName, amount, hashLock, timeLock})
-    }
-
-    public async disconnect() {
+        this._newContracts.push({externalId, accountToName, amount, hashLock, timeLock})
     }
 
     get contracts(): ContractInfo[] {
-        return this._contracts;
+        return this._newContracts;
+    }
+
+    public addInternalContract(contract: Contract) {
+        this._internalContracts.push(contract)
+    }
+
+    getIncomingContracts(start: string): Promise<Contract[]> {
+        return Promise.resolve(this._internalContracts)
+    }
+
+    public async disconnect() {
     }
 }

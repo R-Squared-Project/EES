@@ -24,6 +24,16 @@ export default class DepositRepository implements DepositRepositoryInterface {
         return Promise.resolve(this._deposits[id]?? null)
     }
 
+    getByExternalId(externalId: string): Promise<Deposit | null> {
+        for (const deposit of Object.values(this._deposits)) {
+            if (deposit._externalContract.idString === externalId) {
+                return Promise.resolve(deposit)
+            }
+        }
+
+        return Promise.resolve(null)
+    }
+
     first(): Deposit | null {
         return Object.values(this._deposits)[0]
     }
