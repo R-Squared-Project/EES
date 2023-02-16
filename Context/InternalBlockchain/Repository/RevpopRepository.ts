@@ -7,6 +7,7 @@ import * as Errors from "context/InternalBlockchain/Errors";
 import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
 import Contract from "context/InternalBlockchain/HtlcContract";
+import OperationRedeem from "../OperationRedeem";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 
@@ -126,6 +127,26 @@ export default class RevpopRepository implements RepositoryInterface {
         }
 
        return contracts
+    }
+
+    async getRedeemOperations(account: string): Promise<OperationRedeem[]> {
+        const revpopOperations = await Apis.instance()
+            .history_api()
+            .exec("get_account_history_operations", [account, 70, "1.11.0", "1.11.0", 100])
+
+        const operations = []
+        for(const revpopOperation of revpopOperations) {
+            operations.push(
+                OperationRedeem.create(
+                    account,
+                    revpopOperation['op'][1]['htlc_id'],
+                    Buffer.from(revpopOperation['op'][1]['preimage'], 'hex').toString(),
+                    revpopOperation['id'],
+                )
+            )
+        }
+
+        return operations
     }
 
     public async connect(nodeUrl: string) {

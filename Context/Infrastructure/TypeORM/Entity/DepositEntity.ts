@@ -29,12 +29,18 @@ const DepositEntity = new EntitySchema<Deposit>({
             joinColumn: {
                 name: 'internal_contract_id',
                 referencedColumnName: 'id'
-            }
+            },
+            cascade: ['insert']
         }
     },
     columns: {
         id: UniqueEntityIDType,
         // @ts-ignore
+        _secret: {
+            type: String,
+            name: 'secret',
+            nullable: true
+        },
         _status: {
             type: Number,
             name: 'status',

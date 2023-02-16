@@ -6,4 +6,5 @@ export default interface DepositRepositoryInterface {
     exists: (contractId: string) => Promise<boolean>
     getById: (id: string) => Promise<Deposit | null>
     getByExternalId: (externalId: string) => Promise<Deposit | null>
+    getWaitingToRedeem: () => Promise<Deposit[]>
 }

@@ -1,6 +1,6 @@
 import {DataSource} from 'typeorm';
 import DepositRepositoryInterface from '../../Domain/DepositRepositoryInterface';
-import Deposit from '../../Domain/Deposit';
+import Deposit, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from '../../Domain/Deposit';
 
 export default class TypeOrmRepository implements DepositRepositoryInterface {
     constructor(
@@ -31,6 +31,7 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .getRepository<Deposit>(Deposit)
             .createQueryBuilder('deposit')
             .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
             .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
             .where('deposit.id = :depositId', {depositId: id})
             .getOne()
@@ -44,5 +45,16 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
             .where('externalContract.id = :externalId', {externalId: externalId})
             .getOne()
+    }
+
+    async getWaitingToRedeem(): Promise<Deposit[]> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
+            .where('deposit.status = :status', {status: STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN})
+            .getMany()
     }
 }

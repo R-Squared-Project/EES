@@ -11,6 +11,7 @@
     "monitor:ethereum_transactions": "ts-node -r tsconfig-paths/register src/scripts/monitor_ethereum_transactions.ts",
     "worker:create_in_internal_blockchain": "ts-node -r tsconfig-paths/register src/scripts/worker_create_in_internal_blockchain.ts",
     "monitor:deposit_internal_contract_created": "ts-node -r tsconfig-paths/register src/scripts/monitor_deposit_internal_contract_created.ts",
+    "monitor:deposit_internal_contract_redeemed": "ts-node -r tsconfig-paths/register src/scripts/monitor_deposit_internal_contract_redeemed.ts",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",

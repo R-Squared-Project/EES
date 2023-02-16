@@ -9,7 +9,7 @@ import * as GetLastContractsErrors from "context/Application/Query/ExternalBlock
 import ExternalBlockchain from 'context/ExternalBlockchain/ExternalBlockchain';
 import Setting from 'context/Setting/Setting';
 import DataSource from 'context/Infrastructure/TypeORM/DataSource/DataSource';
-import {AfterIncomingContractProcessed} from "context/Subscribers/AfterIncomingContractProcessed";
+import AfterIncomingContractProcessed from "context/Subscribers/AfterIncomingContractProcessed";
 
 const argv = yargs(process.argv.slice(2))
     .option('block-number', {
