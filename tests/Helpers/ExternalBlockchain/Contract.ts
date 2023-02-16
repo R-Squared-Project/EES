@@ -1,4 +1,4 @@
-import Contract from "context/ExternalBlockchain/Contract";
+import ExternalHtlcContract from "context/ExternalBlockchain/Contract";
 import dayjs from "dayjs";
 import {HashZero} from "@ethersproject/constants";
 
@@ -24,8 +24,8 @@ const withdrawn = false
 const refunded = false
 const preimage = HashZero
 
-export function createContract(params?: ContractParams) {
-    return new Contract(
+export function createContract(params?: ContractParams): ExternalHtlcContract {
+    return new ExternalHtlcContract(
         params?.contractId ?? contractId,
         params?.sender ?? sender,
         params?.receiver ?? receiver,

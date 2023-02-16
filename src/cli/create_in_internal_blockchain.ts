@@ -1,12 +1,12 @@
 import yargs from "yargs";
-import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchain";
 import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
+import CreateContractInInternalBlockchain
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInRevpop/CreateContractInInternalBlockchainHandler";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
 
 const argv = yargs(process.argv.slice(2))
     .option('id', {
