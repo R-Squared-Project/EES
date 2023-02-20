@@ -8,6 +8,7 @@ import TimeLock from "context/Domain/ValueObject/TimeLock";
 interface Params {
     id?: string,
     timeLock?: number
+    txHash?: string
 }
 
 const idDefault = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
