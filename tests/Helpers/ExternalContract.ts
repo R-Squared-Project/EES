@@ -16,6 +16,7 @@ const receiver = '0x9B1EaAe87cC3A041c4CEf02386109D6aCE4E198E'
 const value = '10000000000000000'
 const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
 const timeLock = dayjs().add(10, 'day').unix()
+const txHash = '0x2592cf699903e83bfd664aa4e339388fd044fe31643a85037be803a5d162729f'
 
 export function createExternalContract(params?: Params) {
     return new ExternalContract(
@@ -24,6 +25,7 @@ export function createExternalContract(params?: Params) {
         Address.create(receiver),
         value,
         HashLock.create(hashLock),
-        TimeLock.fromUnix(params?.timeLock ?? timeLock)
+        TimeLock.fromUnix(params?.timeLock ?? timeLock),
+        txHash,
     )
 }

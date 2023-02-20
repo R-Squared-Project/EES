@@ -15,7 +15,8 @@
         "outDir": "./dist",
         "baseUrl": "./",
         "paths": {
-            "context/*": ["Context/*"]
+            "context/*": ["Context/*"],
+            "tests/*": ["tests/*"]
         },
         "incremental": true,
         "skipLibCheck": true,

@@ -1,13 +1,13 @@
 import {expect} from 'chai';
-import ConfirmDepositInternalContractCreatedHandler
-    from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreatedHandler";
-import ConfirmDepositInternalContractCreated
-    from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreated";
 import DepositStubRepository from "context/Infrastructure/Stub/DepositRepository";
-import {createExternalContract} from "../../../../Helpers/ExternalContract";
-import {createDeposit} from "../../../../Helpers/Deposit";
+import {createExternalContract} from "tests/Helpers/ExternalContract";
+import {createDeposit} from "tests/Helpers/Deposit";
 import InternalContract from "context/Domain/InternalContract";
-import * as Errors from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/Errors";
+import ConfirmDepositInternalContractCreatedHandler
+    from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/ConfirmDepositInternalContractCreatedHandler";
+import ConfirmDepositInternalContractCreated
+    from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/ConfirmDepositInternalContractCreated";
+import * as Errors from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/Errors";
 import * as DomainErrors from "context/Domain/Errors";
 
 describe('ConfirmDepositInternalContractCreatedHandler', () => {

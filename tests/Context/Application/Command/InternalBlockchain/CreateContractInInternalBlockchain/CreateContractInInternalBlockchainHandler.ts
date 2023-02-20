@@ -6,10 +6,10 @@ import InternalBlockchainStubRepository from "context/InternalBlockchain/Reposit
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import {STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN} from "context/Domain/Deposit";
 import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchain";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchainHandler";
-import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/Errors";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
+import * as Errors from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/Errors";
 import * as DomainErrors from "context/Domain/Errors";
 import {createDeposit} from "../../../../../Helpers/Deposit";
 import {createExternalContract} from "../../../../../Helpers/ExternalContract";
