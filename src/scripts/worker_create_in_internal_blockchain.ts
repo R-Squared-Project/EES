@@ -1,9 +1,9 @@
 import yargs from 'yargs'
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchain";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchainHandler/CreateContractInInternalBlockchainHandler";
+    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
 import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";

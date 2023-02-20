@@ -4,9 +4,9 @@ import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepo
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import ConfirmDepositInternalContractCreated
-    from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreated";
+    from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/ConfirmDepositInternalContractCreated";
 import ConfirmDepositInternalContractCreatedHandler
-    from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreatedHandler/ConfirmDepositInternalContractCreatedHandler";
+    from "../../Context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/ConfirmDepositInternalContractCreatedHandler";
 import Setting from "context/Setting/Setting";
 import GetLastDepositContractsHandler
     from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContractsHandler";
