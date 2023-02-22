@@ -27,6 +27,6 @@
         "strictNullChecks": true,
         "strictFunctionTypes": true,
         "strictPropertyInitialization": true,
-        "typeRoots": ["./node_modules/@types", "./tests/Helpers"]
+        "typeRoots": ["./node_modules/@types"]
     }
 }
