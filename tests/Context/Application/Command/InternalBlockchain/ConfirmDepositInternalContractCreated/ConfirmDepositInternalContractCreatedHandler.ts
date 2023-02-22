@@ -36,9 +36,6 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                 const updatedDeposit = await depositRepository.getById(deposit.id.toValue())
                 expect(updatedDeposit?.status).equals(10)
                 expect(updatedDeposit?.internalContract).not.null
-
-                const internalContract = deposit.internalContract as InternalContract
-                expect(internalContract.externalId).equals(externalContractId)
             })
         })
 

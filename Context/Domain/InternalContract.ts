@@ -2,8 +2,7 @@ import Entity from "context/Core/Domain/Entity";
 
 export default class InternalContract extends Entity {
     public constructor(
-        private _internalId: string,
-        private _externalId: string
+        private _internalId: string
     ) {
         super();
     }
@@ -12,7 +11,4 @@ export default class InternalContract extends Entity {
         return this._internalId;
     }
 
-    get externalId(): string {
-        return this._externalId;
-    }
 }

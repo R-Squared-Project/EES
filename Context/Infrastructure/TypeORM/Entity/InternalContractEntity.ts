@@ -17,14 +17,6 @@ const InternalContractEntity = new EntitySchema<InternalContract>({
             type: String,
             name: 'internalId',
         },
-        _externalId: {
-            type: String,
-            name: 'externalId',
-        },
-        _status: {
-            type: Number,
-            name: 'status',
-        },
         _createdAt: {
             name: 'created_at',
             createDate: true,

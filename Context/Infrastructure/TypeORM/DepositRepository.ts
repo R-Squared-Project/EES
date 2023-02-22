@@ -42,7 +42,7 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .createQueryBuilder('deposit')
             .leftJoinAndSelect('deposit._externalContract', 'externalContract')
             .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
-            .where('externalContract.id = :externalId', {externalId: externalId})
+            .where('externalContract._txHash = :txHash', {externalId: externalId})
             .getOne()
     }
 }
