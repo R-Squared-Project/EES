@@ -23,8 +23,6 @@ describe('ConfirmDepositInternalContractRedeemed', async () => {
     let handler: ConfirmDepositInternalContractRedeemedHandler
     let deposit: Deposit
 
-    const hashLock = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
-
     before(async () => {
         depositRepository = new DepositRepository(dataSourceTest)
         depositRequestRepository = new DepositRequestTypeOrmRepository(dataSourceTest)
@@ -41,7 +39,7 @@ describe('ConfirmDepositInternalContractRedeemed', async () => {
             await depositRequestRepository.create(depositRequest)
             deposit = createDeposit({
                 depositRequest,
-                externalContract: createExternalContract({hashLock})
+                externalContract: createExternalContract()
             })
             deposit.submittedToInternalBlockchain()
             const internalContract = new InternalContract('1.16.1', 'external_contract_id')

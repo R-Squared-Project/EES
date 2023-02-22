@@ -1,5 +1,7 @@
 import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
+import {ChainTypes} from "@revolutionpopuli/revpopjs";
+//@ts-ignore
 import {Apis} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
 import { Aes, FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
@@ -132,10 +134,10 @@ export default class RevpopRepository implements RepositoryInterface {
     async getRedeemOperations(account: string): Promise<OperationRedeem[]> {
         const revpopOperations = await Apis.instance()
             .history_api()
-            .exec("get_account_history_operations", [account, 70, "1.11.0", "1.11.0", 100])
+            .exec("get_account_history_by_operations", [account, [ChainTypes.operations.htlc_redeem], 0, 100])
 
         const operations = []
-        for(const revpopOperation of revpopOperations) {
+        for(const revpopOperation of revpopOperations.operation_history_objs) {
             operations.push(
                 OperationRedeem.create(
                     account,
