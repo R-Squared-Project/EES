@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import DepositStubRepository from "context/Infrastructure/Stub/DepositRepository";
 import {createExternalContract} from "tests/Helpers/ExternalContract";
 import {createDeposit} from "tests/Helpers/Deposit";
+import InternalContract from "context/Domain/InternalContract";
 import ConfirmDepositInternalContractCreatedHandler
     from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/ConfirmDepositInternalContractCreatedHandler";
 import ConfirmDepositInternalContractCreated
@@ -35,6 +36,9 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                 const updatedDeposit = await depositRepository.getById(deposit.id.toValue())
                 expect(updatedDeposit?.status).equals(10)
                 expect(updatedDeposit?.internalContract).not.null
+
+                const internalContract = deposit.internalContract as InternalContract
+                expect(internalContract.internalId).equals('1.16.1')
             })
         })
 
