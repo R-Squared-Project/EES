@@ -76,8 +76,7 @@ describe('ProcessIncomeContractCreationHandler', () => {
                 const deposit = depositRepository.first() as Deposit
                 expect(deposit).not.null
 
-                const depositRequest = deposit._depositRequest
-                expect(depositRequest?.hashLock.equals(HashLock.create(hashLock))).true
+                expect(deposit._depositRequest?.hashLock.equals(HashLock.create(hashLock))).true
             });
 
             it('should use correct external contract', async () => {
