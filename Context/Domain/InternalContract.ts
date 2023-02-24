@@ -4,8 +4,7 @@ export default class InternalContract extends Entity {
     private _status: number
 
     public constructor(
-        private _internalId: string,
-        private _externalId: string
+        private _internalId: string
     ) {
         super();
 
@@ -16,7 +15,4 @@ export default class InternalContract extends Entity {
         return this._internalId;
     }
 
-    get externalId(): string {
-        return this._externalId;
-    }
 }
