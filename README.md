@@ -6,7 +6,7 @@ Run eslint: `yarn eslint .`
 
 Just run `docker compose up -d`
 
-To check that all work fun execute request: 
+To check that all work fun execute request:
 ```
 curl -i http://localhost:3000/deposit/initialize
 ```
@@ -35,7 +35,10 @@ yarn test
 ```
 docker compose exec db bash -c "./initdb_test.sh"
 ```
-2. Migrations will be applied automatically
+2. Execute migrations
+```
+NODE_ENV=test yarn typeorm migration:run -d Context/Infrastructure/TypeORM/DataSource/DataSource.ts
+```
 3. Run tests
 ```
 yarn test:integration

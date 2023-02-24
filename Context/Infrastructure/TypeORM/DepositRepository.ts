@@ -1,6 +1,7 @@
 import {DataSource} from 'typeorm';
 import DepositRepositoryInterface from '../../Domain/DepositRepositoryInterface';
 import Deposit, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from '../../Domain/Deposit';
+import InternalContract from 'context/Domain/InternalContract';
 
 export default class TypeOrmRepository implements DepositRepositoryInterface {
     constructor(
@@ -12,7 +13,14 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
     }
 
     async save(deposit: Deposit) {
+        if (deposit.internalContract instanceof InternalContract) {
+            await this._datasource.getRepository<InternalContract>(InternalContract).upsert(deposit.internalContract, ['idString'])
+        }
+
         await this._datasource.getRepository<Deposit>(Deposit).upsert(deposit, ['id'])
+
+        // Don't work
+        // await this._datasource.getRepository<Deposit>(Deposit).save(deposit)
     }
 
     async exists(contractId: string): Promise<boolean> {
@@ -37,13 +45,14 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .getOne()
     }
 
-    async getByExternalId(externalId: string): Promise<Deposit | null> {
+    async getByTxHash(txHash: string): Promise<Deposit | null> {
         return await this._datasource
             .getRepository<Deposit>(Deposit)
             .createQueryBuilder('deposit')
             .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
             .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
-            .where('externalContract._txHash = :txHash', {externalId: externalId})
+            .where('externalContract._txHash = :txHash', {txHash})
             .getOne()
     }
 

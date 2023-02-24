@@ -6,13 +6,12 @@ const InternalContractEntity = new EntitySchema<InternalContract>({
     tableName: 'internal_contract',
     target: InternalContract,
     columns: {
-        //@ts-ignore
-        id: {
+        idString: {
             name: 'id',
-            type: Number,
-            primary: true,
-            generated: true,
+            type: String,
+            primary: true
         },
+        // @ts-ignore
         _internalId: {
             type: String,
             name: 'internalId',

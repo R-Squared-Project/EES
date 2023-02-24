@@ -27,6 +27,6 @@ export function createExternalContract(params?: Params) {
         value,
         HashLock.create(hashLock),
         TimeLock.fromUnix(params?.timeLock ?? timeLock),
-        txHash,
+        params?.txHash ?? txHash,
     )
 }

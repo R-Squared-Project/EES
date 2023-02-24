@@ -14,23 +14,24 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
     let depositRepository: DepositStubRepository
     let handler: ConfirmDepositInternalContractCreatedHandler
 
-    const externalContractId = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
-
     beforeEach(async () => {
         depositRepository = new DepositStubRepository()
         handler = new ConfirmDepositInternalContractCreatedHandler(depositRepository)
     });
 
     describe('execute', () => {
+        const txHash = '0x14383da019a0dafdf459d62c6f9c1aaa9e4d0f16554b5c493e85eb4a3dfac55c'
+
         describe('success', () => {
             it('should change status to STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN', async () => {
                 const deposit = createDeposit({
-                    externalContract: createExternalContract({id: externalContractId})
+                    externalContract: createExternalContract({txHash})
                 })
                 deposit.submittedToInternalBlockchain()
                 depositRepository.create(deposit)
+                const internalId = '1.16.1'
 
-                const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
+                const command = new ConfirmDepositInternalContractCreated(txHash, internalId)
                 await handler.execute(command)
 
                 const updatedDeposit = await depositRepository.getById(deposit.id.toValue())
@@ -38,7 +39,7 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                 expect(updatedDeposit?.internalContract).not.null
 
                 const internalContract = deposit.internalContract as InternalContract
-                expect(internalContract.internalId).equals('1.16.1')
+                expect(internalContract.internalId).equals(internalId)
             })
         })
 
@@ -50,11 +51,11 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
 
             it('should throw error if deposit status is invalid', async () => {
                 const deposit = createDeposit({
-                    externalContract: createExternalContract({id: externalContractId})
+                    externalContract: createExternalContract({txHash})
                 })
                 depositRepository.create(deposit)
 
-                const command = new ConfirmDepositInternalContractCreated(externalContractId, '1.16.1')
+                const command = new ConfirmDepositInternalContractCreated(txHash, '1.16.1')
                 await expect(handler.execute(command)).rejectedWith(DomainErrors.ConfirmDepositInternalContractCreatedStatusError)
 
             })
