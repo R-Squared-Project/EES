@@ -6,6 +6,7 @@ import HashedTimeLockAbi from "../../../src/assets/abi/HashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import config from "context/config";
+import * as Errors from "context/ExternalBlockchain/Errors";
 
 export default class EthereumRepository implements RepositoryInterface {
     private _web3: Web3
@@ -13,7 +14,7 @@ export default class EthereumRepository implements RepositoryInterface {
 
     constructor() {
         this._web3 = new Web3(new Web3.providers.HttpProvider(
-            `https://${config.eth?.network as string}.infura.io/v3/${config.eth?.providers.infura.api_key}`
+            `https://${config.eth.network as string}.infura.io/v3/${config.eth?.providers.infura.api_key}`
         ))
 
         this._contract = new this._web3.eth.Contract(HashedTimeLockAbi as AbiItem[], config.eth?.contract_address)
@@ -63,6 +64,43 @@ export default class EthereumRepository implements RepositoryInterface {
                 toBlock
             }
         )
+    }
+
+    async redeem(contractId: string, secret: string, receiver: string): Promise<string> {
+        let gas: number
+
+        try {
+            gas = await this._contract.methods.withdraw(contractId, secret).estimateGas({
+                from: receiver
+            })
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError()
+            }
+
+            throw new Errors.RedeemUnexpectedError(contractId, e.message)
+        }
+
+        const tx = {
+            from: receiver,
+            to: this._contract.options.address,
+            gas,
+            data: this._contract.methods.withdraw(contractId, secret).encodeABI()
+        };
+
+        const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
+
+        try {
+            const result = await this._web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
+
+            return result.transactionHash
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError()
+            }
+
+            throw new Errors.RedeemUnexpectedError(contractId, e.message)
+        }
     }
 
 

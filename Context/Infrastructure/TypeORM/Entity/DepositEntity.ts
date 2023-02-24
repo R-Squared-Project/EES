@@ -41,6 +41,11 @@ const DepositEntity = new EntitySchema<Deposit>({
             name: 'secret',
             nullable: true
         },
+        _externalBlockchainRedeemTxHash: {
+            type: String,
+            name: 'external_blockchain_redeem_tx_hash',
+            nullable: true
+        },
         _status: {
             type: Number,
             name: 'status',
