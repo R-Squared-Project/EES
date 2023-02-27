@@ -8,9 +8,9 @@ import ProcessIncomingContractCreation
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
 import * as ErrorsDomain from "context/Domain/Errors";
-import {createContract} from "../../../../Helpers/ExternalBlockchain/Contract";
+import {createContract} from "tests/Helpers/ExternalBlockchain/Contract";
 import dayjs from "dayjs";
-import {createDepositRequest} from "../../../../Helpers/DepositRequest";
+import {createDepositRequest} from "tests/Helpers/DepositRequest";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import HashLock from "context/Domain/ValueObject/HashLock";
 import Deposit from "context/Domain/Deposit";
@@ -76,8 +76,7 @@ describe('ProcessIncomeContractCreationHandler', () => {
                 const deposit = depositRepository.first() as Deposit
                 expect(deposit).not.null
 
-                const depositRequest = deposit._depositRequest
-                expect(depositRequest?.hashLock.equals(HashLock.create(hashLock))).true
+                expect(deposit._depositRequest?.hashLock.equals(HashLock.create(hashLock))).true
             });
 
             it('should use correct external contract', async () => {

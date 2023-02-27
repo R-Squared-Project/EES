@@ -17,7 +17,7 @@ export default class ConfirmDepositInternalContractCreatedHandler implements Use
             throw new DepositNotFound(externalId)
         }
 
-        const internalContract = new InternalContract(command.internalId, externalId)
+        const internalContract = new InternalContract(command.internalId)
         deposit.createdInInternalBlockchain(internalContract)
 
         this.depositRepository.save(deposit)

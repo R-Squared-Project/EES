@@ -38,7 +38,7 @@ describe('ConfirmDepositInternalContractCreatedHandler', () => {
                 expect(updatedDeposit?.internalContract).not.null
 
                 const internalContract = deposit.internalContract as InternalContract
-                expect(internalContract.externalId).equals(externalContractId)
+                expect(internalContract.internalId).equals('1.16.1')
             })
         })
 
