@@ -109,3 +109,9 @@ export class ConfirmDepositInternalContractCreatedStatusError extends DomainErro
         super(`DepositId: ${id}. Status ${status} is invalid.`)
     }
 }
+
+export class ConfirmDepositInternalContractRedeemedStatusError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`DepositId: ${id}. Status ${status} is invalid.`)
+    }
+}

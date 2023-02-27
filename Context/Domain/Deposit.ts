@@ -3,15 +3,19 @@ import DepositRequest from "./DepositRequest";
 import ExternalContract from "./ExternalContract";
 import InternalContract from "context/Domain/InternalContract";
 import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
+import IncomingContractRedeemedEvent from "context/Domain/Event/IncomingContractRedeemedEvent";
 import CreateContractInInternalBlockchainValidator from "./Validation/CreateContractInInternalBlockchainValidator";
 import ConfirmDepositInternalContractCreatedValidator
     from "context/Domain/Validation/ConfirmDepositInternalContractCreatedValidator";
+import ConfirmDepositInternalContractRedeemedValidator from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
 
 export const STATUS_CREATED = 1
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
-const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
+export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
+export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
 
 export default class Deposit extends AggregateRoot {
+    private _secret: string | null = null
     private _status: number
     public _internalContract: InternalContract | null = null
 
@@ -29,6 +33,10 @@ export default class Deposit extends AggregateRoot {
 
     get status(): number {
         return this._status;
+    }
+
+    get secret(): string | null {
+        return this._secret;
     }
 
     static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
@@ -52,5 +60,16 @@ export default class Deposit extends AggregateRoot {
 
         this._internalContract = internalContract
         this._status = STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN
+    }
+
+    public redeemedInInternalBlockchain(secret: string) {
+        new ConfirmDepositInternalContractRedeemedValidator(this).validate()
+
+        this._secret = secret
+        this._status = STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN
+
+        this.addDomainEvent(new IncomingContractRedeemedEvent(
+            this.id.toValue()
+        ))
     }
 }

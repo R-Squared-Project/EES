@@ -34,6 +34,10 @@ export default class DepositRepository implements DepositRepositoryInterface {
         return Promise.resolve(null)
     }
 
+    getWaitingToRedeem(): Promise<Deposit[]> {
+        return Promise.resolve([])
+    }
+
     first(): Deposit | null {
         return Object.values(this._deposits)[0]
     }

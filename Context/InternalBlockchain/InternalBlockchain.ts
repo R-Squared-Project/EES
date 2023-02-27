@@ -3,6 +3,7 @@ import RevpopRepository from "./Repository/RevpopRepository";
 import StubRepository from "./Repository/StubRepository";
 import config from "context/config";
 import Contract from "context/InternalBlockchain/HtlcContract";
+import OperationRedeem from "./OperationRedeem";
 
 type Repository = 'revpop' | 'stub'
 
@@ -54,7 +55,11 @@ class InternalBlockchain {
     }
 
     async getIncomingContracts(start: string): Promise<Contract[]> {
-        return await this.repository.getIncomingContracts(start);
+        return await this._repository.getIncomingContracts(start);
+    }
+
+    async getRedeemOperations(account: string): Promise<OperationRedeem[]> {
+        return await this._repository.getRedeemOperations(account);
     }
 }
 

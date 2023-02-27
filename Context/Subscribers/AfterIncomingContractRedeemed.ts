@@ -1,9 +1,9 @@
 import DomainEvents from "context/Core/Domain/Events/DomainEvents";
 import HandlerInterface from "context/Core/Domain/Events/HandlerInterface";
-import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
+import IncomingContractRedeemedEvent from "context/Domain/Event/IncomingContractRedeemedEvent";
 import RabbitMQ from "context/Queue/RabbitMQ";
 
-export default class AfterIncomingContractProcessed implements HandlerInterface<IncomingContractProcessedEvent> {
+export default class AfterIncomingContractRedeemed implements HandlerInterface<IncomingContractRedeemedEvent> {
     private readonly sender: RabbitMQ
 
     constructor() {
@@ -15,11 +15,11 @@ export default class AfterIncomingContractProcessed implements HandlerInterface<
 
     setupSubscriptions() {
         //@ts-ignore
-        DomainEvents.register(this.onDepositConfirmedEvent.bind(this), IncomingContractProcessedEvent.eventName());
+        DomainEvents.register(this.onDepositRedeemedEvent.bind(this), IncomingContractRedeemedEvent.eventName());
     }
 
-    private async onDepositConfirmedEvent(event: IncomingContractProcessedEvent) {
-        await this.sender.publish('create_in_internal_blockchain', {
+    private async onDepositRedeemedEvent(event: IncomingContractRedeemedEvent) {
+        await this.sender.publish('deposit_redeemed_in_internal_blockchain', {
             deposit_id: event.depositId
         })
     }
