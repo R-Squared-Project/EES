@@ -1,6 +1,6 @@
 export default class ConfirmDepositInternalContractCreated {
     constructor(
-        private _externalId: string,
+        private _txHash: string,
         private _internalId: string
     ) {}
 
@@ -8,7 +8,7 @@ export default class ConfirmDepositInternalContractCreated {
         return this._internalId;
     }
 
-    get externalId(): string {
-        return this._externalId;
+    get txHash(): string {
+        return this._txHash;
     }
 }

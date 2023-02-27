@@ -10,14 +10,14 @@ import CreateContractInInternalBlockchain
     from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
 import CreateContractInInternalBlockchainHandler
     from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
-import {createDeposit} from "../../../Helpers/Deposit";
-import {createDepositRequest} from "../../../Helpers/DepositRequest";
+import {createDeposit} from "tests/Helpers/Deposit";
+import {createDepositRequest} from "tests/Helpers/DepositRequest";
 
 describe('CreateContractInInternalBlockchainHandler', () => {
-    let depositRequestRepository: DepositRequestTypeOrmRepository;
-    let depositRepository: DepositTypeOrmRepository;
+    let depositRequestRepository: DepositRequestTypeOrmRepository
+    let depositRepository: DepositTypeOrmRepository
     let internalBlockchainRepository: InternalBlockchainStubRepository
-    let handler: CreateContractInInternalBlockchainHandler;
+    let handler: CreateContractInInternalBlockchainHandler
 
     beforeEach(async () => {
         depositRequestRepository = new DepositRequestTypeOrmRepository(DataSource)
@@ -27,7 +27,7 @@ describe('CreateContractInInternalBlockchainHandler', () => {
         })
         internalBlockchainRepository = internalBlockchain.repository as InternalBlockchainStubRepository
         const converter = new EtherToWrappedEtherConverter()
-        handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter);
+        handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter)
     });
 
     describe('execute', () => {
@@ -43,7 +43,7 @@ describe('CreateContractInInternalBlockchainHandler', () => {
 
                 const updatedDeposit = await depositRepository.getById(deposit.idString)
                 expect(updatedDeposit?.status).equals(STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN)
-            });
+            })
         })
-    });
-});
+    })
+})

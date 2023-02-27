@@ -42,7 +42,7 @@ describe('ConfirmDepositInternalContractRedeemed', async () => {
                 externalContract: createExternalContract()
             })
             deposit.submittedToInternalBlockchain()
-            const internalContract = new InternalContract('1.16.1', 'external_contract_id')
+            const internalContract = new InternalContract('1.16.1')
             deposit.createdInInternalBlockchain(internalContract)
             await depositRepository.create(deposit)
         })
