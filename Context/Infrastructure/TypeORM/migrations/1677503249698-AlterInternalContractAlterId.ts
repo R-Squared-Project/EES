@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class AlterInternalContractAlterId1677154192293 implements MigrationInterface {
-    name = 'AlterInternalContractAlterId1677154192293'
+export class AlterInternalContractAlterId1677503249698 implements MigrationInterface {
+    name = 'AlterInternalContractAlterId1677503249698'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`DROP INDEX \`IDX_579bbfff76624a8e2bfdbf8d66\` ON \`deposit\``);
@@ -24,9 +24,7 @@ export class AlterInternalContractAlterId1677154192293 implements MigrationInter
         await queryRunner.query(`ALTER TABLE \`deposit\` DROP FOREIGN KEY \`FK_6cc3eee6365b0a115875d7b35a8\``);
         await queryRunner.query(`DROP INDEX \`REL_6cc3eee6365b0a115875d7b35a\` ON \`deposit\``);
         await queryRunner.query(`ALTER TABLE \`internal_contract\` DROP COLUMN \`id\``);
-        await queryRunner.query(`ALTER TABLE \`internal_contract\` ADD \`id\` int NOT NULL AUTO_INCREMENT`);
-        await queryRunner.query(`ALTER TABLE \`internal_contract\` ADD PRIMARY KEY (\`id\`)`);
-        await queryRunner.query(`ALTER TABLE \`internal_contract\` CHANGE \`id\` \`id\` int NOT NULL AUTO_INCREMENT`);
+        await queryRunner.query(`ALTER TABLE \`internal_contract\` ADD \`id\` int NOT NULL AUTO_INCREMENT PRIMARY KEY`);
         await queryRunner.query(`ALTER TABLE \`deposit\` DROP INDEX \`IDX_6cc3eee6365b0a115875d7b35a\``);
         await queryRunner.query(`ALTER TABLE \`deposit\` DROP COLUMN \`internal_contract_id\``);
         await queryRunner.query(`ALTER TABLE \`deposit\` ADD \`internal_contract_id\` int NULL`);
