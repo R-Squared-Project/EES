@@ -1,6 +1,7 @@
 import RepositoryInterface from "./Repository/RepositoryInterface";
 import EthereumRepository from "./Repository/EthereumRepository";
 import StubRepository from "./Repository/StubRepository";
+import config from "context/config";
 
 class ExternalBlockchain {
     private readonly _repository: RepositoryInterface
@@ -26,6 +27,10 @@ class ExternalBlockchain {
             default:
                 throw new Error('External repository invalid')
         }
+    }
+
+    public async redeem(contractId: string, secret: string) {
+        return this._repository.redeem(contractId, secret, config.eth.receiver)
     }
 }
 

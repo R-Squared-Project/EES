@@ -8,16 +8,19 @@ import CreateContractInInternalBlockchainValidator from "./Validation/CreateCont
 import ConfirmDepositInternalContractCreatedValidator
     from "context/Domain/Validation/ConfirmDepositInternalContractCreatedValidator";
 import ConfirmDepositInternalContractRedeemedValidator from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
+import RedeemExecutedInExternalBlockchainValidator from "./Validation/RedeemExecutedInExternalBlockchainValidator";
 
 export const STATUS_CREATED = 1
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
 export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
+export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null
     private _status: number
     public _internalContract: InternalContract | null = null
+    private _externalBlockchainRedeemTxHash: string | null = null
 
     constructor(
         public _depositRequest: DepositRequest,
@@ -37,6 +40,10 @@ export default class Deposit extends AggregateRoot {
 
     get secret(): string | null {
         return this._secret;
+    }
+
+    get externalBlockchainRedeemTxHash(): string | null {
+        return this._externalBlockchainRedeemTxHash;
     }
 
     static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
@@ -71,5 +78,12 @@ export default class Deposit extends AggregateRoot {
         this.addDomainEvent(new IncomingContractRedeemedEvent(
             this.id.toValue()
         ))
+    }
+
+    public redeemExecutedInExternalBlockchain(txHash: string) {
+        new RedeemExecutedInExternalBlockchainValidator(this).validate()
+
+        this._externalBlockchainRedeemTxHash = txHash
+        this._status = STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN
     }
 }
