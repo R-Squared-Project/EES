@@ -3,6 +3,7 @@ import ConfirmDepositInternalContractCreated from "./ConfirmDepositInternalContr
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import InternalContract from "context/Domain/InternalContract";
 import {DepositNotFound} from "./Errors";
+import {ensureHasPrefix} from "context/Infrastructure/Helper";
 
 export default class ConfirmDepositInternalContractCreatedHandler implements UseCase<ConfirmDepositInternalContractCreated, void> {
     public constructor(
@@ -10,10 +11,11 @@ export default class ConfirmDepositInternalContractCreatedHandler implements Use
     ) {}
 
     public async execute(command: ConfirmDepositInternalContractCreated): Promise<void> {
-        const deposit = await this.depositRepository.getByTxHash(command.txHash)
+        const txHash = ensureHasPrefix(command.txHash)
+        const deposit = await this.depositRepository.getByTxHash(txHash)
 
         if (null === deposit) {
-            throw new DepositNotFound(command.txHash)
+            throw new DepositNotFound(txHash)
         }
 
         const internalContract = new InternalContract(command.internalId)
