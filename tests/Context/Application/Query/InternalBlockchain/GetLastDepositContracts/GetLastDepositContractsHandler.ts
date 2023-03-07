@@ -6,7 +6,7 @@ import GetLastDepositContracts
 import GetLastDepositContractsHandler
     from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContractsHandler";
 import Setting from "context/Setting/Setting";
-import {createContract} from "../../../../../Helpers/InternalBlockchain/Contract";
+import {createContract} from "tests/Helpers/InternalBlockchain/Contract";
 
 describe('GetLastDepositContractsHandler', () => {
     let internalBlockchain: InternalBlockchain
@@ -16,7 +16,7 @@ describe('GetLastDepositContractsHandler', () => {
 
     beforeEach(async () => {
         internalBlockchain = await InternalBlockchain.init({repository: 'stub'})
-        settings = new Setting({repository: 'stub'})
+        settings = new Setting()
         internalBlockchainRepository = internalBlockchain.repository as InternalBlockchainStubRepository
         handler = new GetLastDepositContractsHandler(internalBlockchain, settings)
     });

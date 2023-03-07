@@ -1,6 +1,4 @@
 import {UseCase} from "context/Core/Domain/UseCase";
-import ProcessIncomingContractCreation
-    from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepositoryInterface";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
@@ -13,31 +11,51 @@ import Deposit from "context/Domain/Deposit";
 import {DatabaseConnectionError} from "context/Infrastructure/Errors";
 import Address from "context/Domain/ValueObject/Address";
 import TimeLock from "context/Domain/ValueObject/TimeLock";
+import ExternalBlockchainHandlerInterface
+    from "context/Application/Command/ExternalBlockchain/ChainProcessor/ExternalBlockchainHandlerInterface";
+import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
+import AfterIncomingContractProcessed from "context/Subscribers/AfterIncomingContractProcessed";
+import GetLastContractsHandler
+    from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler";
+import {Inject, Injectable} from "@nestjs/common";
 
-export default class ProcessIncomingContractCreationHandler implements UseCase<ProcessIncomingContractCreation, void> {
+@Injectable()
+export default class ProcessIncomingContractCreationHandler implements UseCase<BlockRange, void>, ExternalBlockchainHandlerInterface {
     constructor(
-        private repository: DepositRepositoryInterface,
-        private depositRequestRepository: DepositRequestRepositoryInterface,
-        private externalBlockchain: ExternalBlockchain
+        @Inject("DepositRepositoryInterface") private repository: DepositRepositoryInterface,
+        @Inject("DepositRequestRepositoryInterface") private depositRequestRepository: DepositRequestRepositoryInterface,
+        private externalBlockchain: ExternalBlockchain,
+        private getLastContractsHandler: GetLastContractsHandler
     ) {}
 
-    async execute(command: ProcessIncomingContractCreation): Promise<void> {
-        const txIncluded = await this.externalBlockchain.repository.txIncluded(command.txHash)
+    async execute(range: BlockRange): Promise<void> {
+        const lastContracts = await this.getLastContractsHandler.execute(range)
+        for (const event of lastContracts.events) {
+            console.log(`Process transaction ${event.transactionHash}`)
+
+            await this.processContract(event.transactionHash, event.returnValues.contractId)
+        }
+    }
+
+    private async processContract(txHash: string, contractId: string) {
+        const txIncluded = await this.externalBlockchain.repository.txIncluded(txHash)
         if (!txIncluded) {
-            throw new Errors.TransactionNotFoundInBlockchain(command.txHash)
+            throw new Errors.TransactionNotFoundInBlockchain(txHash)
         }
 
-        const depositExists = await this.repository.exists(command.contractId)
+        const depositExists = await this.repository.exists(contractId)
         if (depositExists) {
-            throw new Errors.DepositAlreadyExists(command.contractId)
+            throw new Errors.DepositAlreadyExists(contractId)
         }
 
-        const contract = await this.externalBlockchain.repository.load(command.txHash, command.contractId)
+        const contract = await this.externalBlockchain.repository.load(txHash, contractId)
         if (null === contract) {
-            throw new Errors.ExternalContractNotExists(command.contractId)
+            throw new Errors.ExternalContractNotExists(contractId)
         }
 
         new ExternalContractValidator(contract).validate()
+
+        new AfterIncomingContractProcessed()
 
         const externalContract = new ExternalContract(
             new UniqueEntityID(contract.contractId),
@@ -46,7 +64,7 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
             contract.value,
             HashLock.create(contract.hashLock),
             TimeLock.fromUnix(contract.timeLock),
-            command.txHash
+            txHash
         )
 
         const depositRequest = await this.depositRequestRepository.load(HashLock.create(contract.hashLock))

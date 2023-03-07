@@ -2,25 +2,27 @@ import {DataSource} from "typeorm";
 import RepositoryInterface from "./Domain/RepositoryInterface";
 import TypeOrmRepository from "./Infrastructure/TypeOrm/Repository";
 import StubRepository from "./Infrastructure/Stub/Repository";
+import {Inject, Injectable} from "@nestjs/common";
 
 interface Config {
     repository: 'typeorm' | 'stub',
     dataSource?: DataSource
 }
 
+@Injectable()
 export default class Setting {
     private repository: RepositoryInterface;
 
-    constructor(config: Config) {
-        if (config.repository === 'typeorm' && config.dataSource) {
-            this.repository = new TypeOrmRepository(config.dataSource)
+    constructor(@Inject("DataSource") private dataSource?: DataSource) {
+        if (this.dataSource) {
+            this.repository = new TypeOrmRepository(this.dataSource)
         } else {
             this.repository = new StubRepository()
         }
     }
 
     public static init(config: Config): Setting {
-        return new Setting(config)
+        return new Setting(config.dataSource)
     }
 
     public async load(name: string, defaultValue?: any): Promise<string> {

@@ -10,16 +10,24 @@ import ProcessIncomingContractCreation
 import ProcessIncomingContractCreationHandler
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
+import GetLastContractsHandler
+    from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler";
+import Setting from "context/Setting/Setting";
 
 dayjs.extend(duration)
 
 const depositRepository = new DepositTypeOrmRepository(DataSource)
 const depositRequestRepository = new DepositRequestTypeOrmRepository(DataSource)
 const externalBlockchain = new ExternalBlockchain('ethereum')
+const setting = Setting.init({
+    repository: 'typeorm',
+    dataSource: DataSource
+})
+const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, setting)
 
 const submitDepositRequestHandler = new SubmitDepositRequestHandler(depositRequestRepository)
 const processIncomingContractCreationHandler = new ProcessIncomingContractCreationHandler(depositRepository,
-    depositRequestRepository, externalBlockchain)
+    depositRequestRepository, externalBlockchain, getLastContractsHandler)
 
 export {SubmitDepositRequest, submitDepositRequestHandler}
 export {ProcessIncomingContractCreation, processIncomingContractCreationHandler}

@@ -1,4 +1,4 @@
-export default class GetLastContracts {
+export default class GetLastBlocks {
     public constructor(
         private _blockNumber: number | null,
     ) {}

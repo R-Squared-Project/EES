@@ -2,10 +2,12 @@ import {DataSource} from "typeorm";
 import DepositRequest from "../../Domain/DepositRequest";
 import DepositRequestRepositoryInterface from "../../Domain/DepositRequestRepositoryInterface";
 import HashLock from "context/Domain/ValueObject/HashLock";
+import {Inject, Injectable} from "@nestjs/common";
 
+@Injectable()
 export default class DepositRequestTypeOrmRepository implements DepositRequestRepositoryInterface {
     constructor(
-        private _datasource: DataSource
+        @Inject("DataSource") private _datasource: DataSource
     ) {}
 
     async create(depositRequest: DepositRequest) {
