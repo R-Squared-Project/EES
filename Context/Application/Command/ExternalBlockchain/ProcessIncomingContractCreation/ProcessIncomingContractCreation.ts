@@ -1,4 +1,7 @@
-export default class ProcessIncomingContractCreation {
+import ExternalBlockchainCommandInterface
+    from "context/Application/Command/ExternalBlockchain/ChainProcessor/ExternalBlockchainCommandInterface";
+
+export default class ProcessIncomingContractCreation implements ExternalBlockchainCommandInterface{
     constructor(
         private _txHash: string,
         private _contractId: string
