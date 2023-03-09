@@ -16,7 +16,7 @@ describe('GetLastDepositContractsHandler', () => {
 
     beforeEach(async () => {
         internalBlockchain = await InternalBlockchain.init({repository: 'stub'})
-        settings = new Setting()
+        settings = new Setting({repository: 'stub'})
         internalBlockchainRepository = internalBlockchain.repository as InternalBlockchainStubRepository
         handler = new GetLastDepositContractsHandler(internalBlockchain, settings)
     });

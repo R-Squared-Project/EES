@@ -2,10 +2,12 @@ import {DataSource} from 'typeorm';
 import DepositRepositoryInterface from '../../Domain/DepositRepositoryInterface';
 import Deposit, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from '../../Domain/Deposit';
 import InternalContract from 'context/Domain/InternalContract';
+import {Inject, Injectable} from "@nestjs/common";
 
+@Injectable()
 export default class TypeOrmRepository implements DepositRepositoryInterface {
     constructor(
-        private _datasource: DataSource
+        @Inject("DataSource") private _datasource: DataSource
     ) {}
 
     async create(deposit: Deposit) {

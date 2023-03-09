@@ -3,6 +3,8 @@ import RepositoryInterface from "./Domain/RepositoryInterface";
 import TypeOrmRepository from "./Infrastructure/TypeOrm/Repository";
 import StubRepository from "./Infrastructure/Stub/Repository";
 import {Inject, Injectable} from "@nestjs/common";
+import {InvalidSettingConfigError} from "context/Setting/Errors";
+import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/SettingEntity";
 
 interface Config {
     repository: 'typeorm' | 'stub',
@@ -13,16 +15,25 @@ interface Config {
 export default class Setting {
     private repository: RepositoryInterface;
 
-    constructor(@Inject("DataSource") private dataSource?: DataSource) {
-        if (this.dataSource) {
-            this.repository = new TypeOrmRepository(this.dataSource)
+    constructor(
+        @Inject("SettingConfig") private config: Config,
+        private typeormRepository?: TypeOrmRepository,
+    ) {
+        if (config.repository == 'typeorm') {
+            if (typeormRepository) {
+                this.repository = typeormRepository;
+            } else if (config.dataSource) {
+                this.repository = new TypeOrmRepository(config.dataSource)
+            } else {
+                throw new InvalidSettingConfigError();
+            }
         } else {
             this.repository = new StubRepository()
         }
     }
 
     public static init(config: Config): Setting {
-        return new Setting(config.dataSource)
+        return new Setting(config)
     }
 
     public async load(name: string, defaultValue?: any): Promise<string> {

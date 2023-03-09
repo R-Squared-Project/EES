@@ -23,11 +23,11 @@ const setting = Setting.init({
     repository: 'typeorm',
     dataSource: DataSource
 })
-const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, setting)
+// const getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, setting)
 
 const submitDepositRequestHandler = new SubmitDepositRequestHandler(depositRequestRepository)
-const processIncomingContractCreationHandler = new ProcessIncomingContractCreationHandler(depositRepository,
-    depositRequestRepository, externalBlockchain, getLastContractsHandler)
+// const processIncomingContractCreationHandler = new ProcessIncomingContractCreationHandler(depositRepository,
+//     depositRequestRepository, externalBlockchain, getLastContractsHandler)
 
 export {SubmitDepositRequest, submitDepositRequestHandler}
-export {ProcessIncomingContractCreation, processIncomingContractCreationHandler}
+// export {ProcessIncomingContractCreation, processIncomingContractCreationHandler}

@@ -7,7 +7,9 @@ import {Inject, Injectable} from "@nestjs/common";
 class ExternalBlockchain {
     private readonly _repository: RepositoryInterface
 
-    public constructor(@Inject("RepositoryName") repository: Repository) {
+    public constructor(
+        @Inject("ExternalBlockchainRepositoryName") repository: Repository
+    ) {
         this._repository = this.createRepository(repository)
     }
 

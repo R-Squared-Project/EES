@@ -46,7 +46,7 @@ describe('ProcessIncomeContractCreationHandler', () => {
             repository: 'typeorm',
             dataSource: DataSource
         })
-        getLastContractsHandler = new GetLastContractsHandler(externalBlockchain, setting)
+        getLastContractsHandler = new GetLastContractsHandler(externalBlockchain)
 
         handler = new ProcessIncomingContractCreationHandler(
             depositRepository,

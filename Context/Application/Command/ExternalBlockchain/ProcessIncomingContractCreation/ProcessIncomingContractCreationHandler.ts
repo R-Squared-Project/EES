@@ -33,7 +33,13 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<B
         for (const event of lastContracts.events) {
             console.log(`Process transaction ${event.transactionHash}`)
 
-            await this.processContract(event.transactionHash, event.returnValues.contractId)
+            try {
+                await this.processContract(event.transactionHash, event.returnValues.contractId)
+            } catch (e: unknown) {
+                if (e instanceof Error) {
+                    console.log('Error in ', typeof this, ':', e.message);
+                }
+            }
         }
     }
 

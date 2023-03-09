@@ -1,16 +1,22 @@
+import RepositoryInterface from "context/Setting/Domain/RepositoryInterface";
+import {Inject, Injectable} from "@nestjs/common";
 import {DataSource} from "typeorm";
-import RepositoryInterface from "../../Domain/RepositoryInterface";
-import Setting from "../../Domain/Setting";
+import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/SettingEntity";
+import Setting from "context/Setting/Domain/Setting";
 
-export default class Repository implements RepositoryInterface{
+
+@Injectable()
+export default class SettingRepository implements RepositoryInterface
+{
     constructor(
+        @Inject('DataSource')
         private _datasource: DataSource
     ) {}
 
     async load(name: string): Promise<string | null> {
-        const setting = await this._datasource.createQueryBuilder()
+        const setting = await this._datasource.getRepository<Setting>(SettingEntity)
+            .createQueryBuilder('s')
             .select('s.value')
-            .from(Setting, 's')
             .where('s.name = :name', {name})
             .getOne()
 
@@ -24,7 +30,7 @@ export default class Repository implements RepositoryInterface{
     async save(name: string, value: any): Promise<void> {
         await this._datasource.createQueryBuilder()
             .insert()
-            .into(Setting)
+            .into(SettingEntity)
             .values([
                 {name, value}
             ])

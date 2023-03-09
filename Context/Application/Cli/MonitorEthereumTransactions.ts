@@ -2,8 +2,8 @@ import { Command, CommandRunner, Option } from 'nest-commander';
 import GetLastBlocks from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocks";
 import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
 import * as GetLastBlocksErrors from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Errors";
-import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 import ChainProcessor from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainProcessor";
+import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 
 interface MonitorEthereumTransactionsOptions {
     blockNumber?: number;
@@ -24,7 +24,7 @@ export class MonitorEthereumTransactions extends CommandRunner {
         options: MonitorEthereumTransactionsOptions,
     ): Promise<void> {
         if (!options?.blockNumber) {
-            setInterval(this.process.bind(this), options.interval * 1000)
+            await this.cycleProcess(options.interval)
         } else {
             this.process(options.blockNumber).then(() => {
                 process.exit()
@@ -49,7 +49,7 @@ export class MonitorEthereumTransactions extends CommandRunner {
         return Number(val);
     }
 
-    private async process(blockNumber: number) {
+    private async process(blockNumber: number | null) {
         const query = new GetLastBlocks(blockNumber);
         let result: BlockRange
 
@@ -58,6 +58,7 @@ export class MonitorEthereumTransactions extends CommandRunner {
 
             console.log(`Found blocks from ${result.fromBlock} to ${result.toBlock}`);
             await this.chainProcessor.execute(result);
+            await this.getLastBlocksHandler.saveLastBlockNumber(query, result.toBlock)
         } catch (e: unknown) {
             if (e instanceof GetLastBlocksErrors.BlockNotExists ||
                 e instanceof GetLastBlocksErrors.FromBlockLargerThanToBlock ||
@@ -68,5 +69,15 @@ export class MonitorEthereumTransactions extends CommandRunner {
 
             throw e
         }
+    }
+
+    private cycleProcess(interval: number) {
+        this.process(null)
+            .then(() => {
+                setTimeout(() => {
+                    this.cycleProcess(interval);
+                }, interval * 1000)
+            });
+
     }
 }

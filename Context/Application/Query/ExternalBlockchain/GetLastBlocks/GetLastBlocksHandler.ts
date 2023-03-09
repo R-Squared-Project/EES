@@ -3,8 +3,8 @@ import Setting from "context/Setting/Setting";
 import {UseCase} from "context/Core/Domain/UseCase";
 import config from "context/config";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
-import BlockRange from "../../../Command/ExternalBlockchain/ChainProcessor/BlockRange";
-import * as Errors from "./Errors";
+import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
+import * as Errors from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Errors";
 import GetLastBlocks from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocks";
 import {Injectable} from "@nestjs/common";
 
@@ -34,13 +34,15 @@ export default class GetLastBlocksHandler implements UseCase<GetLastBlocks, Bloc
             blocks = await this.getBlocks()
         }
 
-        if (!query.blockNumber) {
-            await this.setting.save(ETH_LAST_BLOCK_NAME, blocks.to.number)
-        }
-
         return new BlockRange(
             blocks.from.number, blocks.to.number
         )
+    }
+
+    public async saveLastBlockNumber(query: GetLastBlocks, blockNumber: number) {
+        if (!query.blockNumber) {
+            await this.setting.save(ETH_LAST_BLOCK_NAME, blockNumber)
+        }
     }
 
     private async getBlock(fromBlockNumber: number): Promise<BlockTransactionString> {
