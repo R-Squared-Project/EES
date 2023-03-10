@@ -1,4 +1,4 @@
-export default class BlockRange {
+export default class ChainedHandlerCommand {
     constructor(
         private readonly _fromBlock: number,
         private readonly _toBlock: number,

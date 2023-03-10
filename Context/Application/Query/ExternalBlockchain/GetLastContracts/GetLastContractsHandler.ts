@@ -2,16 +2,16 @@ import Setting from "context/Setting/Setting";
 import {UseCase} from "context/Core/Domain/UseCase";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import Response from "./Response";
-import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
+import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
 import {Injectable} from "@nestjs/common";
 
 @Injectable()
-export default class GetLastContractsHandler implements UseCase<BlockRange, Response> {
+export default class GetLastContractsHandler implements UseCase<ChainedHandlerCommand, Response> {
     public constructor(
         private readonly externalBlockchain: ExternalBlockchain
     ) {}
 
-    public async execute(query: BlockRange): Promise<Response> {
+    public async execute(query: ChainedHandlerCommand): Promise<Response> {
 
         const events = await this.externalBlockchain.repository.loadHTLCNewEvents(
             query.fromBlock,

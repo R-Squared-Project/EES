@@ -3,10 +3,11 @@ import Setting from "context/Setting/Setting";
 import {UseCase} from "context/Core/Domain/UseCase";
 import config from "context/config";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
-import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
+import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
 import * as Errors from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Errors";
 import GetLastBlocks from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocks";
 import {Injectable} from "@nestjs/common";
+import Response from "./Response";
 
 const ETH_LAST_BLOCK_NAME = 'eth_htlc_new_events_last_block'
 
@@ -16,13 +17,13 @@ interface Blocks {
 }
 
 @Injectable()
-export default class GetLastBlocksHandler implements UseCase<GetLastBlocks, BlockRange> {
+export default class GetLastBlocksHandler implements UseCase<GetLastBlocks, Response> {
     public constructor(
         private readonly externalBlockchain: ExternalBlockchain,
         private setting: Setting
     ) {}
 
-    public async execute(query: GetLastBlocks): Promise<BlockRange> {
+    public async execute(query: GetLastBlocks): Promise<Response> {
         let blocks: Blocks
         if (query.blockNumber) {
             const block = await this.getBlock(query.blockNumber)
@@ -34,7 +35,7 @@ export default class GetLastBlocksHandler implements UseCase<GetLastBlocks, Bloc
             blocks = await this.getBlocks()
         }
 
-        return new BlockRange(
+        return new Response(
             blocks.from.number, blocks.to.number
         )
     }

@@ -2,6 +2,7 @@ import RepositoryInterface from "./Repository/RepositoryInterface";
 import EthereumRepository from "./Repository/EthereumRepository";
 import StubRepository from "./Repository/StubRepository";
 import {Inject, Injectable} from "@nestjs/common";
+import config from "context/config";
 
 @Injectable()
 class ExternalBlockchain {

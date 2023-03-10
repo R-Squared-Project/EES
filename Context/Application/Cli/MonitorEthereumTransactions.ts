@@ -1,9 +1,10 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
 import GetLastBlocks from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocks";
-import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
+import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
 import * as GetLastBlocksErrors from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Errors";
 import ChainProcessor from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainProcessor";
 import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
+import GetLastBlockResponse from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Response";
 
 interface MonitorEthereumTransactionsOptions {
     blockNumber?: number;
@@ -51,13 +52,13 @@ export class MonitorEthereumTransactions extends CommandRunner {
 
     private async process(blockNumber: number | null) {
         const query = new GetLastBlocks(blockNumber);
-        let result: BlockRange
+        let result: GetLastBlockResponse
 
         try {
             result = await this.getLastBlocksHandler.execute(query)
 
             console.log(`Found blocks from ${result.fromBlock} to ${result.toBlock}`);
-            await this.chainProcessor.execute(result);
+            await this.chainProcessor.execute(new ChainedHandlerCommand(result.fromBlock, result.toBlock));
             await this.getLastBlocksHandler.saveLastBlockNumber(query, result.toBlock)
         } catch (e: unknown) {
             if (e instanceof GetLastBlocksErrors.BlockNotExists ||

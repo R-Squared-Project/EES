@@ -1,25 +1,25 @@
-import ExternalBlockchainHandlerInterface
-    from "context/Application/Command/ExternalBlockchain/ChainProcessor/ExternalBlockchainHandlerInterface";
-import BlockRange from "context/Application/Command/ExternalBlockchain/ChainProcessor/BlockRange";
+import ChainedHandlerInterface
+    from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
+import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import Setting from "context/Setting/Setting";
 import {Injectable} from "@nestjs/common";
-import ProcessIncomingContractCreationHandler
-    from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
+import IncomingContractsCreationsProcessingLink
+    from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
 
 @Injectable()
 export default class ChainProcessor {
-    private handlers: ExternalBlockchainHandlerInterface[] = []
+    private handlers: ChainedHandlerInterface[] = []
 
      constructor(
          private readonly externalBlockchain: ExternalBlockchain,
          private setting: Setting,
-         private processIncomingContractCreationHandler: ProcessIncomingContractCreationHandler
+         private incomingContractsCreationsProcessingLink: IncomingContractsCreationsProcessingLink
      ) {
-        this.handlers.push(processIncomingContractCreationHandler);
+        this.handlers.push(incomingContractsCreationsProcessingLink);
      }
 
-    public async execute(range: BlockRange): Promise<void> {
+    public async execute(range: ChainedHandlerCommand): Promise<void> {
         return new Promise((resolve, reject) => {
             Promise.all(this.handlers.map((handler) => {
                 try {

@@ -1,5 +1,5 @@
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
-import TypeOrmRepository from "context/Infrastructure/TypeORM/TypeOrmRepository";
+import TypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import RabbitMQ from "context/Queue/RabbitMQ";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import RedeemDepositExternalContract
