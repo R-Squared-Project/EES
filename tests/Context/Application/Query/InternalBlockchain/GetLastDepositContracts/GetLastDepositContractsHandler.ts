@@ -6,7 +6,7 @@ import GetLastDepositContracts
 import GetLastDepositContractsHandler
     from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContractsHandler";
 import Setting from "context/Setting/Setting";
-import {createContract} from "../../../../../Helpers/InternalBlockchain/Contract";
+import {createContract} from "tests/Helpers/InternalBlockchain/Contract";
 
 describe('GetLastDepositContractsHandler', () => {
     let internalBlockchain: InternalBlockchain

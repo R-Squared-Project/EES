@@ -13,11 +13,13 @@ import Deposit from "context/Domain/Deposit";
 import {DatabaseConnectionError} from "context/Infrastructure/Errors";
 import Address from "context/Domain/ValueObject/Address";
 import TimeLock from "context/Domain/ValueObject/TimeLock";
+import {Inject, Injectable} from "@nestjs/common";
 
+@Injectable()
 export default class ProcessIncomingContractCreationHandler implements UseCase<ProcessIncomingContractCreation, void> {
     constructor(
-        private repository: DepositRepositoryInterface,
-        private depositRequestRepository: DepositRequestRepositoryInterface,
+        @Inject("DepositRepositoryInterface") private repository: DepositRepositoryInterface,
+        @Inject("DepositRequestRepositoryInterface") private depositRequestRepository: DepositRequestRepositoryInterface,
         private externalBlockchain: ExternalBlockchain
     ) {}
 

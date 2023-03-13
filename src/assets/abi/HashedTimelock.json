@@ -166,6 +166,11 @@
 				"type": "uint256"
 			},
 			{
+				"internalType": "uint256",
+				"name": "refundAmount",
+				"type": "uint256"
+			},
+			{
 				"internalType": "bytes32",
 				"name": "hashlock",
 				"type": "bytes32"
