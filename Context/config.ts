@@ -28,6 +28,7 @@ const config = {
         asset_symbol: process.env.REVPOP_ASSET_SYMBOL,
         account_private_key: process.env.REVPOP_ACCOUNT_PRIVATE_KEY,
         redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_INTERNAL_BLOCKCHAIN as string, 10),
+        chain_id: process.env.REVPOP_CHAIN_ID
     },
     db: {
         name: process.env.DATABASE,
