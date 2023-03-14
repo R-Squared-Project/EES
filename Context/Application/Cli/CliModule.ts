@@ -5,7 +5,7 @@ import TypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository"
 import DepositRequestTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRequestRepository";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import GetLastContractsHandler
-    from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler";
+    from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastContractsHandler";
 import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 import ChainProcessor from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainProcessor";
 import ProcessIncomingContractCreationHandler
@@ -15,6 +15,8 @@ import config from "context/config";
 import Setting from "context/Setting/Setting";
 import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/SettingEntity";
 import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository";
+import IncomingContractsCreationsProcessingLink
+    from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
 
 @Module({
     imports: [
@@ -39,6 +41,7 @@ import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository
         Setting,
         SettingRepository,
         ProcessIncomingContractCreationHandler,
+        IncomingContractsCreationsProcessingLink,
         {
             provide: "DataSource",
             useValue: DataSource
