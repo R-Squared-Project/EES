@@ -2,7 +2,7 @@ import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
 import {ChainTypes} from "@revolutionpopuli/revpopjs";
 //@ts-ignore
-import {Apis} from "@revolutionpopuli/revpopjs-ws";
+import {Apis, ChainConfig} from "@revolutionpopuli/revpopjs-ws";
 //@ts-ignore
 import { Aes, FetchChain, TransactionBuilder, PrivateKey } from "@revolutionpopuli/revpopjs";
 import * as Errors from "context/InternalBlockchain/Errors";
@@ -27,8 +27,11 @@ export default class RevpopRepository implements RepositoryInterface {
         nodeUrl: string,
         accountFrom: string,
         accountPrivateKey: string,
-        assetSymbol: string
+        assetSymbol: string,
+        chainId: string
     ): Promise<RevpopRepository> {
+        ChainConfig.networks["RevPop"].chain_id = chainId
+        ChainConfig.setChainId(chainId)
         const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol)
         await repository.connect(nodeUrl)
         return repository

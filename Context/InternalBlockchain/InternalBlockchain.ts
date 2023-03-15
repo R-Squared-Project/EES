@@ -33,7 +33,8 @@ class InternalBlockchain {
                     config.revpop.node_url as string,
                     config.revpop.ees_account as string,
                     config.revpop.account_private_key as string,
-                    config.revpop.asset_symbol as string
+                    config.revpop.asset_symbol as string,
+                    config.revpop.chain_id as string
                 )
             case 'stub':
                 return new StubRepository()
