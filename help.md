@@ -7,4 +7,4 @@ yarn worker:create_in_internal_blockchain
 #### Monitor created contracts in internal blockchain
 yarn monitor:deposit_internal_contract_created
 
-df6ed3c4db3333afe890f4713ff71c88256c7bcbf275576b94083f7f0077d24e
+b53d469c2fb8791b400018a2b0b09a20a6c6701f3ee7e0b43a03fc16444c4e86

@@ -17,7 +17,6 @@ export default class IncomingContractsCreationsProcessingLink implements Chained
         private processIncomingContractCreationHandler: ProcessIncomingContractCreationHandler
     ) {}
     async execute(command: ChainedHandlerCommand): Promise<void> {
-        new AfterIncomingContractProcessed();
         const lastContracts = await this.getLastContractsHandler.execute(command)
         for (const event of lastContracts.events) {
             console.log(`Process transaction ${event.transactionHash}`)
