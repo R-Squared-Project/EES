@@ -17,6 +17,7 @@ import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/Setting
 import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository";
 import IncomingContractsCreationsProcessingLink
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
+import RabbitMQ from "context/Queue/RabbitMQ";
 
 @Module({
     imports: [
@@ -42,6 +43,7 @@ import IncomingContractsCreationsProcessingLink
         SettingRepository,
         ProcessIncomingContractCreationHandler,
         IncomingContractsCreationsProcessingLink,
+        RabbitMQ,
         {
             provide: "DataSource",
             useValue: DataSource

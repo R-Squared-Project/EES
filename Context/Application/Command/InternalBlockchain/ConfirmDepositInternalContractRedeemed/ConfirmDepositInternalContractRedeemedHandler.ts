@@ -24,6 +24,7 @@ export default class ConfirmDepositInternalContractRedeemedHandler implements Us
             if (redeemOperation.htlcContractId === internalContractId) {
                 deposit.redeemedInInternalBlockchain(redeemOperation.secret)
                 await this.repository.save(deposit)
+                console.log(`Deposit ${deposit.idString} redeemed.`);
             }
         }
     }

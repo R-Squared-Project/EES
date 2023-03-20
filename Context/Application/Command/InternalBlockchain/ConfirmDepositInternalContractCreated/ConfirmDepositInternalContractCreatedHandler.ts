@@ -3,7 +3,7 @@ import ConfirmDepositInternalContractCreated from "./ConfirmDepositInternalContr
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import InternalContract from "context/Domain/InternalContract";
 import {DepositNotFound} from "./Errors";
-import {ensureHasPrefix} from "context/Infrastructure/Helper";
+import {ensureHasPrefix} from "context/Infrastructure/Helpers";
 
 export default class ConfirmDepositInternalContractCreatedHandler implements UseCase<ConfirmDepositInternalContractCreated, void> {
     public constructor(

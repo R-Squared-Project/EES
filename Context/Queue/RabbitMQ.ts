@@ -1,6 +1,7 @@
 import amqp, {Channel, Connection} from "amqplib";
 import config from "context/config";
 import {ConsumeMessage} from "amqplib/properties";
+import {Injectable} from "@nestjs/common";
 
 const EXCHANGE_NAME = 'deposit';
 const EXCHANGE_TYPE = 'direct';
@@ -8,6 +9,7 @@ const EXCHANGE_OPTION = {
     durable: true
 };
 
+@Injectable()
 export default class RabbitMQ {
     private channel: Channel | null = null;
     private connection: Connection | null = null
@@ -40,6 +42,7 @@ export default class RabbitMQ {
     }
 
     public async publish(key: string, msg: any) {
+        await this.connect()
         const channel = this.channel as Channel
         channel.publish(EXCHANGE_NAME, key, Buffer.from(
             JSON.stringify(msg)
@@ -49,6 +52,9 @@ export default class RabbitMQ {
     }
 
     private async connect() {
+        if (this.connection && this.channel) {
+            return;
+        }
         this.connection = await amqp.connect({
             hostname: config.rabbitmq.host,
             port: config.rabbitmq.port

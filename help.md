@@ -7,4 +7,10 @@ yarn worker:create_in_internal_blockchain
 #### Monitor created contracts in internal blockchain
 yarn monitor:deposit_internal_contract_created
 
-b53d469c2fb8791b400018a2b0b09a20a6c6701f3ee7e0b43a03fc16444c4e86
+#### Check redeemed in an internal blockchain 
+yarn monitor:deposit_internal_contract_redeemed
+
+#### Redeem in external blockchain
+yarn worker:redeem_in_external_blockchain
+
+020baf90300f41a590b95f31a971411dfdcbd406fb24f9d76084bde42d6444f8
