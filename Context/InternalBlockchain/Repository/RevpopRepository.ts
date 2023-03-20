@@ -91,7 +91,7 @@ export default class RevpopRepository implements RepositoryInterface {
                 asset_id: asset.get('id')
             },
             preimage_hash: [PREIMAGE_HASH_CIPHER_SHA256, hashLock],
-            preimage_size: hashLock.length,
+            preimage_size: 32, //TODO: need to path preimage_size from web3portal
             claim_period_seconds: timeLock,
             extensions: {
                 memo: this.memo.generate(externalId.slice(2), privateKey, accountFrom, accountTo)
@@ -145,7 +145,7 @@ export default class RevpopRepository implements RepositoryInterface {
                 OperationRedeem.create(
                     account,
                     revpopOperation['op'][1]['htlc_id'],
-                    Buffer.from(revpopOperation['op'][1]['preimage'], 'hex').toString(),
+                    revpopOperation['op'][1]['preimage'],
                     revpopOperation['id'],
                 )
             )
