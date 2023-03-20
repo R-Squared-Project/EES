@@ -1,7 +1,6 @@
 import {UseCase} from "context/Core/Domain/UseCase";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
-import {DatabaseConnectionError} from "context/Infrastructure/Errors";
 import {Injectable} from "@nestjs/common";
 import ExternalContractRedeem
     from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeem";
@@ -20,10 +19,9 @@ export default class ExternalContractRedeemHandler implements UseCase<ExternalCo
             throw new Errors.TransactionNotFoundInBlockchain(command.txHash)
         }
 
-        try {
-            // await this.rabbitMQ.publish()
-        } catch (e: unknown) {
-            throw new DatabaseConnectionError()
-        }
+        await this.rabbitMQ.publish(this.rabbitMQ.MONITOR_EXTERNAL_CONTRACT_REDEEM, {
+            'txHash': command.txHash,
+            'contractId': command.contractId
+        })
     }
 }

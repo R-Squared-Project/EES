@@ -18,6 +18,12 @@ import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository
 import IncomingContractsCreationsProcessingLink
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
 import RabbitMQ from "context/Queue/RabbitMQ";
+import MonitorExternalContractsRedeemsLink
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/MonitorExternalContractsRedeemsLink";
+import GetLastRedeemsHandler
+    from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastRedeemsHandler";
+import ExternalContractRedeemHandler
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
 
 @Module({
     imports: [
@@ -43,6 +49,9 @@ import RabbitMQ from "context/Queue/RabbitMQ";
         SettingRepository,
         ProcessIncomingContractCreationHandler,
         IncomingContractsCreationsProcessingLink,
+        MonitorExternalContractsRedeemsLink,
+        GetLastRedeemsHandler,
+        ExternalContractRedeemHandler,
         RabbitMQ,
         {
             provide: "DataSource",
