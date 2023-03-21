@@ -12,4 +12,3 @@ yarn monitor:deposit_internal_contract_redeemed
 
 #### Redeem in external blockchain
 yarn worker:redeem_in_external_blockchain
-

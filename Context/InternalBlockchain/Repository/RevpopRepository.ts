@@ -145,7 +145,7 @@ export default class RevpopRepository implements RepositoryInterface {
                 OperationRedeem.create(
                     account,
                     revpopOperation['op'][1]['htlc_id'],
-                    revpopOperation['op'][1]['preimage'],
+                    Buffer.from(revpopOperation['op'][1]['preimage'], 'hex').toString(),
                     revpopOperation['id'],
                 )
             )
