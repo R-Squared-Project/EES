@@ -68,4 +68,15 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .where('deposit.status = :status', {status: STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN})
             .getMany()
     }
+
+    async getByRedeemTxHash(txHash: string): Promise<Deposit | null> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .where('deposit._externalBlockchainRedeemTxHash = :txHash', {txHash})
+            .getOne()
+    }
 }

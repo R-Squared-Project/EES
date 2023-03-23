@@ -19,9 +19,8 @@ export default class ExternalContractRedeemHandler implements UseCase<ExternalCo
             throw new Errors.TransactionNotFoundInBlockchain(command.txHash)
         }
 
-        await this.rabbitMQ.publish(this.rabbitMQ.MONITOR_EXTERNAL_CONTRACT_REDEEM, {
-            'txHash': command.txHash,
-            'contractId': command.contractId
+        await this.rabbitMQ.publish(this.rabbitMQ.EXTERNAL_CONTRACT_REDEEM, {
+            'txHash': command.txHash
         })
     }
 }

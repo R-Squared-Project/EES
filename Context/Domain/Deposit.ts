@@ -15,6 +15,7 @@ export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
 export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
 export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
+export const STATUS_COMPLETED = 25
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null
@@ -86,4 +87,9 @@ export default class Deposit extends AggregateRoot {
         this._externalBlockchainRedeemTxHash = txHash
         this._status = STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN
     }
+
+    public comleted() {
+        this._status = STATUS_COMPLETED;
+    }
+
 }

@@ -1,7 +1,7 @@
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import {EventData} from "web3-eth-contract";
-import {BlockTransactionString} from "web3-eth";
+import {BlockTransactionString, TransactionReceipt} from "web3-eth";
 import * as Errors from "context/ExternalBlockchain/Errors";
 
 interface RedeemRequest {
@@ -16,6 +16,7 @@ export default class StubRepository implements RepositoryInterface {
     public _error: Errors.ExternalBlockchainError | null = null
     public _redeemedRequests: RedeemRequest[] = []
     public _redeemTxHash: string | null = null
+    public _transactionReceipt: TransactionReceipt | null = null
     async txIncluded(txHash: string): Promise<boolean> {
         return this._txIncluded
     }
@@ -52,5 +53,9 @@ export default class StubRepository implements RepositoryInterface {
 
     loadHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return Promise.resolve([]);
+    }
+
+    getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {
+        return this._transactionReceipt ? Promise.resolve(this._transactionReceipt) : Promise.reject();
     }
 }
