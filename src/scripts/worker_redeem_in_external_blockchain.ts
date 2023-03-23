@@ -18,7 +18,7 @@ async function main() {
     const messenger = new RabbitMQ()
 
     messenger.consume<RedeemedInInternalBlockchainMessage>(
-        'redeemed_in_internal_blockchain',
+        'deposit_redeemed_in_internal_blockchain',
         async (message: RedeemedInInternalBlockchainMessage, ack) => {
             const command = new RedeemDepositExternalContract(message.deposit_id)
 

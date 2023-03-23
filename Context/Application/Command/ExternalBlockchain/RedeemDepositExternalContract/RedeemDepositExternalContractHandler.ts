@@ -20,10 +20,11 @@ export default class RedeemDepositExternalContractHandler implements UseCase<Red
         }
 
         new RedeemExecutedInExternalBlockchainValidator(deposit).validate()
+        const secret = Buffer.from(deposit.secret as string).toString('hex');
 
         const txHash = await this.externalBlockchain.redeem(
             deposit._externalContract.idString,
-            ensureHasPrefix(deposit.secret as string)
+            ensureHasPrefix(secret)
         )
 
         await deposit.redeemExecutedInExternalBlockchain(txHash)

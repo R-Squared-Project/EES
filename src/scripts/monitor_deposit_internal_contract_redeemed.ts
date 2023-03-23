@@ -41,8 +41,6 @@ async function main() {
         const command = new ConfirmDepositInternalContractRedeemed(deposit.idString)
         try {
             await confirmDepositInternalContractRedeemedHandler.execute(command)
-
-            console.log(`Deposit ${deposit.idString} redeemed.`);
         } catch (e) {
             errorHandler.handle(e)
         }

@@ -2,7 +2,7 @@ import ChainedHandlerInterface
     from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
 import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
 import GetLastContractsHandler
-    from "context/Application/Query/ExternalBlockchain/GetLastContracts/GetLastContractsHandler";
+    from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastContractsHandler";
 import ProcessIncomingContractCreationHandler
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
 import ProcessIncomingContractCreation
@@ -17,7 +17,6 @@ export default class IncomingContractsCreationsProcessingLink implements Chained
         private processIncomingContractCreationHandler: ProcessIncomingContractCreationHandler
     ) {}
     async execute(command: ChainedHandlerCommand): Promise<void> {
-        new AfterIncomingContractProcessed();
         const lastContracts = await this.getLastContractsHandler.execute(command)
         for (const event of lastContracts.events) {
             console.log(`Process transaction ${event.transactionHash}`)
@@ -27,9 +26,12 @@ export default class IncomingContractsCreationsProcessingLink implements Chained
                 await this.processIncomingContractCreationHandler.execute(command)
             } catch (e: unknown) {
                 if (e instanceof Error) {
-                    console.log('Error in ', typeof this, ':', e.message);
+                    console.log(`Error while processed transaction ${event.transactionHash}: `, e.message);
+                    continue
                 }
             }
+
+            console.log(`Successfully added new transaction ${event.transactionHash}. `);
         }
     }
 

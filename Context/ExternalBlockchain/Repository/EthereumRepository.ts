@@ -65,6 +65,15 @@ export default class EthereumRepository implements RepositoryInterface {
             }
         )
     }
+    async loadHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return await this._contract.getPastEvents(
+            'LogHTLCWithdraw',
+            {
+                fromBlock: fromBlock,
+                toBlock
+            }
+        )
+    }
 
     async redeem(contractId: string, secret: string, receiver: string): Promise<string> {
         let gas: number

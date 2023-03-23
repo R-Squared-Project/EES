@@ -5,6 +5,7 @@ import * as GetLastBlocksErrors from "context/Application/Query/ExternalBlockcha
 import ChainProcessor from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainProcessor";
 import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 import GetLastBlockResponse from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Response";
+import AfterIncomingContractProcessed from "context/Subscribers/AfterIncomingContractProcessed";
 
 interface MonitorEthereumTransactionsOptions {
     blockNumber?: number;
@@ -24,6 +25,7 @@ export class MonitorEthereumTransactions extends CommandRunner {
         passedParam: string[],
         options: MonitorEthereumTransactionsOptions,
     ): Promise<void> {
+        new AfterIncomingContractProcessed();
         if (!options?.blockNumber) {
             await this.cycleProcess(options.interval)
         } else {

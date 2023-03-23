@@ -6,6 +6,8 @@ import Setting from "context/Setting/Setting";
 import {Injectable} from "@nestjs/common";
 import IncomingContractsCreationsProcessingLink
     from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
+import MonitorExternalContractsRedeemsLink
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/MonitorExternalContractsRedeemsLink";
 
 @Injectable()
 export default class ChainProcessor {
@@ -14,9 +16,11 @@ export default class ChainProcessor {
      constructor(
          private readonly externalBlockchain: ExternalBlockchain,
          private setting: Setting,
-         private incomingContractsCreationsProcessingLink: IncomingContractsCreationsProcessingLink
+         private incomingContractsCreationsProcessingLink: IncomingContractsCreationsProcessingLink,
+         private monitorExternalContractsRedeemLink: MonitorExternalContractsRedeemsLink
      ) {
         this.handlers.push(incomingContractsCreationsProcessingLink);
+        this.handlers.push(monitorExternalContractsRedeemLink)
      }
 
     public async execute(range: ChainedHandlerCommand): Promise<void> {

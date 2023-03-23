@@ -8,5 +8,6 @@ export default interface RepositoryInterface {
     getLastBlockNumber: () => Promise<number>
     getBlock: (number: number) => Promise<BlockTransactionString | null>
     loadHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>
+    loadHTLCRedeemEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>
     redeem: (contractId: string, secret: string, receiver: string) => Promise<string>
 }
