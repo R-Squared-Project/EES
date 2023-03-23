@@ -18,5 +18,3 @@ yarn monitor:ethereum_transactions
 
 #### Confirm redeeming in external blockchain
 yarn worker:external_contract_redeem
-
-ZU:[;X%@uE\XU4h?p6$;jF,R5R9WTmAL
