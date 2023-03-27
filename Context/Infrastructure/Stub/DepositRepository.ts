@@ -27,6 +27,7 @@ export default class DepositRepository implements DepositRepositoryInterface {
     getByTxHash(txHash: string): Promise<Deposit | null> {
         for (const deposit of Object.values(this._deposits)) {
             if (deposit._externalContract.txHash === txHash) {
+
                 return Promise.resolve(deposit)
             }
         }
@@ -53,6 +54,7 @@ export default class DepositRepository implements DepositRepositoryInterface {
     getByRedeemTxHash(txHash: string): Promise<Deposit | null> {
         for (const deposit of Object.values(this._deposits)) {
             if (deposit.externalBlockchainRedeemTxHash === txHash) {
+
                 return Promise.resolve(deposit)
             }
         }

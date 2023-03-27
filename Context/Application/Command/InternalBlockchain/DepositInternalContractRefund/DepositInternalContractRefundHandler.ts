@@ -14,6 +14,7 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
         const deposit = await this.repository.getById(command.depositId)
 
         if (deposit === null) {
+
             throw new Errors.DepositNotFound(command.depositId)
         }
 
@@ -29,6 +30,7 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
         }
 
         if (isRedeemFound) {
+
             return;
         }
 

@@ -51,6 +51,7 @@ export class MonitorDepositInternalContractRefunded extends CommandRunner {
             }
         } catch (e: unknown) {
             if (e instanceof Errors.DepositNotFound) {
+
                 console.log(e.message)
                 return
             }
@@ -66,6 +67,5 @@ export class MonitorDepositInternalContractRefunded extends CommandRunner {
                     this.cycleProcess(interval);
                 }, interval * 1000)
             });
-
     }
 }
