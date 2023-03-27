@@ -12,6 +12,7 @@ import ConfirmDepositInternalContractRedeemedValidator
 import RedeemExecutedInExternalBlockchainValidator from "./Validation/RedeemExecutedInExternalBlockchainValidator";
 import CompletedValidator from "context/Domain/Validation/CompletedValidator";
 import BurnedValidator from "context/Domain/Validation/BurnedValidator";
+import RefundedValidator from "context/Domain/Validation/RefundedValidator";
 
 export const STATUS_CREATED = 1
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
@@ -19,13 +20,15 @@ export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
 export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
 export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
 export const STATUS_COMPLETED = 25
-export const STATUS_BURNED = 105
+export const STATUS_BURNED = 100
+export const STATUS_REFUNDED = 105
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null
     private _status: number
     public _internalContract: InternalContract | null = null
     private _externalBlockchainRedeemTxHash: string | null = null
+    private _internalBlockchainBurnTxHash: string | null = null
 
     constructor(public _depositRequest: DepositRequest, public _externalContract: ExternalContract) {
         super()
@@ -100,5 +103,12 @@ export default class Deposit extends AggregateRoot {
         new BurnedValidator(this).validate()
 
         this._status = STATUS_BURNED;
+    }
+
+    public refunded(txHash: string) {
+        new RefundedValidator(this).validate()
+
+        this._internalBlockchainBurnTxHash = txHash
+        this._status = STATUS_REFUNDED;
     }
 }

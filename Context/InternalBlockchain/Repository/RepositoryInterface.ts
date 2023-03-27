@@ -1,5 +1,6 @@
 import Contract from "../HtlcContract";
 import OperationRedeem from "../OperationRedeem";
+import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
 
 export default interface RepositoryInterface {
@@ -16,4 +17,5 @@ export default interface RepositoryInterface {
     disconnect: () => void;
     burnAsset: (amount: string) => void;
     getAsset: () => Promise<any>;
+    getBurnOperations: (account: string) => Promise<OperationBurn[]>;
 }
