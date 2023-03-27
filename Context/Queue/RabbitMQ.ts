@@ -11,7 +11,7 @@ const EXCHANGE_OPTION = {
 
 @Injectable()
 export default class RabbitMQ {
-    public readonly MONITOR_EXTERNAL_CONTRACT_REDEEM = 'monitor_external_contract_redeem';
+    public readonly EXTERNAL_CONTRACT_REDEEM = 'external_contract_redeem';
     private channel: Channel | null = null;
     private connection: Connection | null = null
 

@@ -24,6 +24,11 @@ import GetLastRedeemsHandler
     from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastRedeemsHandler";
 import ExternalContractRedeemHandler
     from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
+import EthereumRepository from "context/ExternalBlockchain/Repository/EthereumRepository";
+import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
+import {ExternalContractRedeemWorker} from "context/Application/Cli/ExternalContractRedeemWorker";
+import ConfirmDepositExternalContractRedeemedHandler
+    from "context/Application/Command/ExternalBlockchain/ConfirmDepositExternalContractRedeemed/ConfirmDepositExternalContractRedeemedHandler";
 
 @Module({
     imports: [
@@ -41,6 +46,7 @@ import ExternalContractRedeemHandler
     ],
     providers: [
         MonitorEthereumTransactions,
+        ExternalContractRedeemWorker,
         ExternalBlockchain,
         GetLastContractsHandler,
         GetLastBlocksHandler,
@@ -53,6 +59,7 @@ import ExternalContractRedeemHandler
         GetLastRedeemsHandler,
         ExternalContractRedeemHandler,
         RabbitMQ,
+        ConfirmDepositExternalContractRedeemedHandler,
         {
             provide: "DataSource",
             useValue: DataSource
@@ -72,6 +79,14 @@ import ExternalContractRedeemHandler
         {
             provide: "DepositRequestRepositoryInterface",
             useClass: DepositRequestTypeOrmRepository
+        },
+        {
+            provide: "ExternalBlockchainRepositoryInterface",
+            useClass: EthereumRepository
+        },
+        {
+            provide: "NotifierInterface",
+            useClass: ConsoleNotifier
         }
 
     ]

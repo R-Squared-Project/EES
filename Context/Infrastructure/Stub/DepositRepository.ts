@@ -49,4 +49,14 @@ export default class DepositRepository implements DepositRepositoryInterface {
     reset() {
         this._deposits = {}
     }
+
+    getByRedeemTxHash(txHash: string): Promise<Deposit | null> {
+        for (const deposit of Object.values(this._deposits)) {
+            if (deposit.externalBlockchainRedeemTxHash === txHash) {
+                return Promise.resolve(deposit)
+            }
+        }
+
+        return Promise.resolve(null)
+    }
 }

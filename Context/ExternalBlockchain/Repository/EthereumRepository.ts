@@ -1,13 +1,15 @@
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
-import {BlockTransactionString} from "web3-eth";
+import {BlockTransactionString, TransactionReceipt} from "web3-eth";
 import {Contract as ContractWeb3, EventData} from "web3-eth-contract";
 import HashedTimeLockAbi from "../../../src/assets/abi/HashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import config from "context/config";
 import * as Errors from "context/ExternalBlockchain/Errors";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export default class EthereumRepository implements RepositoryInterface {
     private _web3: Web3
     private _contract: ContractWeb3
@@ -112,6 +114,9 @@ export default class EthereumRepository implements RepositoryInterface {
         }
     }
 
+    async getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {
+        return await this._web3.eth.getTransactionReceipt(txHash)
+    }
 
     private async loadTx(txHash: string) {
         return await this._web3.eth.getTransaction(txHash)

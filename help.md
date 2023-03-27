@@ -1,5 +1,5 @@
 #### Monitor ETH transaction
-yarn build && node dist/cli.js monitor-ethereum-transactions
+yarn monitor:ethereum_transactions
 
 #### Create contracts in internal blockchain
 yarn worker:create_in_internal_blockchain
@@ -12,3 +12,9 @@ yarn monitor:deposit_internal_contract_redeemed
 
 #### Redeem in external blockchain
 yarn worker:redeem_in_external_blockchain
+
+#### Monitor ETH transaction for redeems
+yarn monitor:ethereum_transactions
+
+#### Confirm redeeming in external blockchain
+yarn worker:external_contract_redeem
