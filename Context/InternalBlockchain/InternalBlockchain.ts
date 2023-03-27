@@ -9,6 +9,7 @@ import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import { Injectable } from "@nestjs/common";
 import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
 import { Map } from "immutable";
+import OperationBurn from "context/InternalBlockchain/OperationBurn";
 
 type Repository = "revpop" | "stub";
 
