@@ -14,6 +14,7 @@ export default class BurnedHandler implements UseCase<Burned, void> {
         const deposit = await this.repository.getById(command.depositId)
 
         if (deposit === null) {
+
             throw new Errors.DepositNotFound(command.depositId)
         }
 

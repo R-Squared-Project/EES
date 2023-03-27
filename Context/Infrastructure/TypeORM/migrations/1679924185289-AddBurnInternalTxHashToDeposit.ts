@@ -10,5 +10,4 @@ export class AddBurnInternalTxHashToDeposit1679924185289 implements MigrationInt
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE \`deposit\` DROP COLUMN \`internal_blockchain_burn_tx_hash\``);
     }
-
 }
