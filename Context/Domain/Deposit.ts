@@ -9,8 +9,8 @@ import ConfirmDepositInternalContractCreatedValidator from "context/Domain/Valid
 import ConfirmDepositInternalContractRedeemedValidator from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
 import RedeemExecutedInExternalBlockchainValidator from "./Validation/RedeemExecutedInExternalBlockchainValidator";
 import CompletedValidator from "context/Domain/Validation/CompletedValidator";
-import BurnedValidator from "context/Domain/Validation/BurnedValidator";
 import RefundedValidator from "context/Domain/Validation/RefundedValidator";
+import BurnedValidator from "context/Domain/Validation/BurnedValidator";
 
 export const STATUS_CREATED = 1;
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5;
