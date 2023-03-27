@@ -6,4 +6,5 @@ export default interface RepositoryInterface {
     getIncomingContracts: (start: string) => Promise<Contract[]>
     getRedeemOperations: (account: string) => Promise<OperationRedeem[]>
     disconnect: () => void
+    burnAsset: (amount: number) => void
 }

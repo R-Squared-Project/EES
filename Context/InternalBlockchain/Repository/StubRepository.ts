@@ -42,4 +42,7 @@ export default class StubRepository implements RepositoryInterface {
     public async disconnect() {
         return undefined
     }
+
+    burnAsset(amount: number): void {
+    }
 }

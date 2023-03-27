@@ -12,6 +12,12 @@ export class IssueAssetError extends ExternalBlockchainError {
     }
 }
 
+export class ReserveAssetError extends ExternalBlockchainError {
+    public constructor() {
+        super();
+    }
+}
+
 export class CreateHtlcError extends ExternalBlockchainError {
     public constructor() {
         super();

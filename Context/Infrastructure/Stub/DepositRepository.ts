@@ -59,4 +59,8 @@ export default class DepositRepository implements DepositRepositoryInterface {
 
         return Promise.resolve(null)
     }
+
+    getOverdueTimeLock(): Promise<Deposit[]> {
+        return Promise.resolve([])
+    }
 }

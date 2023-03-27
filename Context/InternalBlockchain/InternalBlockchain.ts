@@ -62,6 +62,10 @@ class InternalBlockchain {
     async getRedeemOperations(account: string): Promise<OperationRedeem[]> {
         return await this._repository.getRedeemOperations(account);
     }
+
+    async burnAsset(amount: number) {
+        await this._repository.burnAsset(amount);
+    }
 }
 
 export default InternalBlockchain;

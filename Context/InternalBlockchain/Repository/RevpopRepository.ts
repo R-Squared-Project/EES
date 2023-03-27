@@ -12,6 +12,7 @@ import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
+const PREIMAGE_LENGTH = 32
 
 export default class RevpopRepository implements RepositoryInterface {
     private memo: Memo
@@ -91,7 +92,7 @@ export default class RevpopRepository implements RepositoryInterface {
                 asset_id: asset.get('id')
             },
             preimage_hash: [PREIMAGE_HASH_CIPHER_SHA256, hashLock],
-            preimage_size: 32, //TODO: need to path preimage_size from web3portal
+            preimage_size: PREIMAGE_LENGTH,
             claim_period_seconds: timeLock,
             extensions: {
                 memo: this.memo.generate(externalId.slice(2), privateKey, accountFrom, accountTo)
@@ -164,5 +165,42 @@ export default class RevpopRepository implements RepositoryInterface {
 
     public async disconnect() {
         Apis.close()
+    }
+
+    async burnAsset(amount: number) {
+        const accountTo = await FetchChain("getAccount", this.eesAccount)
+
+        if (null === accountTo) {
+            throw new Errors.AccountNotFound(this.eesAccount)
+        }
+
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
+
+        const asset = await FetchChain("getAsset", this.assetSymbol)
+
+        if (asset === null) {
+            throw new Errors.AssetNotFoundError(this.assetSymbol)
+        }
+
+        const txReserveAsset = new TransactionBuilder();
+        txReserveAsset.add_type_operation("reserve_asset", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            payer: accountTo.get('id'),
+            amount_to_reserve: {
+                amount: amount,
+                asset_id: asset.get("id")
+            },
+        });
+        txReserveAsset.set_required_fees()
+        txReserveAsset.add_signer(privateKey)
+
+        try {
+            await txReserveAsset.broadcast()
+        } catch (e: unknown) {
+            throw new Errors.ReserveAssetError()
+        }
     }
 }

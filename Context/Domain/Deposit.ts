@@ -18,6 +18,7 @@ export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
 export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
 export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
 export const STATUS_COMPLETED = 25
+export const STATUS_REFUNDED = 100
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null
@@ -88,4 +89,9 @@ export default class Deposit extends AggregateRoot {
 
         this._status = STATUS_COMPLETED;
     }
+
+    public refunded() {
+        this._status = STATUS_REFUNDED;
+    }
+
 }

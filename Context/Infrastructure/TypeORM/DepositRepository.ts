@@ -79,4 +79,16 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .where('deposit._externalBlockchainRedeemTxHash = :txHash', {txHash})
             .getOne()
     }
+
+    async getOverdueTimeLock(): Promise<Deposit[]> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
+            .where('deposit.status = :status', {status: STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN})
+            .andWhere('externalContract.timeLock <= NOW()')
+            .getMany()
+    }
 }
