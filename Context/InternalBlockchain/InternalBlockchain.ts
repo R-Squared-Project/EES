@@ -4,6 +4,7 @@ import StubRepository from "./Repository/StubRepository";
 import config from "context/config";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "./OperationRedeem";
+import OperationRefund from "context/InternalBlockchain/OperationRefund";
 
 type Repository = 'revpop' | 'stub'
 
@@ -57,6 +58,10 @@ class InternalBlockchain {
 
     async getIncomingContracts(start: string): Promise<Contract[]> {
         return await this._repository.getIncomingContracts(start);
+    }
+
+    async getRefundOperations(account: string): Promise<OperationRefund[]> {
+        return await this._repository.getRefundOperations(account);
     }
 
     async getRedeemOperations(account: string): Promise<OperationRedeem[]> {

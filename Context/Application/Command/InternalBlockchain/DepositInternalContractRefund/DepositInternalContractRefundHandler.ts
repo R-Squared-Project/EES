@@ -19,21 +19,28 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
         }
 
         const internalContractId = deposit.internalContract?.internalId as string
-        const redeemOperations = await this.internalBlockchain.getRedeemOperations(deposit._depositRequest.revpopAccount.value)
-        let isRedeemFound = false;
 
-        for (const redeemOperation of redeemOperations) {
-            if (redeemOperation.htlcContractId === internalContractId) {
-                isRedeemFound = true;
-                console.log(`Deposit ${deposit.idString} already redeemed.`);
-            }
-        }
-
-        if (isRedeemFound) {
+        if(!await this.hasRefundOperation(internalContractId, deposit._depositRequest.revpopAccount.value)) {
+            console.log(`Deposit ${deposit.idString} has not refund yet.`)
 
             return;
         }
 
+        console.log(`Deposit ${deposit.idString} has refund.`);
+
         await this.internalBlockchain.burnAsset(parseInt(deposit._externalContract.value));
+    }
+
+    private async hasRefundOperation(internalContractId: string, accountName: string): Promise<boolean> {
+        const refundOperations = await this.internalBlockchain.getRefundOperations(accountName)
+
+        for (const refundOperation of refundOperations) {
+            if (refundOperation.htlcContractId === internalContractId) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -10,17 +10,15 @@ import {InternalBlockchainConnectionError} from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
+import OperationRefund from "../OperationRefund";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 const PREIMAGE_LENGTH = 32
 
 export default class RevpopRepository implements RepositoryInterface {
     private memo: Memo
-    public constructor(
-        private readonly eesAccount: string,
-        private readonly accountPrivateKey: string,
-        private readonly assetSymbol: string
-    ) {
+
+    public constructor(private readonly eesAccount: string, private readonly accountPrivateKey: string, private readonly assetSymbol: string) {
         this.memo = new Memo()
     }
 
@@ -147,6 +145,25 @@ export default class RevpopRepository implements RepositoryInterface {
                     account,
                     revpopOperation['op'][1]['htlc_id'],
                     Buffer.from(revpopOperation['op'][1]['preimage'], 'hex').toString(),
+                    revpopOperation['id'],
+                )
+            )
+        }
+
+        return operations
+    }
+
+    async getRefundOperations(account: string): Promise<OperationRefund[]> {
+        const revpopOperations = await Apis.instance()
+            .history_api()
+            .exec("get_account_history_by_operations", [account, [ChainTypes.operations.htlc_refund], 0, 100])
+
+        const operations = []
+        for(const revpopOperation of revpopOperations.operation_history_objs) {
+            operations.push(
+                OperationRefund.create(
+                    account,
+                    revpopOperation['op'][1]['htlc_id'],
                     revpopOperation['id'],
                 )
             )

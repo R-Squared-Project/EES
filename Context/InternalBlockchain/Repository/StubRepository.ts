@@ -1,6 +1,7 @@
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
+import OperationRefund from "context/InternalBlockchain/OperationRefund";
 
 interface ContractInfo {
     externalId: string,
@@ -29,6 +30,10 @@ export default class StubRepository implements RepositoryInterface {
 
     async getIncomingContracts(start: string): Promise<Contract[]> {
         return this._internalContracts
+    }
+
+    getRefundOperations(account: string): Promise<OperationRefund[]> {
+        return Promise.resolve([]);
     }
 
     async addRedeemOperation(operationRedeem: OperationRedeem) {
