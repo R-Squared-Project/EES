@@ -10,7 +10,11 @@ services:
       - "3000:3000"
     volumes:
       - ./:/var/ees
+      - ./docker/node/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
       - node_modules:/var/ees/node_modules
+    environment:
+      DATABASE_HOST: db
+      RABBITMQ_HOST: rabbitmq
     depends_on:
       - db
     networks:
