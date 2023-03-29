@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: docker/node/Dockerfile
-    ports:
-      - "3000:3000"
+#    ports:
+#      - "3000:3000"
     volumes:
       - ./:/var/ees
       - ./docker/node/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
