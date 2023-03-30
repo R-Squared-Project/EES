@@ -29,6 +29,8 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
         console.log(`Deposit ${deposit.idString} has refund.`);
 
         await this.internalBlockchain.burnAsset(parseInt(deposit._externalContract.value));
+        deposit.burned();
+        this.repository.save(deposit);
     }
 
     private async hasRefundOperation(internalContractId: string, accountName: string): Promise<boolean> {
