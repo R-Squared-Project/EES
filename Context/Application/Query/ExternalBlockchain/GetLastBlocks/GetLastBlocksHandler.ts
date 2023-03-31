@@ -58,6 +58,7 @@ export default class GetLastBlocksHandler implements UseCase<GetLastBlocks, Resp
 
     private async getBlocks(): Promise<Blocks> {
         const lastProcessedBlockNumber = parseInt(await this.setting.load(ETH_LAST_BLOCK_NAME, config.eth.deploy_block_number), 10)
+        console.log('LPBN', lastProcessedBlockNumber)
         const lastProcessedBlock = await this.externalBlockchain.repository.getBlock(lastProcessedBlockNumber) as BlockTransactionString
 
         const fromBlockNumber = lastProcessedBlockNumber + 1

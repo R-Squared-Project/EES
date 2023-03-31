@@ -24,6 +24,16 @@ export default class DepositRepository implements DepositRepositoryInterface {
         return Promise.resolve(this._deposits[id]?? null)
     }
 
+    getByRequestId(requestId: string): Promise<Deposit | null> {
+        for (const deposit of Object.values(this._deposits)) {
+            if (deposit._depositRequest.id.toString() === requestId) {
+                return Promise.resolve(deposit)
+            }
+        }
+
+        return Promise.resolve(null)
+    }
+
     getByTxHash(txHash: string): Promise<Deposit | null> {
         for (const deposit of Object.values(this._deposits)) {
             if (deposit._externalContract.txHash === txHash) {

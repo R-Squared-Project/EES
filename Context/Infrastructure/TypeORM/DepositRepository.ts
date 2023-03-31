@@ -49,6 +49,17 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .getOne()
     }
 
+    async getByRequestId(requestId: string): Promise<Deposit | null> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .where('depositRequest.id = :requestId', {requestId: requestId})
+            .getOne()
+    }
+
     async getByTxHash(txHash: string): Promise<Deposit | null> {
         return await this._datasource
             .getRepository<Deposit>(Deposit)
