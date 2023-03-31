@@ -55,6 +55,7 @@ async function main() {
 
         try {
             await confirmDepositInternalContractCreatedHandler.execute(query)
+            console.log(`Internal contract ${contract.id} created.`)
         } catch (e) {
             errorHandler.handle(e)
         }
