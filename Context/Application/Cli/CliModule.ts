@@ -29,6 +29,10 @@ import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
 import {ExternalContractRedeemWorker} from "context/Application/Cli/ExternalContractRedeemWorker";
 import ConfirmDepositExternalContractRedeemedHandler
     from "context/Application/Command/ExternalBlockchain/ConfirmDepositExternalContractRedeemed/ConfirmDepositExternalContractRedeemedHandler";
+import {MonitorDepositInternalContractRefunded} from "context/Application/Cli/MonitorDepositInternalContractRefunded";
+import DepositInternalContractRefundHandler
+    from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
+import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 
 @Module({
     imports: [
@@ -60,6 +64,8 @@ import ConfirmDepositExternalContractRedeemedHandler
         ExternalContractRedeemHandler,
         RabbitMQ,
         ConfirmDepositExternalContractRedeemedHandler,
+        MonitorDepositInternalContractRefunded,
+        DepositInternalContractRefundHandler,
         {
             provide: "DataSource",
             useValue: DataSource
@@ -83,6 +89,12 @@ import ConfirmDepositExternalContractRedeemedHandler
         {
             provide: "ExternalBlockchainRepositoryInterface",
             useClass: EthereumRepository
+        },
+        {
+            provide: "InternalBlockchain",
+            useFactory: () => {
+                return InternalBlockchain.init({repository: "revpop"})
+            }
         },
         {
             provide: "NotifierInterface",

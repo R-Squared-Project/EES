@@ -5,6 +5,7 @@ import config from "context/config";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "./OperationRedeem";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
+import {Injectable} from "@nestjs/common";
 
 type Repository = 'revpop' | 'stub'
 
@@ -12,6 +13,7 @@ interface Config {
     repository: Repository
 }
 
+@Injectable()
 class InternalBlockchain {
     public constructor(
         private readonly _repository: RepositoryInterface

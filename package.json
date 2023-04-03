@@ -12,6 +12,7 @@
     "worker:create_in_internal_blockchain": "ts-node -r tsconfig-paths/register src/scripts/worker_create_in_internal_blockchain.ts",
     "worker:redeem_in_external_blockchain": "ts-node -r tsconfig-paths/register src/scripts/worker_redeem_in_external_blockchain.ts",
     "monitor:deposit_internal_contract_created": "ts-node -r tsconfig-paths/register src/scripts/monitor_deposit_internal_contract_created.ts",
+    "monitor:deposit_internal_contract_refunded": "ts-node -r tsconfig-paths/register cli.ts monitor-deposit-internal-contract-refunded",
     "monitor:deposit_internal_contract_redeemed": "ts-node -r tsconfig-paths/register src/scripts/monitor_deposit_internal_contract_redeemed.ts",
     "worker:external_contract_redeem": "ts-node -r tsconfig-paths/register cli.ts worker-external-contract-redeem",
     "build": "nest build",

@@ -3,11 +3,13 @@ import DepositInternalContractRefund from "./DepositInternalContractRefund";
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import * as Errors from "./Errors"
+import {Inject, Injectable} from "@nestjs/common";
 
+@Injectable()
 export default class DepositInternalContractRefundHandler implements UseCase<DepositInternalContractRefund, void> {
     constructor(
-        private repository: DepositRepositoryInterface,
-        private internalBlockchain: InternalBlockchain
+        @Inject("DepositRepositoryInterface") private repository: DepositRepositoryInterface,
+        @Inject("InternalBlockchain") private internalBlockchain: InternalBlockchain
     ) {}
 
     async execute(command: DepositInternalContractRefund): Promise<void> {
@@ -28,9 +30,10 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
 
         console.log(`Deposit ${deposit.idString} has refund.`);
 
-        await this.internalBlockchain.burnAsset(parseInt(deposit._externalContract.value));
+        await this.internalBlockchain.burnAsset(parseInt(deposit._externalContract.value) / 100000000000000);
         deposit.burned();
         this.repository.save(deposit);
+        console.log(`Deposit ${deposit.idString} has burned.`)
     }
 
     private async hasRefundOperation(internalContractId: string, accountName: string): Promise<boolean> {
