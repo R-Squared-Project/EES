@@ -39,7 +39,7 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
             this.repository.save(deposit);
             console.log(`Deposit ${deposit.idString} has burned.`)
         } catch (e:unknown) {
-
+            console.log(`Error processing deposit ${deposit.idString}`)
         }
     }
 
