@@ -4,12 +4,14 @@ import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterfac
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import * as Errors from "./Errors"
 import {Inject, Injectable} from "@nestjs/common";
+import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 
 @Injectable()
 export default class DepositInternalContractRefundHandler implements UseCase<DepositInternalContractRefund, void> {
     constructor(
         @Inject("DepositRepositoryInterface") private repository: DepositRepositoryInterface,
-        @Inject("InternalBlockchain") private internalBlockchain: InternalBlockchain
+        @Inject("InternalBlockchain") private internalBlockchain: InternalBlockchain,
+        private converter: EtherToWrappedEtherConverter
     ) {}
 
     async execute(command: DepositInternalContractRefund): Promise<void> {
@@ -22,7 +24,7 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
 
         const internalContractId = deposit.internalContract?.internalId as string
 
-        if(!await this.hasRefundOperation(internalContractId, deposit._depositRequest.revpopAccount.value)) {
+        if (!await this.hasRefundOperation(internalContractId, deposit._depositRequest.revpopAccount.value)) {
             console.log(`Deposit ${deposit.idString} has not refund yet.`)
 
             return;
@@ -30,10 +32,15 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
 
         console.log(`Deposit ${deposit.idString} has refund.`);
 
-        await this.internalBlockchain.burnAsset(parseInt(deposit._externalContract.value) / 100000000000000);
+        const rvEthAmount = this.converter.convert(deposit._externalContract.value)
         deposit.burned();
-        this.repository.save(deposit);
-        console.log(`Deposit ${deposit.idString} has burned.`)
+        try {
+            await this.internalBlockchain.burnAsset(rvEthAmount);
+            this.repository.save(deposit);
+            console.log(`Deposit ${deposit.idString} has burned.`)
+        } catch (e:unknown) {
+
+        }
     }
 
     private async hasRefundOperation(internalContractId: string, accountName: string): Promise<boolean> {
