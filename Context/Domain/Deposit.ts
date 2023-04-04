@@ -51,6 +51,10 @@ export default class Deposit extends AggregateRoot {
         return this._externalBlockchainRedeemTxHash;
     }
 
+    get internalBlockchainBurnTxHash(): string | null {
+        return this._internalBlockchainBurnTxHash;
+    }
+
     static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
         const deposit = new Deposit(depositRequest, externalContract)
 

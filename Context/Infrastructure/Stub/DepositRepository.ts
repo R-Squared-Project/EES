@@ -72,7 +72,22 @@ export default class DepositRepository implements DepositRepositoryInterface {
         return Promise.resolve(null)
     }
 
+    getByBurnTxHash(txHash: string): Promise<Deposit | null> {
+        for (const deposit of Object.values(this._deposits)) {
+            if (deposit.internalBlockchainBurnTxHash === txHash) {
+
+                return Promise.resolve(deposit)
+            }
+        }
+
+        return Promise.resolve(null)
+    }
+
     getOverdueTimeLock(): Promise<Deposit[]> {
+        return Promise.resolve([])
+    }
+
+    getBurned(): Promise<Deposit[]> {
         return Promise.resolve([])
     }
 }

@@ -14,6 +14,7 @@
     "monitor:deposit_internal_contract_created": "ts-node -r tsconfig-paths/register src/scripts/monitor_deposit_internal_contract_created.ts",
     "monitor:deposit_internal_contract_refunded": "ts-node -r tsconfig-paths/register cli.ts monitor-deposit-internal-contract-refunded",
     "monitor:deposit_internal_contract_redeemed": "ts-node -r tsconfig-paths/register src/scripts/monitor_deposit_internal_contract_redeemed.ts",
+    "monitor:deposit_internal_contract_burned": "ts-node -r tsconfig-paths/register cli.ts monitor-deposit-internal-contract-burned",
     "worker:external_contract_redeem": "ts-node -r tsconfig-paths/register cli.ts worker-external-contract-redeem",
     "build": "nest build",
     "start": "nest start",

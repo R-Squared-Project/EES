@@ -1,8 +1,5 @@
 import AbstractValidator from "./AbstractValidator";
-import Deposit, {
-    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
-    STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN
-} from "context/Domain/Deposit";
+import Deposit, {STATUS_BURNED} from "context/Domain/Deposit";
 import * as Errors from "context/Domain/Errors";
 
 export default class RefundedValidator extends AbstractValidator {
@@ -19,7 +16,7 @@ export default class RefundedValidator extends AbstractValidator {
     }
 
     private validateStatus() {
-        if (this.deposit.status !== STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN) {
+        if (this.deposit.status !== STATUS_BURNED) {
 
             throw new Errors.CompletedStatusError(this.deposit.id.toValue(), this.deposit.status)
         }

@@ -1,7 +1,7 @@
 import {DataSource} from 'typeorm';
 import DepositRepositoryInterface from '../../Domain/DepositRepositoryInterface';
 import Deposit, {
-    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN, STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
+    STATUS_BURNED, STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN, STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
 } from '../../Domain/Deposit';
 import InternalContract from 'context/Domain/InternalContract';
 import {Inject, Injectable} from "@nestjs/common";
@@ -93,6 +93,17 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .getOne()
     }
 
+    async getByBurnTxHash(txHash: string): Promise<Deposit | null> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .where('deposit._internalBlockchainBurnTxHash = :txHash', {txHash})
+            .getOne()
+    }
+
     async getOverdueTimeLock(): Promise<Deposit[]> {
         return await this._datasource
             .getRepository<Deposit>(Deposit)
@@ -105,6 +116,19 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
                 status2: STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
             })
             .andWhere('externalContract._timeLock <= NOW()')
+            .getMany()
+    }
+
+    async getBurned(): Promise<Deposit[]> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder('deposit')
+            .leftJoinAndSelect('deposit._externalContract', 'externalContract')
+            .leftJoinAndSelect('deposit._depositRequest', 'depositRequest')
+            .leftJoinAndSelect('deposit._internalContract', 'internalContract')
+            .where('deposit.status = :status', {
+                status: STATUS_BURNED
+            })
             .getMany()
     }
 }

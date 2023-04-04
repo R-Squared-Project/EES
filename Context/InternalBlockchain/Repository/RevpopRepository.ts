@@ -225,20 +225,22 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getBurnOperations(account: string): Promise<OperationBurn[]> {
+        const mostRecently = '1.' + ChainTypes.object_type.operation_history + '.0'
         const revpopOperations = await Apis.instance()
             .history_api()
-            .exec("get_account_history_by_operations", [account, [ChainTypes.operations.asset_reserve], 0, 100])
+            .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently])
 
         const operations = []
 
-        for (const revpopOperation of revpopOperations.operation_history_objs) {
-            operations.push(
-                OperationBurn.create(
-                    account,
-                    revpopOperation['op'][1]['htlc_id'],
-                    revpopOperation['id'],
+        for (const revpopOperation of revpopOperations) {
+            if (revpopOperation['op'][0] == ChainTypes.operations.asset_reserve) {
+                operations.push(
+                    OperationBurn.create(
+                        account,
+                        revpopOperation['id'],
+                    )
                 )
-            )
+            }
         }
 
         return operations
