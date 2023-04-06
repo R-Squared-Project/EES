@@ -9,4 +9,5 @@ export default interface RepositoryInterface {
     getRefundOperations: (account: string) => Promise<OperationRefund[]>
     disconnect: () => void
     burnAsset: (amount: number) => void
+    getAsset: () => Promise<any>
 }

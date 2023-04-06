@@ -49,5 +49,10 @@ export default class StubRepository implements RepositoryInterface {
     }
 
     burnAsset(amount: number): void {
+        return;
+    }
+
+    async getAsset(): Promise<any> {
+        return {}
     }
 }

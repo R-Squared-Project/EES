@@ -73,6 +73,10 @@ class InternalBlockchain {
     async burnAsset(amount: number) {
         await this._repository.burnAsset(amount);
     }
+
+    async getAsset(): Promise<any> {
+        return await this._repository.getAsset();
+    }
 }
 
 export default InternalBlockchain;

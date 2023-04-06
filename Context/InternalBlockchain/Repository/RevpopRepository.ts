@@ -11,6 +11,7 @@ import Memo from "context/InternalBlockchain/Memo";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 import OperationRefund from "../OperationRefund";
+import AssetConverter from "context/Infrastructure/AssetConverter";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 const PREIMAGE_LENGTH = 32
@@ -18,14 +19,25 @@ const PREIMAGE_LENGTH = 32
 export default class RevpopRepository implements RepositoryInterface {
     private memo: Memo
 
-    public constructor(private readonly eesAccount: string, private readonly accountPrivateKey: string, private readonly assetSymbol: string) {
+    public constructor(
+        private readonly eesAccount: string,
+        private readonly accountPrivateKey: string,
+        private readonly assetSymbol: string,
+        private readonly converter: AssetConverter
+    ) {
         this.memo = new Memo()
     }
 
-    public static async init(nodeUrl: string, accountFrom: string, accountPrivateKey: string, assetSymbol: string, chainId: string): Promise<RevpopRepository> {
+    public static async init(
+        nodeUrl: string,
+        accountFrom: string,
+        accountPrivateKey: string,
+        assetSymbol: string,
+        chainId: string
+    ): Promise<RevpopRepository> {
         ChainConfig.networks["RevPop"].chain_id = chainId
         ChainConfig.setChainId(chainId)
-        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol)
+        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol, new AssetConverter())
         await repository.connect(nodeUrl)
         return repository
     }
@@ -39,16 +51,10 @@ export default class RevpopRepository implements RepositoryInterface {
         }
 
         const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
-
-        const asset = await FetchChain("getAsset", this.assetSymbol)
-
-        if (asset === null) {
-            throw new Errors.AssetNotFoundError(this.assetSymbol)
-        }
-
-        const amountWithPrecision = amount * Math.pow(10, asset.get('precision'))
-
+        const asset = await this.getAsset();
+        const amountWithPrecision = this.converter.fromAsset(amount, asset);
         const txIssueAsset = new TransactionBuilder();
+
         txIssueAsset.add_type_operation("asset_issue", {
             fee: {
                 amount: 0, asset_id: 0
@@ -186,5 +192,15 @@ export default class RevpopRepository implements RepositoryInterface {
         } catch (e: unknown) {
             throw new Errors.ReserveAssetError()
         }
+    }
+
+    async getAsset(): Promise<any> {
+        const asset = await FetchChain("getAsset", this.assetSymbol)
+
+        if (asset === null) {
+            throw new Errors.AssetNotFoundError(this.assetSymbol)
+        }
+
+        return asset;
     }
 }
