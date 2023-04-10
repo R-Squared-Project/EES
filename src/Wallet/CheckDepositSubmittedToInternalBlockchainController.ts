@@ -1,9 +1,6 @@
-import {Controller, Post, Body, HttpCode, HttpException, HttpStatus} from '@nestjs/common';
-import {
-    CheckDepositSubmittedToInternalBlockchainRequest,
-    checkDepositSubmittedToInternalBlockchainRequestHandler,
-} from "../../Context";
+import {Controller, Post, Body, HttpCode, HttpException, HttpStatus, Inject} from '@nestjs/common';
 import SuccessResponse from "../Response/SuccessResponse";
+import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 
 interface Request {
     sessionId: string
@@ -11,21 +8,25 @@ interface Request {
 
 @Controller('deposit/submitted')
 export default class CheckDepositSubmittedToInternalBlockchainController {
+    constructor(
+        @Inject("DepositRepositoryInterface") private _repository: DepositRepositoryInterface
+    ) {}
+
     @Post()
     @HttpCode(200)
     async create(@Body() request: Request): Promise<SuccessResponse> {
-        const command = new CheckDepositSubmittedToInternalBlockchainRequest(
-            request.sessionId,
-        )
+        const deposit = await this._repository.getByRequestId(request.sessionId)
 
-        try {
-            const depositRequestId = await checkDepositSubmittedToInternalBlockchainRequestHandler.execute(command)
-
-            return Promise.resolve(SuccessResponse.create({
-                id: depositRequestId
-            }))
-        } catch (e) {
-            throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+        if (!deposit) {
+            throw new HttpException("Deposit not found", HttpStatus.NOT_FOUND);
         }
+
+        if (!deposit.isSubmittedToInternalBlockchain()) {
+            throw new HttpException("Deposit Internal Contract is not confirmed", HttpStatus.BAD_REQUEST);
+        }
+
+        return Promise.resolve(SuccessResponse.create({
+            submitted: true
+        }))
     }
 }

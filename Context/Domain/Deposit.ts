@@ -19,7 +19,7 @@ export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
 export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
 export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
 export const STATUS_COMPLETED = 25
-export const STATUS_BURNED = 100
+export const STATUS_BURNED = 105
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null
@@ -89,6 +89,11 @@ export default class Deposit extends AggregateRoot {
         new CompletedValidator(this).validate()
 
         this._status = STATUS_COMPLETED;
+    }
+
+    public isSubmittedToInternalBlockchain(): boolean {
+
+        return this._status === STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN;
     }
 
     public burned() {
