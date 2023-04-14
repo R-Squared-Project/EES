@@ -11,7 +11,7 @@ import Memo from "context/InternalBlockchain/Memo";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 import OperationRefund from "../OperationRefund";
-import AssetConverter from "context/Infrastructure/AssetConverter";
+import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2
 const PREIMAGE_LENGTH = 32
@@ -23,7 +23,7 @@ export default class RevpopRepository implements RepositoryInterface {
         private readonly eesAccount: string,
         private readonly accountPrivateKey: string,
         private readonly assetSymbol: string,
-        private readonly converter: AssetConverter
+        private readonly converter: AssetNormalizer
     ) {
         this.memo = new Memo()
     }
@@ -37,7 +37,7 @@ export default class RevpopRepository implements RepositoryInterface {
     ): Promise<RevpopRepository> {
         ChainConfig.networks["RevPop"].chain_id = chainId
         ChainConfig.setChainId(chainId)
-        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol, new AssetConverter())
+        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol, new AssetNormalizer())
         await repository.connect(nodeUrl)
         return repository
     }
@@ -52,7 +52,7 @@ export default class RevpopRepository implements RepositoryInterface {
 
         const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
         const asset = await this.getAsset();
-        const amountWithPrecision = this.converter.fromAsset(amount, asset);
+        const amountWithPrecision = this.converter.denormalize(amount, asset);
         const txIssueAsset = new TransactionBuilder();
 
         txIssueAsset.add_type_operation("asset_issue", {

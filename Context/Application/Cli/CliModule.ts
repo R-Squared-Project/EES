@@ -34,7 +34,7 @@ import DepositInternalContractRefundHandler
     from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
-import AssetConverter from "context/Infrastructure/AssetConverter";
+import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
 
 @Module({
     imports: [
@@ -69,7 +69,7 @@ import AssetConverter from "context/Infrastructure/AssetConverter";
         MonitorDepositInternalContractRefunded,
         DepositInternalContractRefundHandler,
         EtherToWrappedEtherConverter,
-        AssetConverter,
+        AssetNormalizer,
         {
             provide: "DataSource",
             useValue: DataSource
