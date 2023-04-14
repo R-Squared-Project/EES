@@ -11,7 +11,9 @@ export default class GetSettingsController {
             contract_address: config.eth.contract_address,
             receiver_address: config.eth.receiver,
             minimum_deposit: config.eth.minimum_deposit_amount.toString(),
-            minimum_timelock: config.contract.minimum_timelock
+            minimum_timelock: config.contract.minimum_timelock,
+            rvp_withdrawal_fee: config.revpop.rvp_withdrawal_fee,
+            rveth_withdrawal_fee: config.revpop.rveth_withdrawal_fee
         }))
     }
 }

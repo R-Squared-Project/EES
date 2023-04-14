@@ -30,6 +30,9 @@ const config = {
         account_private_key: process.env.REVPOP_ACCOUNT_PRIVATE_KEY,
         redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_INTERNAL_BLOCKCHAIN as string, 10),
         chain_id: process.env.REVPOP_CHAIN_ID,
+        rvp_withdrawal_fee: parseFloat(process.env.REVPOP_RVP_WITHDRAWAL_FEE as string),
+        rveth_withdrawal_fee: parseFloat(process.env.REVPOP_RVETH_WITHDRAWAL_FEE as string)
+        chain_id: process.env.REVPOP_CHAIN_ID,
         eth_to_rveth_rate: parseFloat(process.env.REVPOP_ETH_TO_RVETH_RATE ?? "1")
     },
     db: {
