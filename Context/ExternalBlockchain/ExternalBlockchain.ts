@@ -36,6 +36,10 @@ class ExternalBlockchain {
     public async redeem(contractId: string, secret: string) {
         return this._repository.redeem(contractId, secret, config.eth.receiver)
     }
+
+    public getAsset() {
+        return this._repository.getAsset();
+    }
 }
 
 export default ExternalBlockchain;

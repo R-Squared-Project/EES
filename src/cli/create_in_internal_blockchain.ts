@@ -3,37 +3,44 @@ import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepo
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
-import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
-import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
+import CreateContractInInternalBlockchain from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
+import CreateContractInInternalBlockchainHandler from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
+import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
+import AssetNormalizer from "Context/Infrastructure/AssetNormalizer";
 
 const argv = yargs(process.argv.slice(2))
-    .option('id', {
-        alias: 'i',
-        describe: 'Deposit id',
-        type: 'string'
+    .option("id", {
+        alias: "i",
+        describe: "Deposit id",
+        type: "string",
     })
-    .demandOption(['id'])
+    .demandOption(["id"])
     .help()
-    .parseSync()
+    .parseSync();
 
-const depositId = argv.id
+const depositId = argv.id;
 
 const main = async () => {
-    const depositRepository = new DepositTypeOrmRepository(DataSource)
+    const depositRepository = new DepositTypeOrmRepository(DataSource);
     const internalBlockchain = await InternalBlockchain.init({
-        repository: 'revpop'
-    })
-    const converter = new EtherToWrappedEtherConverter()
-    const handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter)
+        repository: "revpop",
+    });
+    const externalBlockchain = new ExternalBlockchain("ethereum");
+    const converter = new EtherToWrappedEtherConverter();
+    const handler = new CreateContractInInternalBlockchainHandler(
+        depositRepository,
+        internalBlockchain,
+        externalBlockchain,
+        converter,
+        new AssetNormalizer()
+    );
 
-    const command = new CreateContractInInternalBlockchain(depositId)
-    await handler.execute(command)
+    const command = new CreateContractInInternalBlockchain(depositId);
+    await handler.execute(command);
 
-    internalBlockchain.disconnect()
-}
+    internalBlockchain.disconnect();
+};
 
 main().then(() => {
-    console.log(`Internal HTLC for deposit ${depositId} was created.`)
-})
+    console.log(`Internal HTLC for deposit ${depositId} was created.`);
+});

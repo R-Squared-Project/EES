@@ -1,3 +1,3 @@
 export default interface ConverterInterface {
-    convert: (eth: string) => number
+    convert: (value: number) => number
 }

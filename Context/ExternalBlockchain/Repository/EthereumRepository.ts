@@ -8,6 +8,7 @@ import Contract from "../Contract";
 import config from "context/config";
 import * as Errors from "context/ExternalBlockchain/Errors";
 import {Injectable} from "@nestjs/common";
+import {Map} from "immutable";
 
 @Injectable()
 export default class EthereumRepository implements RepositoryInterface {
@@ -116,6 +117,10 @@ export default class EthereumRepository implements RepositoryInterface {
 
     async getTransactionReceipt(txHash: string): Promise<TransactionReceipt> {
         return await this._web3.eth.getTransactionReceipt(txHash)
+    }
+
+    getAsset(): Map<string, number> {
+        return Map<string, number>({precision: 18});
     }
 
     private async loadTx(txHash: string) {

@@ -1,55 +1,64 @@
-import yargs from 'yargs'
+import yargs from "yargs";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
-import CreateContractInInternalBlockchain
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
-import CreateContractInInternalBlockchainHandler
-    from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
+import CreateContractInInternalBlockchain from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchain";
+import CreateContractInInternalBlockchainHandler from "context/Application/Command/InternalBlockchain/CreateContractInInternalBlockchain/CreateContractInInternalBlockchainHandler";
 import DepositTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import RabbitMQ from "context/Queue/RabbitMQ";
+import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
+import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
 
 yargs(process.argv.slice(2))
-    .usage('Connect to a RabbitMQ server and consume new messages. Create new contract in an internal blockchain')
+    .usage("Connect to a RabbitMQ server and consume new messages. Create new contract in an internal blockchain")
     .help()
-    .parseSync()
+    .parseSync();
 
 interface CreateInInternalBlockchainMessage {
-    deposit_id: string
+    deposit_id: string;
 }
 
-let internalBlockchain: InternalBlockchain
-let messenger: RabbitMQ
+let internalBlockchain: InternalBlockchain;
+let messenger: RabbitMQ;
 
 async function main() {
-    const depositRepository = new DepositTypeOrmRepository(DataSource)
+    const depositRepository = new DepositTypeOrmRepository(DataSource);
     internalBlockchain = await InternalBlockchain.init({
-        repository: 'revpop'
-    })
-    const converter = new EtherToWrappedEtherConverter()
-    const handler = new CreateContractInInternalBlockchainHandler(depositRepository, internalBlockchain, converter)
-    messenger = new RabbitMQ()
+        repository: "revpop",
+    });
+    const externalBlockchain = new ExternalBlockchain("ethereum");
+    const converter = new EtherToWrappedEtherConverter();
+    const handler = new CreateContractInInternalBlockchainHandler(
+        depositRepository,
+        internalBlockchain,
+        externalBlockchain,
+        converter,
+        new AssetNormalizer()
+    );
+    messenger = new RabbitMQ();
 
     messenger.consume<CreateInInternalBlockchainMessage>(
-        'create_in_internal_blockchain',
+        "create_in_internal_blockchain",
         async (message: CreateInInternalBlockchainMessage, ack, nack) => {
-            const command = new CreateContractInInternalBlockchain(message.deposit_id)
+            const command = new CreateContractInInternalBlockchain(message.deposit_id);
 
             try {
-                await handler.execute(command)
-                ack()
-                console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
+                await handler.execute(command);
+                ack();
+                console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`);
             } catch (e: unknown) {
-                nack()
-                console.log(`Error occurred while HTLC contract submitted in an internal blockchain: ${message.deposit_id}`)
+                nack();
+                console.log(
+                    `Error occurred while HTLC contract submitted in an internal blockchain: ${message.deposit_id}`
+                );
             }
         }
-    )
+    );
 }
 
-process.on('SIGINT', () => {
-    messenger.disconnect()
-    internalBlockchain.disconnect()
+process.on("SIGINT", () => {
+    messenger.disconnect();
+    internalBlockchain.disconnect();
 });
 
-main()
+main();

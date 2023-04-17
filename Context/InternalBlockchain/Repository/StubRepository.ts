@@ -2,22 +2,25 @@ import RepositoryInterface from "./RepositoryInterface";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
+import { Map } from "immutable";
 
 interface ContractInfo {
-    externalId: string,
-    accountToName: string,
-    amount: number,
-    hashLock: string,
-    timeLock: number
+    externalId: string;
+    accountToName: string;
+    amount: string;
+    hashLock: string;
+    timeLock: number;
 }
 
-export default class StubRepository implements RepositoryInterface {
-    private _newContracts: ContractInfo[] = []
-    private _internalContracts: Contract[] = []
-    private _operationsRedeem: OperationRedeem[] = []
+const ASSET_PRECISION = 4;
 
-    createContract(externalId: string, accountToName: string, amount: number, hashLock: string, timeLock: number) {
-        this._newContracts.push({externalId, accountToName, amount, hashLock, timeLock})
+export default class StubRepository implements RepositoryInterface {
+    private _newContracts: ContractInfo[] = [];
+    private _internalContracts: Contract[] = [];
+    private _operationsRedeem: OperationRedeem[] = [];
+
+    createContract(externalId: string, accountToName: string, amount: string, hashLock: string, timeLock: number) {
+        this._newContracts.push({ externalId, accountToName, amount, hashLock, timeLock });
     }
 
     get contracts(): ContractInfo[] {
@@ -25,11 +28,11 @@ export default class StubRepository implements RepositoryInterface {
     }
 
     public addInternalContract(contract: Contract) {
-        this._internalContracts.push(contract)
+        this._internalContracts.push(contract);
     }
 
     async getIncomingContracts(start: string): Promise<Contract[]> {
-        return this._internalContracts
+        return this._internalContracts;
     }
 
     getRefundOperations(account: string): Promise<OperationRefund[]> {
@@ -37,22 +40,22 @@ export default class StubRepository implements RepositoryInterface {
     }
 
     async addRedeemOperation(operationRedeem: OperationRedeem) {
-        this._operationsRedeem.push(operationRedeem)
+        this._operationsRedeem.push(operationRedeem);
     }
 
     async getRedeemOperations(account: string): Promise<OperationRedeem[]> {
-        return this._operationsRedeem
+        return this._operationsRedeem;
     }
 
     public async disconnect() {
-        return undefined
+        return undefined;
     }
 
-    burnAsset(amount: number): void {
+    burnAsset(amount: string): void {
         return;
     }
 
     async getAsset(): Promise<any> {
-        return {}
+        return Map<string, number>({ precision: ASSET_PRECISION });
     }
 }
