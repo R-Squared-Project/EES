@@ -1,4 +1,4 @@
-export default class SubmitDepositRequest {
+export default class SubmitWithdrawRequest {
     constructor(
         private _revpopAccount: string,
         private _hashLock: string
