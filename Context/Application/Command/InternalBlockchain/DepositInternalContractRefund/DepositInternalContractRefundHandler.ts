@@ -13,9 +13,9 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
     constructor(
         @Inject("DepositRepositoryInterface") private repository: DepositRepositoryInterface,
         @Inject("InternalBlockchain") private internalBlockchain: InternalBlockchain,
-        @Inject("ExternalBlockchain") private externalBlockchain: ExternalBlockchain,
+        private externalBlockchain: ExternalBlockchain,
         private normalizer: AssetNormalizer,
-        private converter: ConverterInterface
+        @Inject("ConverterInterface") private converter: ConverterInterface
     ) {}
 
     async execute(command: DepositInternalContractRefund): Promise<void> {
