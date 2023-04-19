@@ -1,11 +1,14 @@
 import Web3 from "web3";
 import ConverterInterface from "context/Domain/ConverterInterface";
+import {Injectable} from "@nestjs/common";
+import config from "context/config";
 
-type EthWei = string
+type Eth = number
 type RvEth = number
 
+@Injectable()
 export default class EtherToWrappedEtherConverter implements ConverterInterface {
-    convert(eth: EthWei): RvEth {
-        return parseFloat(Web3.utils.fromWei(eth))
+    convert(eth: Eth): RvEth {
+        return eth / config.revpop.eth_to_rveth_rate
     }
 }

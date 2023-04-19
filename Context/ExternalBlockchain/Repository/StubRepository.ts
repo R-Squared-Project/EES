@@ -3,6 +3,7 @@ import Contract from "../Contract";
 import {EventData} from "web3-eth-contract";
 import {BlockTransactionString, TransactionReceipt} from "web3-eth";
 import * as Errors from "context/ExternalBlockchain/Errors";
+import {Map} from "immutable";
 
 interface RedeemRequest {
     contractId: string
@@ -44,6 +45,10 @@ export default class StubRepository implements RepositoryInterface {
         })
 
         return this._redeemTxHash as string
+    }
+
+    getAsset(): Map<string, number> {
+        return Map<string, number>({precision: 18});
     }
 
     reset() {

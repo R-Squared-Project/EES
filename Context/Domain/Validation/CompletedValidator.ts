@@ -17,6 +17,7 @@ export default class CompletedValidator extends AbstractValidator {
 
     private validateStatus() {
         if (this.deposit.status !== STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN) {
+
             throw new Errors.CompletedStatusError(this.deposit.id.toValue(), this.deposit.status)
         }
     }

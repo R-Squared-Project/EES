@@ -127,3 +127,9 @@ export class CompletedStatusError extends DomainError {
         super(`DepositId: ${id}. Status ${status} is invalid.`)
     }
 }
+
+export class BurnedStatusError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`DepositId: ${id}. Status ${status} is invalid.`)
+    }
+}

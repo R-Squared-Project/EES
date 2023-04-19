@@ -19,6 +19,7 @@ export default class ConfirmDepositExternalContractRedeemedHandler {
         const deposit = await this.depositRepository.getByRedeemTxHash(command.txHash);
 
         if (deposit === null) {
+
             throw new Errors.DepositNotExists(command.txHash)
         }
 
@@ -31,7 +32,6 @@ export default class ConfirmDepositExternalContractRedeemedHandler {
             const alertDate = dayjs().add(alertPeriod, "seconds");
 
             if (deposit._externalContract.timeLock.value.isBefore(alertDate)) {
-
                 await this.notifier.sendMessage('Timeout of HTLC Redeem in Ethereum')
             }
 

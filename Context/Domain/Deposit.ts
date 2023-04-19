@@ -11,6 +11,7 @@ import ConfirmDepositInternalContractRedeemedValidator
     from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
 import RedeemExecutedInExternalBlockchainValidator from "./Validation/RedeemExecutedInExternalBlockchainValidator";
 import CompletedValidator from "context/Domain/Validation/CompletedValidator";
+import BurnedValidator from "context/Domain/Validation/BurnedValidator";
 
 export const STATUS_CREATED = 1
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
@@ -18,6 +19,7 @@ export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
 export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
 export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
 export const STATUS_COMPLETED = 25
+export const STATUS_BURNED = 100
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null
@@ -87,5 +89,11 @@ export default class Deposit extends AggregateRoot {
         new CompletedValidator(this).validate()
 
         this._status = STATUS_COMPLETED;
+    }
+
+    public burned() {
+        new BurnedValidator(this).validate()
+
+        this._status = STATUS_BURNED;
     }
 }
