@@ -5,6 +5,7 @@ export default interface DepositRepositoryInterface {
     save: (deposit: Deposit) => void
     exists: (contractId: string) => Promise<boolean>
     getById: (id: string) => Promise<Deposit | null>
+    getByRequestId: (requestId: string) => Promise<Deposit | null>
     getByTxHash: (externalId: string) => Promise<Deposit | null>
     getWaitingToRedeem: () => Promise<Deposit[]>
     getOverdueTimeLock: () => Promise<Deposit[]>

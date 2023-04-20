@@ -11,4 +11,7 @@ const depositRequestRepository = new DepositRequestTypeOrmRepository(DataSource)
 
 const submitDepositRequestHandler = new SubmitDepositRequestHandler(depositRequestRepository)
 
-export {SubmitDepositRequest, submitDepositRequestHandler}
+export {
+    SubmitDepositRequest,
+    submitDepositRequestHandler
+}
