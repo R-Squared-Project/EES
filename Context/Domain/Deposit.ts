@@ -5,34 +5,34 @@ import InternalContract from "context/Domain/InternalContract";
 import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
 import IncomingContractRedeemedEvent from "context/Domain/Event/IncomingContractRedeemedEvent";
 import CreateContractInInternalBlockchainValidator from "./Validation/CreateContractInInternalBlockchainValidator";
-import ConfirmDepositInternalContractCreatedValidator
-    from "context/Domain/Validation/ConfirmDepositInternalContractCreatedValidator";
-import ConfirmDepositInternalContractRedeemedValidator
-    from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
+import ConfirmDepositInternalContractCreatedValidator from "context/Domain/Validation/ConfirmDepositInternalContractCreatedValidator";
+import ConfirmDepositInternalContractRedeemedValidator from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
 import RedeemExecutedInExternalBlockchainValidator from "./Validation/RedeemExecutedInExternalBlockchainValidator";
 import CompletedValidator from "context/Domain/Validation/CompletedValidator";
 import BurnedValidator from "context/Domain/Validation/BurnedValidator";
 import RefundedValidator from "context/Domain/Validation/RefundedValidator";
 
-export const STATUS_CREATED = 1
-export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5
-export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10
-export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15
-export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20
-export const STATUS_COMPLETED = 25
-export const STATUS_BURNED = 100
-export const STATUS_REFUNDED = 105
+export const STATUS_CREATED = 1;
+export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5;
+export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 10;
+export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15;
+export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20;
+export const STATUS_COMPLETED = 25;
+export const STATUS_BURNED = 100;
+export const STATUS_REFUNDED = 105;
 
 export default class Deposit extends AggregateRoot {
-    private _secret: string | null = null
-    private _status: number
-    public _internalContract: InternalContract | null = null
-    private _externalBlockchainRedeemTxHash: string | null = null
-    private _internalBlockchainBurnTxHash: string | null = null
+    private _secret: string | null = null;
+    private _status: number;
+    public _internalContract: InternalContract | null = null;
+    private _externalBlockchainRedeemTxHash: string | null = null;
+    private _internalBlockchainBurnTxHash: string | null = null;
+    private _mintedAmount: string | null = null;
+    private _burnedAmount: string | null = null;
 
     constructor(public _depositRequest: DepositRequest, public _externalContract: ExternalContract) {
-        super()
-        this._status = STATUS_CREATED
+        super();
+        this._status = STATUS_CREATED;
     }
 
     get internalContract(): InternalContract | null {
@@ -55,46 +55,48 @@ export default class Deposit extends AggregateRoot {
         return this._internalBlockchainBurnTxHash;
     }
 
-    static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
-        const deposit = new Deposit(depositRequest, externalContract)
-
-        deposit.addDomainEvent(new IncomingContractProcessedEvent(deposit.id.toValue()))
-
-        return deposit
+    get mintedAmount(): string {
+        return this._mintedAmount ?? "";
     }
 
-    public submittedToInternalBlockchain() {
-        new CreateContractInInternalBlockchainValidator(this).validate()
+    get burnedAmount(): string {
+        return this._burnedAmount ?? "";
+    }
 
-        this._status = STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
+    static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
+        const deposit = new Deposit(depositRequest, externalContract);
+        deposit.addDomainEvent(new IncomingContractProcessedEvent(deposit.id.toValue()));
+
+        return deposit;
+    }
+
+    public submittedToInternalBlockchain(mintedAmount: string) {
+        new CreateContractInInternalBlockchainValidator(this).validate();
+        this._status = STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN;
+        this._mintedAmount = mintedAmount;
     }
 
     public createdInInternalBlockchain(internalContract: InternalContract) {
-        new ConfirmDepositInternalContractCreatedValidator(this).validate()
-
-        this._internalContract = internalContract
-        this._status = STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN
+        new ConfirmDepositInternalContractCreatedValidator(this).validate();
+        this._internalContract = internalContract;
+        this._status = STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN;
     }
 
     public redeemedInInternalBlockchain(secret: string) {
-        new ConfirmDepositInternalContractRedeemedValidator(this).validate()
-
-        this._secret = secret
-        this._status = STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN
-
-        this.addDomainEvent(new IncomingContractRedeemedEvent(this.id.toValue()))
+        new ConfirmDepositInternalContractRedeemedValidator(this).validate();
+        this._secret = secret;
+        this._status = STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN;
+        this.addDomainEvent(new IncomingContractRedeemedEvent(this.id.toValue()));
     }
 
     public redeemExecutedInExternalBlockchain(txHash: string) {
-        new RedeemExecutedInExternalBlockchainValidator(this).validate()
-
-        this._externalBlockchainRedeemTxHash = txHash
-        this._status = STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN
+        new RedeemExecutedInExternalBlockchainValidator(this).validate();
+        this._externalBlockchainRedeemTxHash = txHash;
+        this._status = STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN;
     }
 
     public completed() {
-        new CompletedValidator(this).validate()
-
+        new CompletedValidator(this).validate();
         this._status = STATUS_COMPLETED;
     }
 
@@ -103,16 +105,15 @@ export default class Deposit extends AggregateRoot {
         return this._status === STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN;
     }
 
-    public burned() {
-        new BurnedValidator(this).validate()
-
+    public burned(burnedAmount: string) {
+        this._burnedAmount = burnedAmount;
+        new BurnedValidator(this).validate();
         this._status = STATUS_BURNED;
     }
 
     public refunded(txHash: string) {
-        new RefundedValidator(this).validate()
-
-        this._internalBlockchainBurnTxHash = txHash
+        new RefundedValidator(this).validate();
+        this._internalBlockchainBurnTxHash = txHash;
         this._status = STATUS_REFUNDED;
     }
 }

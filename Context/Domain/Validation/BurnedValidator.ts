@@ -1,26 +1,39 @@
 import AbstractValidator from "./AbstractValidator";
 import Deposit, {
-    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN, STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN,
+    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
+    STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN,
 } from "context/Domain/Deposit";
 import * as Errors from "context/Domain/Errors";
 
 export default class BurnedValidator extends AbstractValidator {
-    private deposit: Deposit
+    private deposit: Deposit;
 
     constructor(deposit: Deposit) {
         super();
 
-        this.deposit = deposit
+        this.deposit = deposit;
     }
 
     validate(): void {
-        this.validateStatus()
+        this.validateStatus();
     }
 
     private validateStatus() {
-        if (this.deposit.status !== STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN && this.deposit.status !== STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN) {
+        if (
+            this.deposit.status !== STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN &&
+            this.deposit.status !== STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN
+        ) {
+            throw new Errors.BurnedStatusError(this.deposit.id.toValue(), this.deposit.status);
+        }
+    }
 
-            throw new Errors.BurnedStatusError(this.deposit.id.toValue(), this.deposit.status)
+    private validateBurnedAmount() {
+        if (parseFloat(this.deposit.burnedAmount) > parseFloat(this.deposit.mintedAmount)) {
+            throw new Errors.BurnedAmountError(
+                this.deposit.id.toValue(),
+                this.deposit.burnedAmount,
+                this.deposit.mintedAmount
+            );
         }
     }
 }

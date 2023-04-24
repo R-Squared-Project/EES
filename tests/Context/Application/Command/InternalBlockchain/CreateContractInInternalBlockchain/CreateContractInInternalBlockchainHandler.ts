@@ -108,7 +108,7 @@ describe("CreateContractInInternalBlockchainHandler", () => {
 
             it("should throw error if deposit has invalid state", async () => {
                 const deposit = createDeposit();
-                deposit.submittedToInternalBlockchain();
+                deposit.submittedToInternalBlockchain("1000000");
                 depositRepository.create(deposit);
 
                 const command = new CreateContractInInternalBlockchain(deposit.idString);
