@@ -22,8 +22,7 @@ export default class RevpopRepository implements RepositoryInterface {
     public constructor(
         private readonly eesAccount: string,
         private readonly accountPrivateKey: string,
-        private readonly assetSymbol: string,
-        private readonly normalizer: AssetNormalizer
+        private readonly assetSymbol: string
     ) {
         this.memo = new Memo();
     }
@@ -37,7 +36,7 @@ export default class RevpopRepository implements RepositoryInterface {
     ): Promise<RevpopRepository> {
         ChainConfig.networks["RevPop"].chain_id = chainId;
         ChainConfig.setChainId(chainId);
-        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol, new AssetNormalizer());
+        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol);
         await repository.connect(nodeUrl);
         return repository;
     }

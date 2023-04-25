@@ -1,11 +1,8 @@
-import HashLock from "context/Domain/ValueObject/HashLock";
-
 export default class SubmitWithdrawRequest {
     constructor(
         private _revpopAccount: string,
         private _amountToPayInRVETH: number,
-        private _addressOfUserInEthereum: string,
-        private _hashLock: string
+        private _addressOfUserInEthereum: string
     ) {}
 
     get revpopAccount(): string {
@@ -18,9 +15,5 @@ export default class SubmitWithdrawRequest {
 
     get addressOfUserInEthereum(): string {
         return this._addressOfUserInEthereum;
-    }
-
-    get hashLock(): string {
-        return this._hashLock;
     }
 }

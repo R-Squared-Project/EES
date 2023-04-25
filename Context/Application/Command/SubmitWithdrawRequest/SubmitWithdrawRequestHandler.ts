@@ -16,19 +16,10 @@ export default class SubmitWithdrawRequestHandler implements UseCase<SubmitWithd
 
     async execute(command: SubmitWithdrawRequest): Promise<string> {
         const revpopAccount = RevpopAccount.create(command.revpopAccount);
-        const hashLock = HashLock.create(command.hashLock);
-
-        const exists = await this._repository.load(hashLock);
-
-        if (exists) {
-            throw new Errors.WithdrawRequestAlreadyExists(command.hashLock);
-        }
-
         const withdrawRequest = WithdrawRequest.create(
             revpopAccount,
             command.amountToPayInRVETH,
-            command.addressOfUserInEthereum,
-            hashLock
+            command.addressOfUserInEthereum
         );
 
         try {
