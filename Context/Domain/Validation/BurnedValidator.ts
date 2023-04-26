@@ -16,6 +16,7 @@ export default class BurnedValidator extends AbstractValidator {
 
     validate(): void {
         this.validateStatus();
+        this.validateBurnedAmount();
     }
 
     private validateStatus() {
