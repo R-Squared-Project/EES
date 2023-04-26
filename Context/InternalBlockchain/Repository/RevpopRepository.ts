@@ -13,6 +13,7 @@ import OperationRedeem from "../OperationRedeem";
 import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "../OperationRefund";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
+import Transaction from "context/InternalBlockchain/Transaction";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2;
 const PREIMAGE_LENGTH = 32;
@@ -254,4 +255,6 @@ export default class RevpopRepository implements RepositoryInterface {
 
         return asset;
     }
+
+    async getAccountHistory(account: string): Promise<Transaction[]> {}
 }

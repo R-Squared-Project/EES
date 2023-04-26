@@ -2,6 +2,7 @@ import Contract from "../HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
+import Transaction from "context/InternalBlockchain/Transaction";
 
 export default interface RepositoryInterface {
     createContract: (
@@ -18,4 +19,5 @@ export default interface RepositoryInterface {
     burnAsset: (amount: string) => void;
     getAsset: () => Promise<any>;
     getBurnOperations: (account: string) => Promise<OperationBurn[]>;
+    getAccountHistory: (account: string) => Promise<Transaction[]>;
 }

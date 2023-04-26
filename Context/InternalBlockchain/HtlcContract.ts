@@ -1,18 +1,15 @@
 export default class HtlcContract {
-    constructor(
-        private _id: string,
-        private _externalId: string
-    ) {}
+    constructor(private _id: string, private _message: string) {}
 
     get id(): string {
         return this._id;
     }
 
-    get externalId(): string {
-        return this._externalId;
+    get message(): string {
+        return this._message;
     }
 
-    hasExternalId(): boolean {
-        return this._externalId !== ''
+    hasMessage(): boolean {
+        return this._message !== "";
     }
 }

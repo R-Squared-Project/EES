@@ -1,15 +1,15 @@
 import Setting from "context/Setting/Setting";
 import { UseCase } from "context/Core/Domain/UseCase";
-import GetLastDepositContracts from "./GetLastDepositContracts";
+import GetLastWithdrawContracts from "./GetLastWithdrawContracts";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import Response from "./Response";
 
-const DEPOSIT_LAST_PROCESSED_INTERNAL_CONTRACT = "deposit_last_processed_internal_contract";
+const WITHDRAW_LAST_PROCESSED_INTERNAL_CONTRACT = "withdraw_last_processed_internal_contract";
 
-export default class GetLastDepositContractsHandler implements UseCase<GetLastDepositContracts, Response> {
+export default class GetLastWithdrawContractsHandler implements UseCase<GetLastWithdrawContracts, Response> {
     public constructor(private readonly internalBlockchain: InternalBlockchain, private setting: Setting) {}
 
-    public async execute(query: GetLastDepositContracts): Promise<Response> {
+    public async execute(query: GetLastWithdrawContracts): Promise<Response> {
         const lastProcessedContract = await this.getLastProcessedContract();
         const [nextContractToProcessId, getNextContractToProcess] =
             this.getNextContractToProcess(lastProcessedContract);
@@ -31,7 +31,7 @@ export default class GetLastDepositContractsHandler implements UseCase<GetLastDe
 
         if (contractsToProcessed.length > 0) {
             await this.setting.save(
-                DEPOSIT_LAST_PROCESSED_INTERNAL_CONTRACT,
+                WITHDRAW_LAST_PROCESSED_INTERNAL_CONTRACT,
                 contractsToProcessed[contractsToProcessed.length - 1].id
             );
         }
@@ -40,7 +40,7 @@ export default class GetLastDepositContractsHandler implements UseCase<GetLastDe
     }
 
     private async getLastProcessedContract(): Promise<string | null> {
-        return await this.setting.load(DEPOSIT_LAST_PROCESSED_INTERNAL_CONTRACT, null);
+        return await this.setting.load(WITHDRAW_LAST_PROCESSED_INTERNAL_CONTRACT, null);
     }
 
     private getNextContractToProcess(lastProcessedContract: string | null): [string, number] {
