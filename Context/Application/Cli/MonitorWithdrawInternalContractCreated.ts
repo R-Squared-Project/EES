@@ -1,10 +1,6 @@
 import { Command, CommandRunner, Option } from "nest-commander";
-import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
-import { Inject } from "@nestjs/common";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import ConfirmWithdrawInternalContractCreatedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreatedHandler";
-import GetLastDepositContracts from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContracts";
-import ConfirmDepositInternalContractCreated from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractCreated/ConfirmDepositInternalContractCreated";
 import GetLastWithdrawContracts from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContracts";
 import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
 import ConfirmWithdrawInternalContractCreated from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreated";
@@ -19,7 +15,6 @@ interface MonitorWithdrawInternalContractCreatedOptions {
 })
 export class MonitorWithdrawInternalContractCreated extends CommandRunner {
     constructor(
-        @Inject("WithdrawRepositoryInterface") private readonly withdrawRepository: WithdrawRepositoryInterface,
         private readonly confirmWithdrawInternalContractCreateHandler: ConfirmWithdrawInternalContractCreatedHandler,
         private readonly getLastWithdrawContractsHandler: GetLastWithdrawContractsHandler
     ) {
@@ -41,19 +36,17 @@ export class MonitorWithdrawInternalContractCreated extends CommandRunner {
 
     private async process() {
         const queryGetLastWithdrawContracts = new GetLastWithdrawContracts();
-        const withdrawInternalContracts = await this.getLastWithdrawContractsHandler.execute(
-            queryGetLastWithdrawContracts
-        );
+        const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
         const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractCreated");
 
-        console.log(`Found ${withdrawInternalContracts.contracts.length} internal contracts to processed.`);
+        console.log(`Found ${withdrawTransactions.transactions.length} transactions to processed.`);
 
-        for (const contract of withdrawInternalContracts.contracts) {
-            const query = new ConfirmWithdrawInternalContractCreated(contract.message, contract.id);
+        for (const transaction of withdrawTransactions.transactions) {
+            const query = new ConfirmWithdrawInternalContractCreated(transaction);
 
             try {
                 await this.confirmWithdrawInternalContractCreateHandler.execute(query);
-                console.log(`Internal contract ${contract.id} created.`);
+                console.log(`Withdraw for transaction ${transaction.transactionId} created.`);
             } catch (e) {
                 errorHandler.handle(e);
             }

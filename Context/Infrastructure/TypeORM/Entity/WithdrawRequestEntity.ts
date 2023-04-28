@@ -1,26 +1,38 @@
-import {EntitySchema} from "typeorm"
+import { EntitySchema } from "typeorm";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import RevpopAccountType from "../Type/RevpopAccountType";
-import HashLockType from "../Type/HashLockType";
 
 const WithdrawRequestEntity = new EntitySchema<WithdrawRequest>({
     name: "WithdrawRequest",
-    tableName: 'withdraw_request',
+    tableName: "withdraw_request",
     target: WithdrawRequest,
     columns: {
         idString: {
-            name: 'id',
+            name: "id",
             type: String,
-            primary: true
+            primary: true,
         },
         // @ts-ignore
+        _status: {
+            name: "status",
+            type: Number,
+        },
         _revpopAccount: RevpopAccountType,
-        _hashLock: HashLockType,
         _createdAt: {
-            name: 'created_at',
+            name: "created_at",
             createDate: true,
         },
+        _amountToPayInRVETH: {
+            name: "amount_to_pay_in_RVETH",
+            type: "decimal",
+            precision: 15,
+            scale: 5,
+        },
+        _addressOfUserInEthereum: {
+            name: "address_of_user_in_ethereum",
+            type: String,
+        },
     },
-})
+});
 
-export default WithdrawRequestEntity
+export default WithdrawRequestEntity;

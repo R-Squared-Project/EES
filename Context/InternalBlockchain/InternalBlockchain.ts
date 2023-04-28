@@ -6,7 +6,9 @@ import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "./OperationRedeem";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
 import OperationBurn from "context/InternalBlockchain/OperationBurn";
-import {Injectable} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
+import { Map } from "immutable";
 
 type Repository = "revpop" | "stub";
 
@@ -83,8 +85,24 @@ class InternalBlockchain {
         return await this._repository.getBurnOperations(account);
     }
 
-    async getAsset(): Promise<any> {
-        return await this._repository.getAsset();
+    async getInternalAsset(): Promise<Map<string, any>> {
+        return await this._repository.getInternalAsset();
+    }
+
+    async getAsset(assetId: string): Promise<Map<string, any>> {
+        return await this._repository.getAsset(assetId);
+    }
+
+    async getAccountHistory(): Promise<WithdrawTransaction[]> {
+        return await this.repository.getAccountHistory();
+    }
+
+    async getAccount(accountId: string): Promise<Map<string, any>> {
+        return await this.repository.getAccount(accountId);
+    }
+
+    async getEesAccount(): Promise<Map<string, any>> {
+        return await this.repository.getEesAccount();
     }
 }
 

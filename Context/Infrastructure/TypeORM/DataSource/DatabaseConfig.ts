@@ -1,5 +1,5 @@
 import path from "path";
-import {DataSourceOptions} from "typeorm/data-source/DataSourceOptions";
+import { DataSourceOptions } from "typeorm/data-source/DataSourceOptions";
 import Subscriber from "context/Core/Infrastructure/TypeORM/Subscriber";
 import DepositEntity from "../Entity/DepositEntity";
 import DepositRequestEntity from "../Entity/DepositRequestEntity";
@@ -8,19 +8,28 @@ import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/Setting
 import config from "../../../config";
 import InternalContractEntity from "context/Infrastructure/TypeORM/Entity/InternalContractEntity";
 import WithdrawRequestEntity from "context/Infrastructure/TypeORM/Entity/WithdrawRequestEntity";
+import WithdrawEntity from "context/Infrastructure/TypeORM/Entity/WithdrawEntity";
 
 const DatabaseConfig: DataSourceOptions = {
-    type: 'mysql',
+    type: "mysql",
     host: config.db.host,
     port: config.db.port,
     username: config.db.user,
     password: config.db.password,
     database: config.db.name,
-    entities: [DepositRequestEntity, DepositEntity, ExternalContractEntity, InternalContractEntity, SettingEntity, WithdrawRequestEntity],
-    migrations: [path.join(__dirname, '..', 'migrations', '*.ts')],
+    entities: [
+        DepositRequestEntity,
+        DepositEntity,
+        ExternalContractEntity,
+        InternalContractEntity,
+        SettingEntity,
+        WithdrawRequestEntity,
+        WithdrawEntity,
+    ],
+    migrations: [path.join(__dirname, "..", "migrations", "*.ts")],
     subscribers: [Subscriber],
     migrationsRun: config.isTest,
-    logging: false
-}
+    logging: false,
+};
 
-export default DatabaseConfig
+export default DatabaseConfig;

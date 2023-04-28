@@ -1,11 +1,9 @@
-import InternalHtlcContract from "context/InternalBlockchain/HtlcContract";
+import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
 
 export default class Response {
-    constructor(
-        private readonly _contracts: InternalHtlcContract[]
-    ) {}
+    constructor(private readonly _transactions: WithdrawTransaction[]) {}
 
-    get contracts(): InternalHtlcContract[] {
-        return this._contracts;
+    get transactions(): WithdrawTransaction[] {
+        return this._transactions;
     }
 }

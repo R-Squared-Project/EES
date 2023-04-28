@@ -3,59 +3,25 @@ import { UseCase } from "context/Core/Domain/UseCase";
 import GetLastWithdrawContracts from "./GetLastWithdrawContracts";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
 import Response from "./Response";
+import { Inject, Injectable } from "@nestjs/common";
+import { WithdrawTransactionsCollection } from "context/InternalBlockchain/WithdrawTransactionsCollection";
 
-const WITHDRAW_LAST_PROCESSED_INTERNAL_CONTRACT = "withdraw_last_processed_internal_contract";
-
+@Injectable()
 export default class GetLastWithdrawContractsHandler implements UseCase<GetLastWithdrawContracts, Response> {
-    public constructor(private readonly internalBlockchain: InternalBlockchain, private setting: Setting) {}
+    public constructor(
+        @Inject("InternalBlockchain") private readonly internalBlockchain: InternalBlockchain,
+        private setting: Setting
+    ) {}
 
     public async execute(query: GetLastWithdrawContracts): Promise<Response> {
-        const lastProcessedContract = await this.getLastProcessedContract();
-        const [nextContractToProcessId, getNextContractToProcess] =
-            this.getNextContractToProcess(lastProcessedContract);
+        const operations = await this.internalBlockchain.getAccountHistory();
+        const eesAccount = await this.internalBlockchain.getEesAccount();
+        const transactions = new WithdrawTransactionsCollection(eesAccount.get("id"));
 
-        const contracts = await this.internalBlockchain.getIncomingContracts(nextContractToProcessId);
-        const contractsToProcessed = [];
-
-        for (const contract of contracts) {
-            if (!contract.hasMessage()) {
-                continue;
-            }
-
-            if (this.parseContractIdLastNumber(contract.id) < getNextContractToProcess) {
-                continue;
-            }
-
-            contractsToProcessed.push(contract);
+        for (const operation of operations) {
+            transactions.add(operation);
         }
 
-        if (contractsToProcessed.length > 0) {
-            await this.setting.save(
-                WITHDRAW_LAST_PROCESSED_INTERNAL_CONTRACT,
-                contractsToProcessed[contractsToProcessed.length - 1].id
-            );
-        }
-
-        return new Response(contractsToProcessed);
-    }
-
-    private async getLastProcessedContract(): Promise<string | null> {
-        return await this.setting.load(WITHDRAW_LAST_PROCESSED_INTERNAL_CONTRACT, null);
-    }
-
-    private getNextContractToProcess(lastProcessedContract: string | null): [string, number] {
-        if (null === lastProcessedContract) {
-            return ["1.16.0", 0];
-        }
-
-        const lastProcessedIdParts = lastProcessedContract.split(".");
-        const nextContractToProcessedNumber = parseInt(lastProcessedIdParts[2], 10) + 1;
-        lastProcessedIdParts[2] = nextContractToProcessedNumber.toString();
-
-        return [lastProcessedIdParts.join("."), nextContractToProcessedNumber];
-    }
-
-    private parseContractIdLastNumber(id: string): number {
-        return parseInt(id.split(".")[2], 10);
+        return new Response(transactions.transactions);
     }
 }
