@@ -29,7 +29,7 @@ export default class BurnedValidator extends AbstractValidator {
     }
 
     private validateBurnedAmount() {
-        if (parseFloat(this.deposit.burnedAmount) > parseFloat(this.deposit.mintedAmount)) {
+        if (Math.abs(parseFloat(this.deposit.burnedAmount) - parseFloat(this.deposit.mintedAmount)) > 0.0000000001) {
             throw new Errors.BurnedAmountError(
                 this.deposit.id.toValue(),
                 this.deposit.burnedAmount,
