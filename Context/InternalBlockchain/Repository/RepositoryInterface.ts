@@ -25,4 +25,6 @@ export default interface RepositoryInterface {
     getAccount(accountId: string): Promise<Map<string, any>>;
     getEesAccount: () => Promise<Map<string, any>>;
     getBurnOperations: (account: string) => Promise<OperationBurn[]>;
+    getObject: (objectId: string) => Promise<Map<string, any>>;
+    getLastIrreversibleBlockNumber: () => Promise<number>;
 }
