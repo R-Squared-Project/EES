@@ -188,12 +188,11 @@ export default class RevpopRepository implements RepositoryInterface {
 
     async burnAsset(amount: string) {
         const accountTo = await this.getEesAccount();
-        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
-        const asset = await FetchChain("getAsset", this.assetSymbol)
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
+        const asset = await FetchChain("getAsset", this.assetSymbol);
 
         if (asset === null) {
-
-            throw new Errors.AssetNotFoundError(this.assetSymbol)
+            throw new Errors.AssetNotFoundError(this.assetSymbol);
         }
 
         const txReserveAsset = new TransactionBuilder();
@@ -219,25 +218,20 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getBurnOperations(account: string): Promise<OperationBurn[]> {
-        const mostRecently = '1.' + ChainTypes.object_type.operation_history + '.0'
+        const mostRecently = "1." + ChainTypes.object_type.operation_history + ".0";
         const revpopOperations = await Apis.instance()
             .history_api()
-            .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently])
+            .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently]);
 
-        const operations = []
+        const operations = [];
 
         for (const revpopOperation of revpopOperations) {
-            if (revpopOperation['op'][0] == ChainTypes.operations.asset_reserve) {
-                operations.push(
-                    OperationBurn.create(
-                        account,
-                        revpopOperation['id'],
-                    )
-                )
+            if (revpopOperation["op"][0] == ChainTypes.operations.asset_reserve) {
+                operations.push(OperationBurn.create(account, revpopOperation["id"]));
             }
         }
 
-        return operations
+        return operations;
     }
 
     async getInternalAsset(): Promise<Map<string, any>> {
@@ -251,7 +245,7 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getAsset(assetId: string): Promise<Map<string, any>> {
-        const asset = await FetchChain("getAsset", "RVETH"); // TODO: use passed assetId
+        const asset = await ChainStore.getAsset(assetId);
 
         if (asset === null) {
             throw new Errors.AssetNotFoundError(assetId);
@@ -291,5 +285,19 @@ export default class RevpopRepository implements RepositoryInterface {
 
     async getEesAccount(): Promise<Map<string, any>> {
         return await this.getAccount(this.eesAccount);
+    }
+
+    async getObject(objectId: string): Promise<Map<string, any>> {
+        const [result] = await Apis.instance()
+            .db_api()
+            .exec("get_objects", [[objectId]]);
+
+        return Map(result);
+    }
+
+    async getLastIrreversibleBlockNumber(): Promise<number> {
+        const dynamicProperties = await this.getObject("2.1.0");
+
+        return parseInt(dynamicProperties.get("last_irreversible_block_num"));
     }
 }

@@ -77,10 +77,18 @@ export default class StubRepository implements RepositoryInterface {
     }
 
     async addBurnOperation(operationBurn: OperationBurn) {
-        this._operationsBurn.push(operationBurn)
+        this._operationsBurn.push(operationBurn);
     }
 
     async getBurnOperations(account: string): Promise<OperationBurn[]> {
-        return this._operationsBurn
+        return this._operationsBurn;
+    }
+
+    async getObject(objectId: string): Promise<Map<string, any>> {
+        return Map<string, any>({ id: objectId });
+    }
+
+    async getLastIrreversibleBlockNumber(): Promise<number> {
+        return 1000000;
     }
 }
