@@ -9,8 +9,8 @@ import ConfirmDepositInternalContractCreatedValidator from "context/Domain/Valid
 import ConfirmDepositInternalContractRedeemedValidator from "./Validation/ConfirmDepositInternalContractRedeemedValidator";
 import RedeemExecutedInExternalBlockchainValidator from "./Validation/RedeemExecutedInExternalBlockchainValidator";
 import CompletedValidator from "context/Domain/Validation/CompletedValidator";
-import RefundedValidator from "context/Domain/Validation/RefundedValidator";
 import BurnedValidator from "context/Domain/Validation/BurnedValidator";
+import RefundedValidator from "context/Domain/Validation/RefundedValidator";
 
 export const STATUS_CREATED = 1;
 export const STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN = 5;
@@ -101,7 +101,6 @@ export default class Deposit extends AggregateRoot {
     }
 
     public isSubmittedToInternalBlockchain(): boolean {
-
         return this._status === STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN;
     }
 
