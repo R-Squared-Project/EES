@@ -60,12 +60,12 @@ export default class CheckInternalWithdrawalOperationHandler
         await this.checkLastIrreversible(htlcOperation);
         await this.checkReceiver(htlcOperation);
 
-        const normilizedAmount = this.normalizer.normalize(
+        const normalizedAmount = this.normalizer.normalize(
             htlcOperation.get("op")[1].amount.amount,
-            this.internalBlockchain.getAsset(htlcOperation.get("op")[1].amount.asset_id)
+            await this.internalBlockchain.getAsset(htlcOperation.get("op")[1].amount.asset_id)
         );
-        console.log(config.eth.minimum_withdraw_amount.toNumber(), "minimum_withdraw_amount");
-        if (normilizedAmount < config.eth.minimum_withdraw_amount.toNumber()) {
+
+        if (normalizedAmount < config.eth.minimum_withdraw_amount) {
             throw new Errors.InvalidAmount(withdraw);
         }
 

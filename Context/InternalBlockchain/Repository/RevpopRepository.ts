@@ -245,7 +245,7 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getAsset(assetId: string): Promise<Map<string, any>> {
-        const asset = await ChainStore.getAsset(assetId);
+        const asset = await this.getObject(assetId);
 
         if (asset === null) {
             throw new Errors.AssetNotFoundError(assetId);
