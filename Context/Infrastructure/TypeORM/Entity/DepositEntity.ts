@@ -51,11 +51,6 @@ const DepositEntity = new EntitySchema<Deposit>({
             name: "internal_blockchain_burn_tx_hash",
             nullable: true,
         },
-        _internalBlockchainBurnTxHash: {
-            type: String,
-            name: 'internal_blockchain_burn_tx_hash',
-            nullable: true
-        },
         _status: {
             type: Number,
             name: "status",

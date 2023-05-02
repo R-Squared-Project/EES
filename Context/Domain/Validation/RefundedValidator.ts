@@ -1,24 +1,23 @@
 import AbstractValidator from "./AbstractValidator";
-import Deposit, {STATUS_BURNED} from "context/Domain/Deposit";
+import Deposit, { STATUS_BURNED } from "context/Domain/Deposit";
 import * as Errors from "context/Domain/Errors";
 
 export default class RefundedValidator extends AbstractValidator {
-    private deposit: Deposit
+    private deposit: Deposit;
 
     constructor(deposit: Deposit) {
         super();
 
-        this.deposit = deposit
+        this.deposit = deposit;
     }
 
     validate(): void {
-        this.validateStatus()
+        this.validateStatus();
     }
 
     private validateStatus() {
         if (this.deposit.status !== STATUS_BURNED) {
-
-            throw new Errors.CompletedStatusError(this.deposit.id.toValue(), this.deposit.status)
+            throw new Errors.CompletedStatusError(this.deposit.id.toValue(), this.deposit.status);
         }
     }
 }
