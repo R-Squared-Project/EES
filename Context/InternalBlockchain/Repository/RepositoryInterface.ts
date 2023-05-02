@@ -14,7 +14,6 @@ export default interface RepositoryInterface {
     getIncomingContracts: (start: string) => Promise<Contract[]>;
     getRedeemOperations: (account: string) => Promise<OperationRedeem[]>;
     getRefundOperations: (account: string) => Promise<OperationRefund[]>;
-    getBurnOperations: (account: string) => Promise<OperationBurn[]>
     disconnect: () => void;
     burnAsset: (amount: string) => void;
     getAsset: () => Promise<any>;
