@@ -1,12 +1,12 @@
 import {EntitySchema} from "typeorm"
-import DepositRequest from "context/Domain/DepositRequest";
+import WithdrawRequest from "context/Domain/WithdrawRequest";
 import RevpopAccountType from "../Type/RevpopAccountType";
 import HashLockType from "../Type/HashLockType";
 
-const DepositEntity = new EntitySchema<DepositRequest>({
-    name: "DepositRequest",
-    tableName: 'deposit_request',
-    target: DepositRequest,
+const WithdrawRequestEntity = new EntitySchema<WithdrawRequest>({
+    name: "WithdrawRequest",
+    tableName: 'withdraw_request',
+    target: WithdrawRequest,
     columns: {
         idString: {
             name: 'id',
@@ -16,10 +16,6 @@ const DepositEntity = new EntitySchema<DepositRequest>({
         // @ts-ignore
         _revpopAccount: RevpopAccountType,
         _hashLock: HashLockType,
-        _status: {
-            type: Number,
-            name: 'status',
-        },
         _createdAt: {
             name: 'created_at',
             createDate: true,
@@ -27,4 +23,4 @@ const DepositEntity = new EntitySchema<DepositRequest>({
     },
 })
 
-export default DepositEntity
+export default WithdrawRequestEntity
