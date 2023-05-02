@@ -31,7 +31,10 @@ export default class CreateContractInInternalBlockchainHandler
             this.normalizer.normalize(deposit._externalContract.value, this.externalBlockchain.getAsset())
         );
 
-        const denormalizedAmount = this.normalizer.denormalize(rvEthAmount, await this.internalBlockchain.getAsset());
+        const denormalizedAmount = this.normalizer.denormalize(
+            rvEthAmount,
+            await this.internalBlockchain.getInternalAsset()
+        );
 
         deposit.submittedToInternalBlockchain(denormalizedAmount);
 
