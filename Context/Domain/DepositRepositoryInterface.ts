@@ -9,5 +9,7 @@ export default interface DepositRepositoryInterface {
     getByTxHash: (externalId: string) => Promise<Deposit | null>
     getWaitingToRedeem: () => Promise<Deposit[]>
     getOverdueTimeLock: () => Promise<Deposit[]>
+    getBurned: () => Promise<Deposit[]>
     getByRedeemTxHash: (txHash: string) => Promise<Deposit | null>
+    getByBurnTxHash: (txHash: string) => Promise<Deposit | null>
 }

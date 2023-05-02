@@ -48,7 +48,7 @@ describe("RedeemDepositExternalContractHandler", () => {
                 deposit = createDeposit({
                     externalContract,
                 });
-                deposit.submittedToInternalBlockchain();
+                deposit.submittedToInternalBlockchain("1000000");
                 deposit.createdInInternalBlockchain(createInternalContract());
                 deposit.redeemedInInternalBlockchain(secret);
                 depositRepository.create(deposit);

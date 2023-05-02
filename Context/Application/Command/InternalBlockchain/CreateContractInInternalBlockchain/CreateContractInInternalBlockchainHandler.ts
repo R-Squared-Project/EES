@@ -31,12 +31,14 @@ export default class CreateContractInInternalBlockchainHandler
             this.normalizer.normalize(deposit._externalContract.value, this.externalBlockchain.getAsset())
         );
 
-        deposit.submittedToInternalBlockchain();
+        const denormalizedAmount = this.normalizer.denormalize(rvEthAmount, await this.internalBlockchain.getAsset());
+
+        deposit.submittedToInternalBlockchain(denormalizedAmount);
 
         await this.internalBlockchain.createContract(
             deposit._externalContract.txHash,
             deposit._depositRequest.revpopAccount.value,
-            this.normalizer.denormalize(rvEthAmount, await this.internalBlockchain.getAsset()),
+            denormalizedAmount,
             deposit._depositRequest.hashLock.value.substring(2),
             this.timeLock()
         );

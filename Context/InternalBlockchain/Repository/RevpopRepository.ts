@@ -10,6 +10,7 @@ import { InternalBlockchainConnectionError } from "context/Infrastructure/Errors
 import Memo from "context/InternalBlockchain/Memo";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
+import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "../OperationRefund";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
 
@@ -189,15 +190,16 @@ export default class RevpopRepository implements RepositoryInterface {
         const accountTo = await FetchChain("getAccount", this.eesAccount);
 
         if (null === accountTo) {
-            throw new Errors.AccountNotFound(this.eesAccount);
+
+            throw new Errors.AccountNotFound(this.eesAccount)
         }
 
-        const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
-
-        const asset = await FetchChain("getAsset", this.assetSymbol);
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
+        const asset = await FetchChain("getAsset", this.assetSymbol)
 
         if (asset === null) {
-            throw new Errors.AssetNotFoundError(this.assetSymbol);
+
+            throw new Errors.AssetNotFoundError(this.assetSymbol)
         }
 
         const txReserveAsset = new TransactionBuilder();
@@ -220,6 +222,28 @@ export default class RevpopRepository implements RepositoryInterface {
         } catch (e: unknown) {
             throw new Errors.ReserveAssetError();
         }
+    }
+
+    async getBurnOperations(account: string): Promise<OperationBurn[]> {
+        const mostRecently = '1.' + ChainTypes.object_type.operation_history + '.0'
+        const revpopOperations = await Apis.instance()
+            .history_api()
+            .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently])
+
+        const operations = []
+
+        for (const revpopOperation of revpopOperations) {
+            if (revpopOperation['op'][0] == ChainTypes.operations.asset_reserve) {
+                operations.push(
+                    OperationBurn.create(
+                        account,
+                        revpopOperation['id'],
+                    )
+                )
+            }
+        }
+
+        return operations
     }
 
     async getAsset(): Promise<any> {

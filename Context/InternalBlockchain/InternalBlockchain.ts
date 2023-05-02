@@ -5,7 +5,8 @@ import config from "context/config";
 import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "./OperationRedeem";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
-import { Injectable } from "@nestjs/common";
+import OperationBurn from "context/InternalBlockchain/OperationBurn";
+import {Injectable} from "@nestjs/common";
 
 type Repository = "revpop" | "stub";
 
@@ -76,6 +77,10 @@ class InternalBlockchain {
 
     async burnAsset(amount: string) {
         await this._repository.burnAsset(amount);
+    }
+
+    async getBurnOperations(account: string): Promise<OperationBurn[]> {
+        return await this._repository.getBurnOperations(account);
     }
 
     async getAsset(): Promise<any> {

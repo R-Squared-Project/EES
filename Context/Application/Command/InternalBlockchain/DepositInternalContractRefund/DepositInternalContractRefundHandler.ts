@@ -34,16 +34,10 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
         }
 
         console.log(`Deposit ${deposit.idString} has refund.`);
-
-        const rvEthAmount = this.converter.convert(
-            this.normalizer.normalize(deposit._externalContract.value, this.externalBlockchain.getAsset())
-        );
-
-        deposit.burned();
-        const asset = await this.internalBlockchain.getAsset();
+        deposit.burned(deposit.mintedAmount);
 
         try {
-            await this.internalBlockchain.burnAsset(this.normalizer.denormalize(rvEthAmount, asset));
+            await this.internalBlockchain.burnAsset(deposit.mintedAmount);
             this.repository.save(deposit);
             console.log(`Deposit ${deposit.idString} has burned.`);
         } catch (e: unknown) {

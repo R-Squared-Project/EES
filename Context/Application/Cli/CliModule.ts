@@ -25,6 +25,8 @@ import ConfirmDepositExternalContractRedeemedHandler from "context/Application/C
 import { MonitorDepositInternalContractRefunded } from "context/Application/Cli/MonitorDepositInternalContractRefunded";
 import DepositInternalContractRefundHandler from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
+import {MonitorDepositInternalContractBurned} from "context/Application/Cli/MonitorDepositInternalContractBurned";
+import BurnedHandler from "context/Application/Command/InternalBlockchain/Confirm/Burned/BurnedHandler";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
 
@@ -60,6 +62,8 @@ import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
         ConfirmDepositExternalContractRedeemedHandler,
         MonitorDepositInternalContractRefunded,
         DepositInternalContractRefundHandler,
+        MonitorDepositInternalContractBurned,
+        BurnedHandler,
         EtherToWrappedEtherConverter,
         AssetNormalizer,
         {
