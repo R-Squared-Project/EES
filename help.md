@@ -23,8 +23,8 @@ yarn worker:external_contract_redeem
 
 ## Withdraw
 
-### Monitor withdrawal internal contract creation
-yarn monitor:withdrawal_internal_contract_creation
+### Monitor withdraw internal contract created
+yarn monitor:withdraw_internal_contract_created
 
 ### Found Withdraw  Internal Contract Creation
 yarn found:withdraw_internal_contract_creation
