@@ -1,7 +1,5 @@
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 import Withdraw, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
-import DepositRequest from "context/Domain/DepositRequest";
-import HashLock from "context/Domain/ValueObject/HashLock";
 
 export default class WithdrawStubRepository implements WithdrawRepositoryInterface {
     public _exists = false;
@@ -18,5 +16,9 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
         });
 
         return Promise.resolve(withdraws);
+    }
+
+    getById(id: string): Promise<Withdraw | null> {
+        return Promise.resolve(this._withdraws[id] ?? null);
     }
 }

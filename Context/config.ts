@@ -6,7 +6,8 @@ const config = {
     ...Config.config(),
     contract: {
         minimum_timelock: parseInt(process.env.MINUMUM_TIMELOCK as string),
-        withdrawn_timelock: parseInt(process.env.WITHDRAW_TIMELOCK as string),
+        withdraw_internal_timelock: parseInt(process.env.WITHDRAW_INTERNAL_TIMELOCK as string),
+        withdraw_external_timelock: parseInt(process.env.WITHDRAW_EXTERNAL_TIMELOCK as string),
     },
     eth: {
         providers: {

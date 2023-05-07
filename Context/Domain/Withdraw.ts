@@ -3,6 +3,7 @@ import WithdrawRequest from "./WithdrawRequest";
 import ExternalContract from "./ExternalContract";
 import InternalContract from "context/Domain/InternalContract";
 import ReadyToProcess from "context/Domain/Validation/Withdraw/ReadyToProcess";
+import WithdrawReadyToProcessEvent from "context/Domain/Event/WithdrawReadyToProcessEvent";
 
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 5;
 export const STATUS_READY_TO_PROCESS = 10;
@@ -61,5 +62,7 @@ export default class Withdraw extends AggregateRoot {
         this.assetOfWithdrawalFee = assetOfWithdrawalFee;
         new ReadyToProcess(this).validate();
         this.status = STATUS_READY_TO_PROCESS;
+
+        this.addDomainEvent(new WithdrawReadyToProcessEvent(this.id.toValue()));
     }
 }

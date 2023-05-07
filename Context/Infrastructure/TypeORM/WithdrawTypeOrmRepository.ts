@@ -35,4 +35,15 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .where("withdraw.status = :status", { status: STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN })
             .getMany();
     }
+
+    async getById(id: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw._externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw._internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw._withdrawRequest", "withdrawRequest")
+            .where("withdraw.id = :withdrawId", { withdrawId: id })
+            .getOne();
+    }
 }
