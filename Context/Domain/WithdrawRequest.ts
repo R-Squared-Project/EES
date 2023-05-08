@@ -1,17 +1,18 @@
 import AggregateRoot from "../Core/Domain/AggregateRoot";
 import RevpopAccount from "./ValueObject/RevpopAccount";
-import HashLock from "./ValueObject/HashLock";
+
+export const STATUS_CREATED = 1;
+export const STATUS_WITHDRAW_CREATED = 5;
 
 export default class WithdrawRequest extends AggregateRoot {
     private _status: number;
-    private _hashLock: HashLock | undefined;
     constructor(
         private _revpopAccount: RevpopAccount,
         private _amountToPayInRVETH: number,
         private _addressOfUserInEthereum: string
     ) {
         super();
-        this._status = 1;
+        this._status = STATUS_CREATED;
     }
 
     get revpopAccount(): RevpopAccount {
@@ -26,10 +27,6 @@ export default class WithdrawRequest extends AggregateRoot {
         return this._addressOfUserInEthereum;
     }
 
-    get hashLock(): HashLock | undefined {
-        return this._hashLock;
-    }
-
     get status(): number {
         return this._status;
     }
@@ -40,5 +37,9 @@ export default class WithdrawRequest extends AggregateRoot {
         addressOfUserInEthereum: string
     ): WithdrawRequest {
         return new WithdrawRequest(revpopAccount, amountToPayInRVETH, addressOfUserInEthereum);
+    }
+
+    withdrawCreated(): void {
+        this._status = STATUS_WITHDRAW_CREATED;
     }
 }

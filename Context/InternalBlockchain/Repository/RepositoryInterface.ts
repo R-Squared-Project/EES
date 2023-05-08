@@ -2,6 +2,8 @@ import Contract from "../HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
+import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
+import { Map } from "immutable";
 
 export default interface RepositoryInterface {
     createContract: (
@@ -16,6 +18,10 @@ export default interface RepositoryInterface {
     getRefundOperations: (account: string) => Promise<OperationRefund[]>;
     disconnect: () => void;
     burnAsset: (amount: string) => void;
-    getAsset: () => Promise<any>;
+    getInternalAsset: () => Promise<Map<string, any>>;
+    getAsset: (assetId: string) => Promise<Map<string, any>>;
+    getAccountHistory: () => Promise<WithdrawTransaction[]>;
+    getAccount(accountId: string): Promise<Map<string, any>>;
+    getEesAccount: () => Promise<Map<string, any>>;
     getBurnOperations: (account: string) => Promise<OperationBurn[]>;
 }

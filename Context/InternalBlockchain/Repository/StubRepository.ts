@@ -4,6 +4,7 @@ import OperationRedeem from "../OperationRedeem";
 import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "context/InternalBlockchain/OperationRefund";
 import { Map } from "immutable";
+import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
 
 interface ContractInfo {
     externalId: string;
@@ -57,8 +58,22 @@ export default class StubRepository implements RepositoryInterface {
         return;
     }
 
-    async getAsset(): Promise<any> {
-        return Map<string, number>({ precision: ASSET_PRECISION });
+    async getInternalAsset(): Promise<Map<string, any>> {
+        return Map<string, any>({ precision: ASSET_PRECISION });
+    }
+
+    async getAsset(assetId: string): Promise<Map<string, any>> {
+        return Map<string, any>({ id: assetId, precision: ASSET_PRECISION });
+    }
+
+    async getAccountHistory(): Promise<WithdrawTransaction[]> {
+        return [];
+    }
+    async getAccount(accountId: string): Promise<Map<string, any>> {
+        return Map<string, any>({ id: accountId });
+    }
+    async getEesAccount(): Promise<Map<string, any>> {
+        return Map<string, any>({ id: "1.2.70" });
     }
 
     async addBurnOperation(operationBurn: OperationBurn) {

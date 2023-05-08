@@ -1,29 +1,32 @@
-import WithdrawRequest from "context/Domain/WithdrawRequest";
-import HashLock from "context/Domain/ValueObject/HashLock";
+import WithdrawRequest, { STATUS_CREATED } from "context/Domain/WithdrawRequest";
 import WithdrawRequestRepositoryInterface from "context/Domain/WithdrawRequestRepositoryInterface";
 
 export default class WithdrawRequestRepository implements WithdrawRequestRepositoryInterface {
     private _withdrawRequests: {
-        [index: string]: WithdrawRequest
-    } = {}
+        [index: string]: WithdrawRequest;
+    } = {};
 
-    create(withdrawRequest: WithdrawRequest): void {
-        this._withdrawRequests[withdrawRequest.id.toValue()] = withdrawRequest
+    save(withdrawRequest: WithdrawRequest): void {
+        this._withdrawRequests[withdrawRequest.idString] = withdrawRequest;
     }
 
-    load(hashLock: HashLock): Promise<WithdrawRequest | null> {
-        const withdrawRequest = Object.values(this._withdrawRequests).find((withdrawRequest: WithdrawRequest) => {
-            return (Reflect.get(withdrawRequest, '_hashLock') as HashLock).equals(hashLock)
-        })
-
-        return Promise.resolve(withdrawRequest ?? null)
+    create(withdrawRequest: WithdrawRequest): void {
+        this._withdrawRequests[withdrawRequest.id.toValue()] = withdrawRequest;
     }
 
     get size(): number {
-        return Object.values(this._withdrawRequests).length
+        return Object.values(this._withdrawRequests).length;
     }
 
     reset() {
-        this._withdrawRequests = {}
+        this._withdrawRequests = {};
+    }
+
+    findAllCreated(): Promise<WithdrawRequest[]> {
+        const withdrawRequests = Object.values(this._withdrawRequests).filter((withdrawRequest: WithdrawRequest) => {
+            return withdrawRequest.status == STATUS_CREATED;
+        });
+
+        return Promise.resolve(withdrawRequests);
     }
 }

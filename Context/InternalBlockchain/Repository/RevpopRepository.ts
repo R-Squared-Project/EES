@@ -12,7 +12,8 @@ import Contract from "context/InternalBlockchain/HtlcContract";
 import OperationRedeem from "../OperationRedeem";
 import OperationBurn from "context/InternalBlockchain/OperationBurn";
 import OperationRefund from "../OperationRefund";
-import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
+import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
+import { Map } from "immutable";
 
 const PREIMAGE_HASH_CIPHER_SHA256 = 2;
 const PREIMAGE_LENGTH = 32;
@@ -57,7 +58,7 @@ export default class RevpopRepository implements RepositoryInterface {
         }
 
         const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
-        const asset = await this.getAsset();
+        const asset = await this.getInternalAsset();
         const txIssueAsset = new TransactionBuilder();
 
         txIssueAsset.add_type_operation("asset_issue", {
@@ -186,13 +187,7 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async burnAsset(amount: string) {
-        const accountTo = await FetchChain("getAccount", this.eesAccount);
-
-        if (null === accountTo) {
-
-            throw new Errors.AccountNotFound(this.eesAccount)
-        }
-
+        const accountTo = await this.getEesAccount();
         const privateKey = PrivateKey.fromWif(this.accountPrivateKey)
         const asset = await FetchChain("getAsset", this.assetSymbol)
 
@@ -245,7 +240,7 @@ export default class RevpopRepository implements RepositoryInterface {
         return operations
     }
 
-    async getAsset(): Promise<any> {
+    async getInternalAsset(): Promise<Map<string, any>> {
         const asset = await FetchChain("getAsset", this.assetSymbol);
 
         if (asset === null) {
@@ -253,5 +248,48 @@ export default class RevpopRepository implements RepositoryInterface {
         }
 
         return asset;
+    }
+
+    async getAsset(assetId: string): Promise<Map<string, any>> {
+        const asset = await FetchChain("getAsset", "RVETH"); // TODO: use passed assetId
+
+        if (asset === null) {
+            throw new Errors.AssetNotFoundError(assetId);
+        }
+
+        return asset;
+    }
+
+    async getAccountHistory(): Promise<WithdrawTransaction[]> {
+        const mostRecently = "1." + ChainTypes.object_type.operation_history + ".0";
+        const revpopOperations = await Apis.instance()
+            .history_api()
+            .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently]);
+
+        const transactions = [];
+        for (const revpopOperation of revpopOperations) {
+            if (
+                revpopOperation["op"][0] == ChainTypes.operations.transfer ||
+                revpopOperation["op"][0] == ChainTypes.operations.htlc_create
+            ) {
+                transactions.push(revpopOperation);
+            }
+        }
+
+        return transactions;
+    }
+
+    async getAccount(accountId: string): Promise<Map<string, any>> {
+        const account = await FetchChain("getAccount", accountId);
+
+        if (null === account) {
+            throw new Errors.AccountNotFound(account);
+        }
+
+        return account;
+    }
+
+    async getEesAccount(): Promise<Map<string, any>> {
+        return await this.getAccount(this.eesAccount);
     }
 }

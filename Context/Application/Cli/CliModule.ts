@@ -29,23 +29,16 @@ import {MonitorDepositInternalContractBurned} from "context/Application/Cli/Moni
 import BurnedHandler from "context/Application/Command/InternalBlockchain/Confirm/Burned/BurnedHandler";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
+import { MonitorWithdrawInternalContractCreated } from "context/Application/Cli/MonitorWithdrawInternalContractCreated";
+import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
+import ConfirmWithdrawInternalContractCreatedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreatedHandler";
+import { CoreModule } from "context/Core/CoreModule";
 
 @Module({
-    imports: [
-        TypeOrmModule.forRoot({
-            type: "mysql",
-            host: config.db.host,
-            port: config.db.port,
-            username: config.db.user,
-            password: config.db.password,
-            database: config.db.name,
-            entities: [SettingEntity],
-            keepConnectionAlive: true,
-        }),
-        TypeOrmModule.forFeature([SettingEntity]),
-    ],
+    imports: [CoreModule],
     providers: [
         MonitorEthereumTransactions,
+        MonitorWithdrawInternalContractCreated,
         ExternalContractRedeemWorker,
         ExternalBlockchain,
         GetLastContractsHandler,
@@ -66,6 +59,8 @@ import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
         BurnedHandler,
         EtherToWrappedEtherConverter,
         AssetNormalizer,
+        GetLastWithdrawContractsHandler,
+        ConfirmWithdrawInternalContractCreatedHandler,
         {
             provide: "DataSource",
             useValue: DataSource,
