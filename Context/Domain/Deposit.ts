@@ -101,7 +101,6 @@ export default class Deposit extends AggregateRoot {
     }
 
     public isSubmittedToInternalBlockchain(): boolean {
-
         return this._status === STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN;
     }
 
