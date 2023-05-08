@@ -69,4 +69,8 @@ export default class StubRepository implements RepositoryInterface {
     getGasPrice(): Promise<string> {
         return Promise.resolve("300");
     }
+
+    createWithdrawHTLC(receiver: string, hashlock: string, timelock: number, amount: string): Promise<string> {
+        return Promise.resolve("");
+    }
 }

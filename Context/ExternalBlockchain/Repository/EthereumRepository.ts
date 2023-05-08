@@ -13,7 +13,8 @@ import { Map } from "immutable";
 @Injectable()
 export default class EthereumRepository implements RepositoryInterface {
     private _web3: Web3;
-    private _contract: ContractWeb3;
+    private _depositContract: ContractWeb3;
+    private _withdrawContract: ContractWeb3;
 
     constructor() {
         this._web3 = new Web3(
@@ -22,7 +23,14 @@ export default class EthereumRepository implements RepositoryInterface {
             )
         );
 
-        this._contract = new this._web3.eth.Contract(HashedTimeLockAbi as AbiItem[], config.eth?.contract_address);
+        this._depositContract = new this._web3.eth.Contract(
+            HashedTimeLockAbi as AbiItem[],
+            config.eth?.deposit_contract_address
+        );
+        this._withdrawContract = new this._web3.eth.Contract(
+            HashedTimeLockAbi as AbiItem[],
+            config.eth?.withdraw_contract_address
+        );
     }
 
     async txIncluded(txHash: string): Promise<boolean> {
@@ -36,8 +44,8 @@ export default class EthereumRepository implements RepositoryInterface {
     }
 
     async load(txHash: string, contractId: string): Promise<Contract | null> {
-        const contractData = await this._contract.methods.getContract(contractId).call({
-            from: config.eth.contract_address,
+        const contractData = await this._depositContract.methods.getContract(contractId).call({
+            from: config.eth.deposit_contract_address,
         });
 
         return new Contract(
@@ -62,13 +70,13 @@ export default class EthereumRepository implements RepositoryInterface {
     }
 
     async loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
-        return await this._contract.getPastEvents("LogHTLCNew", {
+        return await this._depositContract.getPastEvents("LogHTLCNew", {
             fromBlock: fromBlock,
             toBlock,
         });
     }
     async loadHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
-        return await this._contract.getPastEvents("LogHTLCWithdraw", {
+        return await this._depositContract.getPastEvents("LogHTLCWithdraw", {
             fromBlock: fromBlock,
             toBlock,
         });
@@ -78,7 +86,7 @@ export default class EthereumRepository implements RepositoryInterface {
         let gas: number;
 
         try {
-            gas = await this._contract.methods.withdraw(contractId, secret).estimateGas({
+            gas = await this._depositContract.methods.withdraw(contractId, secret).estimateGas({
                 from: receiver,
             });
         } catch (e) {
@@ -91,9 +99,9 @@ export default class EthereumRepository implements RepositoryInterface {
 
         const tx = {
             from: receiver,
-            to: this._contract.options.address,
+            to: this._depositContract.options.address,
             gas,
-            data: this._contract.methods.withdraw(contractId, secret).encodeABI(),
+            data: this._depositContract.methods.withdraw(contractId, secret).encodeABI(),
         };
 
         const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
@@ -121,6 +129,45 @@ export default class EthereumRepository implements RepositoryInterface {
 
     async getGasPrice(): Promise<string> {
         return await this._web3.eth.getGasPrice();
+    }
+
+    async createWithdrawHTLC(receiver: string, hashlock: string, timelock: number, amount: string): Promise<string> {
+        let gas: number;
+
+        try {
+            gas = await this._withdrawContract.methods.newContract(receiver, hashlock, timelock).estimateGas({
+                from: config.eth.receiver,
+                value: amount,
+            });
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw new Errors.ErrorEstimatingGas(receiver, e.message);
+        }
+
+        const tx = {
+            from: config.eth.receiver,
+            to: this._withdrawContract.options.address,
+            gas,
+            value: amount,
+            data: this._withdrawContract.methods.newContract(receiver, hashlock, timelock).encodeABI(),
+        };
+
+        const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
+
+        try {
+            const result = await this._web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
+
+            return result.transactionHash;
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw new Errors.CreateWithdrawContractUnexpactedError(receiver, e.message);
+        }
     }
 
     private async loadTx(txHash: string) {

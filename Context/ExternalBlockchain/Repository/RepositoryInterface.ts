@@ -14,4 +14,5 @@ export default interface RepositoryInterface {
     getTransactionReceipt: (txHash: string) => Promise<TransactionReceipt>;
     getAsset: () => Map<string, number>;
     getGasPrice: () => Promise<string>;
+    createWithdrawHTLC: (receiver: string, hashlock: string, timelock: number, amount: string) => Promise<string>;
 }

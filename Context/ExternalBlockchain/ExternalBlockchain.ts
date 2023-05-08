@@ -42,6 +42,15 @@ class ExternalBlockchain {
     public async getGasPrice(): Promise<string> {
         return await this._repository.getGasPrice();
     }
+
+    public async createWithdrawHTLC(
+        receiver: string,
+        hashlock: string,
+        timelock: number,
+        amount: string
+    ): Promise<string> {
+        return await this._repository.createWithdrawHTLC(receiver, hashlock, timelock, amount);
+    }
 }
 
 export default ExternalBlockchain;

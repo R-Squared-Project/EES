@@ -32,6 +32,9 @@ import ConfirmWithdrawInternalContractCreatedHandler from "context/Application/C
 import { CoreModule } from "context/Core/CoreModule";
 import { FoundWithdrawInternalContractCreation } from "context/Application/Cli/FoundWithdrawInternalContractCreation";
 import CheckInternalWithdrawalOperationHandler from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperationHandler";
+import { WorkerCreateWithdrawalExternalContract } from "context/Application/Cli/WorkerCreateWithdrawalExternalContract";
+import CreateWithdrawalExternalContractHandler from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContractHandler";
+import WrappedEtherToEtherConverter from "context/Infrastructure/WrappedEtherToEtherConverter";
 
 @Module({
     imports: [CoreModule],
@@ -62,6 +65,9 @@ import CheckInternalWithdrawalOperationHandler from "context/Application/Command
         ConfirmWithdrawInternalContractCreatedHandler,
         FoundWithdrawInternalContractCreation,
         CheckInternalWithdrawalOperationHandler,
+        WorkerCreateWithdrawalExternalContract,
+        CreateWithdrawalExternalContractHandler,
+        WrappedEtherToEtherConverter,
         {
             provide: "DataSource",
             useValue: DataSource,

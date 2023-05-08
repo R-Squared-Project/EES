@@ -40,9 +40,8 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
         return await this._datasource
             .getRepository<Withdraw>(Withdraw)
             .createQueryBuilder("withdraw")
-            .leftJoinAndSelect("withdraw._externalContract", "externalContract")
-            .leftJoinAndSelect("withdraw._internalContract", "internalContract")
-            .leftJoinAndSelect("withdraw._withdrawRequest", "withdrawRequest")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdraw.id = :withdrawId", { withdrawId: id })
             .getOne();
     }
