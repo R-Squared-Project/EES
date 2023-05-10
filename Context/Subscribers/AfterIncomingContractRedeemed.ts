@@ -20,7 +20,7 @@ export default class AfterIncomingContractRedeemed implements HandlerInterface<I
 
     private async onDepositRedeemedEvent(event: IncomingContractRedeemedEvent) {
         await this.sender.publish("deposit_redeemed_in_internal_blockchain", {
-            withdraw_id: event.depositId,
+            deposit_id: event.depositId,
         });
     }
 }

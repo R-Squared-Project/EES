@@ -20,7 +20,7 @@ export default class AfterIncomingContractProcessed implements HandlerInterface<
 
     private async onDepositConfirmedEvent(event: IncomingContractProcessedEvent) {
         await this.sender.publish("create_in_internal_blockchain", {
-            withdraw_id: event.depositId,
+            deposit_id: event.depositId,
         });
     }
 }
