@@ -5,12 +5,14 @@ import InternalContract from "context/Domain/InternalContract";
 import ReadyToProcess from "context/Domain/Validation/Withdraw/ReadyToProcess";
 import WithdrawReadyToProcessEvent from "context/Domain/Event/WithdrawReadyToProcessEvent";
 import SendInReply from "context/Domain/Validation/Withdraw/SendInReply";
+import ReadyToSign from "context/Domain/Validation/Withdraw/ReadyToSign";
 
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 5;
 export const STATUS_READY_TO_PROCESS = 10;
 export const STATUS_SEND_IN_REPLY = 15;
-export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20;
-export const STATUS_COMPLETED = 25;
+export const STATUS_READY_TO_SIGN = 20;
+export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 25;
+export const STATUS_COMPLETED = 30;
 export const STATUS_BURNED = 105;
 export const STATUS_FAILED_PROCESSING = 200;
 
@@ -72,5 +74,11 @@ export default class Withdraw extends AggregateRoot {
         this.txHash = txHash;
         new SendInReply(this).validate();
         this.status = STATUS_SEND_IN_REPLY;
+    }
+
+    public readyToSign(contract: ExternalContract) {
+        this.externalContract = contract;
+        new ReadyToSign(this).validate();
+        this.status = STATUS_READY_TO_SIGN;
     }
 }
