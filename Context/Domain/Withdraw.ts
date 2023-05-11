@@ -81,4 +81,8 @@ export default class Withdraw extends AggregateRoot {
         new ReadyToSign(this).validate();
         this.status = STATUS_READY_TO_SIGN;
     }
+
+    public isReadyToSign() {
+        return this.status == STATUS_READY_TO_SIGN;
+    }
 }
