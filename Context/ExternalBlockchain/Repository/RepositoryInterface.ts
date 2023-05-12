@@ -5,10 +5,12 @@ import { Map } from "immutable";
 
 export default interface RepositoryInterface {
     txIncluded: (txHash: string) => Promise<boolean>;
-    load: (txHash: string, contractId: string) => Promise<Contract | null>;
+    loadDepositContract: (txHash: string, contractId: string) => Promise<Contract | null>;
+    loadWithdrawContract: (txHash: string, contractId: string) => Promise<Contract | null>;
     getLastBlockNumber: () => Promise<number>;
     getBlock: (number: number) => Promise<BlockTransactionString | null>;
-    loadHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
+    loadDepositHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
+    loadWithdrawHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
     loadHTLCRedeemEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
     redeem: (contractId: string, secret: string, receiver: string) => Promise<string>;
     getTransactionReceipt: (txHash: string) => Promise<TransactionReceipt>;

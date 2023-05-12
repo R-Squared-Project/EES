@@ -1,6 +1,5 @@
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 import Withdraw, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
-import Deposit from "context/Domain/Deposit";
 
 export default class WithdrawStubRepository implements WithdrawRepositoryInterface {
     public _exists = false;

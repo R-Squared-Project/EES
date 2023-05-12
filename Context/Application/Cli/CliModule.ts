@@ -4,7 +4,6 @@ import { MonitorEthereumTransactions } from "context/Application/Cli/MonitorEthe
 import TypeOrmRepository from "context/Infrastructure/TypeORM/DepositRepository";
 import DepositRequestTypeOrmRepository from "context/Infrastructure/TypeORM/DepositRequestRepository";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
-import GetLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastContractsHandler";
 import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 import ChainProcessor from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainProcessor";
 import ProcessIncomingContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
@@ -13,7 +12,6 @@ import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository
 import IncomingContractsCreationsProcessingLink from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
 import RabbitMQ from "context/Queue/RabbitMQ";
 import MonitorExternalContractsRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/MonitorExternalContractsRedeemsLink";
-import GetLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastRedeemsHandler";
 import ExternalContractRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
 import EthereumRepository from "context/ExternalBlockchain/Repository/EthereumRepository";
 import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
@@ -35,6 +33,12 @@ import CheckInternalWithdrawalOperationHandler from "context/Application/Command
 import { WorkerCreateWithdrawalExternalContract } from "context/Application/Cli/WorkerCreateWithdrawalExternalContract";
 import CreateWithdrawalExternalContractHandler from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContractHandler";
 import WrappedEtherToEtherConverter from "context/Infrastructure/WrappedEtherToEtherConverter";
+import WithdrawContractsCreationsProcessingLink from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/WithdrawContractsCreationsProcessingLink";
+import ProcessWithdrawContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreationHandler";
+import GetDepositLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastContractsHandler";
+import GetDepositLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastRedeemsHandler";
+import GetWithdrawLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastContractsHandler";
+import GetWithdrawLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastRedeemsHandler";
 
 @Module({
     imports: [CoreModule],
@@ -43,7 +47,7 @@ import WrappedEtherToEtherConverter from "context/Infrastructure/WrappedEtherToE
         MonitorWithdrawInternalContractCreated,
         ExternalContractRedeemWorker,
         ExternalBlockchain,
-        GetLastContractsHandler,
+        GetDepositLastContractsHandler,
         GetLastBlocksHandler,
         ChainProcessor,
         Setting,
@@ -51,7 +55,7 @@ import WrappedEtherToEtherConverter from "context/Infrastructure/WrappedEtherToE
         ProcessIncomingContractCreationHandler,
         IncomingContractsCreationsProcessingLink,
         MonitorExternalContractsRedeemsLink,
-        GetLastRedeemsHandler,
+        GetDepositLastRedeemsHandler,
         ExternalContractRedeemHandler,
         RabbitMQ,
         ConfirmDepositExternalContractRedeemedHandler,
@@ -68,6 +72,10 @@ import WrappedEtherToEtherConverter from "context/Infrastructure/WrappedEtherToE
         WorkerCreateWithdrawalExternalContract,
         CreateWithdrawalExternalContractHandler,
         WrappedEtherToEtherConverter,
+        WithdrawContractsCreationsProcessingLink,
+        ProcessWithdrawContractCreationHandler,
+        GetWithdrawLastContractsHandler,
+        GetWithdrawLastRedeemsHandler,
         {
             provide: "DataSource",
             useValue: DataSource,

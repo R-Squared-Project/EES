@@ -1,14 +1,14 @@
 import ChainedHandlerInterface from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
 import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
-import GetLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastContractsHandler";
 import { Injectable } from "@nestjs/common";
 import ProcessWithdrawContractCreation from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreation";
 import ProcessWithdrawContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreationHandler";
+import GetWithdrawLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastContractsHandler";
 
 @Injectable()
 export default class WithdrawContractsCreationsProcessingLink implements ChainedHandlerInterface {
     constructor(
-        private getLastContractsHandler: GetLastContractsHandler,
+        private getLastContractsHandler: GetWithdrawLastContractsHandler,
         private processWithdrawContractCreationHandler: ProcessWithdrawContractCreationHandler
     ) {}
     async execute(command: ChainedHandlerCommand): Promise<void> {

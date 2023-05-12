@@ -5,7 +5,7 @@ import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchai
 import {Injectable} from "@nestjs/common";
 
 @Injectable()
-export default class GetLastRedeemsHandler implements UseCase<ChainedHandlerCommand, Response> {
+export default class GetDepositLastRedeemsHandler implements UseCase<ChainedHandlerCommand, Response> {
     public constructor(
         private readonly externalBlockchain: ExternalBlockchain
     ) {}

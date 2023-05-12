@@ -59,7 +59,7 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .getRepository<Withdraw>(Withdraw)
             .createQueryBuilder("withdraw")
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
-            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            // .leftJoinAndSelect("withdraw.externalContract", "externalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdraw.txHash = :withdrawTxHash", { withdrawTxHash: txHash })
             .getOne();
@@ -69,7 +69,7 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
         return await this._datasource
             .getRepository<Withdraw>(Withdraw)
             .createQueryBuilder("withdraw")
-            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            // .leftJoinAndSelect("withdraw.externalContract", "externalContract")
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdrawRequest.id = :requestId", { requestId: requestId })

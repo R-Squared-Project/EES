@@ -30,7 +30,11 @@ export default class ProcessWithdrawContractCreationHandler implements UseCase<P
             throw new Errors.WithdrawNotExists(command.txHash);
         }
 
-        const contract = await this.externalBlockchain.repository.load(command.txHash, command.contractId);
+        const contract = await this.externalBlockchain.repository.loadWithdrawContract(
+            command.txHash,
+            command.contractId
+        );
+
         if (null === contract) {
             throw new Errors.ExternalContractNotExists(command.contractId);
         }

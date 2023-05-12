@@ -22,7 +22,11 @@ export default class StubRepository implements RepositoryInterface {
         return this._txIncluded;
     }
 
-    async load(txHash: string, contractId: string): Promise<Contract | null> {
+    async loadDepositContract(txHash: string, contractId: string): Promise<Contract | null> {
+        return this._contract;
+    }
+
+    async loadWithdrawContract(txHash: string, contractId: string): Promise<Contract | null> {
         return this._contract;
     }
 
@@ -35,7 +39,11 @@ export default class StubRepository implements RepositoryInterface {
         return {};
     }
 
-    loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    loadDepositHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return Promise.resolve([]);
+    }
+
+    loadWithdrawHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return Promise.resolve([]);
     }
 
