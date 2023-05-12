@@ -69,7 +69,8 @@ export default class CheckInternalWithdrawalOperationHandler
             throw new Errors.InvalidAmount(withdraw);
         }
 
-        if (htlcOperation.get("op")[1].amount.asset_id != "1.3.1") {
+        const asset = await this.internalBlockchain.getAsset("RVETH");
+        if (htlcOperation.get("op")[1].amount.asset_id != asset.get("id")) {
             throw new Errors.InvalidAsset(withdraw);
         }
 
@@ -91,7 +92,7 @@ export default class CheckInternalWithdrawalOperationHandler
         await this.checkReceiver(transferOperation);
 
         let minimalWithdrawalFee = config.revpop.rveth_withdrawal_fee;
-        if (transferOperation.get("op")[1].amount.asset_id == "1.3.0") {
+        if (transferOperation.get("op")[1].amount.asset_id == config.revpop.asset_id) {
             minimalWithdrawalFee = config.revpop.rvp_withdrawal_fee;
         }
 
