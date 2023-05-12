@@ -10,6 +10,7 @@ import Withdraw from "context/Domain/Withdraw";
 import { Map } from "immutable";
 import config from "context/config";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
+import { HardFailError } from "./Errors";
 
 @Injectable()
 export default class CheckInternalWithdrawalOperationHandler
@@ -43,13 +44,13 @@ export default class CheckInternalWithdrawalOperationHandler
                 transferOperation.get("op")[1].amount.amount,
                 transferOperation.get("op")[1].amount.asset_id
             );
+            this.withdrawRepository.save(command.withdraw);
         } catch (error: unknown) {
-            if (error instanceof Error) {
+            if (error instanceof HardFailError) {
                 command.withdraw.error(error.message);
+                this.withdrawRepository.save(command.withdraw);
             }
         }
-
-        this.withdrawRepository.save(command.withdraw);
     }
 
     public async checkHTLCOperation(htlcOperation: Map<string, any>, withdraw: Withdraw) {
