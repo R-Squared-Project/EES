@@ -104,6 +104,14 @@ class InternalBlockchain {
     async getEesAccount(): Promise<Map<string, any>> {
         return await this.repository.getEesAccount();
     }
+
+    async getObject(objectId: string): Promise<Map<string, any>> {
+        return await this.repository.getObject(objectId);
+    }
+
+    async getLastIrreversibleBlockNumber(): Promise<number> {
+        return await this.repository.getLastIrreversibleBlockNumber();
+    }
 }
 
 export default InternalBlockchain;

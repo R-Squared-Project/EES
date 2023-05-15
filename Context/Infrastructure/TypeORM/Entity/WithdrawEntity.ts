@@ -53,6 +53,36 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
             name: "created_at",
             createDate: true,
         },
+        errorMessage: {
+            name: "error_message",
+            type: String,
+            nullable: true,
+        },
+        hashlock: {
+            name: "hashlock",
+            type: String,
+            nullable: true,
+        },
+        timelock: {
+            name: "timelock",
+            type: Number,
+            nullable: true,
+        },
+        amountOfHTLC: {
+            name: "amount_of_htlc",
+            type: Number,
+            nullable: true,
+        },
+        amountOfWithdrawalFee: {
+            name: "amount_of_withdrawal_fee",
+            type: Number,
+            nullable: true,
+        },
+        assetOfWithdrawalFee: {
+            name: "asset_of_withdrawal_fee",
+            type: String,
+            nullable: true,
+        },
     },
 });
 

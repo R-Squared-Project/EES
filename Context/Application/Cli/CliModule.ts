@@ -8,10 +8,7 @@ import GetLastContractsHandler from "context/Application/Query/ExternalBlockchai
 import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 import ChainProcessor from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainProcessor";
 import ProcessIncomingContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import config from "context/config";
 import Setting from "context/Setting/Setting";
-import SettingEntity from "context/Setting/Infrastructure/TypeOrm/Entity/SettingEntity";
 import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository";
 import IncomingContractsCreationsProcessingLink from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
 import RabbitMQ from "context/Queue/RabbitMQ";
@@ -25,7 +22,7 @@ import ConfirmDepositExternalContractRedeemedHandler from "context/Application/C
 import { MonitorDepositInternalContractRefunded } from "context/Application/Cli/MonitorDepositInternalContractRefunded";
 import DepositInternalContractRefundHandler from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
-import {MonitorDepositInternalContractBurned} from "context/Application/Cli/MonitorDepositInternalContractBurned";
+import { MonitorDepositInternalContractBurned } from "context/Application/Cli/MonitorDepositInternalContractBurned";
 import BurnedHandler from "context/Application/Command/InternalBlockchain/Confirm/Burned/BurnedHandler";
 import EtherToWrappedEtherConverter from "context/Infrastructure/EtherToWrappedEtherConverter";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
@@ -33,6 +30,8 @@ import { MonitorWithdrawInternalContractCreated } from "context/Application/Cli/
 import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
 import ConfirmWithdrawInternalContractCreatedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreatedHandler";
 import { CoreModule } from "context/Core/CoreModule";
+import { FoundWithdrawInternalContractCreation } from "context/Application/Cli/FoundWithdrawInternalContractCreation";
+import CheckInternalWithdrawalOperationHandler from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperationHandler";
 
 @Module({
     imports: [CoreModule],
@@ -61,6 +60,8 @@ import { CoreModule } from "context/Core/CoreModule";
         AssetNormalizer,
         GetLastWithdrawContractsHandler,
         ConfirmWithdrawInternalContractCreatedHandler,
+        FoundWithdrawInternalContractCreation,
+        CheckInternalWithdrawalOperationHandler,
         {
             provide: "DataSource",
             useValue: DataSource,

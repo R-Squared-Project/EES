@@ -29,3 +29,9 @@ export class AccountNotFound extends ExternalBlockchainError {
         super(`Account "${account}" is not found.`);
     }
 }
+
+export class ObjectNotFound extends ExternalBlockchainError {
+    public constructor(id: string) {
+        super(`Object "${id}" is not found.`);
+    }
+}

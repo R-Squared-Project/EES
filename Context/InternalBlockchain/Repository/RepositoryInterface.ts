@@ -18,10 +18,12 @@ export default interface RepositoryInterface {
     getRefundOperations: (account: string) => Promise<OperationRefund[]>;
     disconnect: () => void;
     burnAsset: (amount: string) => void;
+    getBurnOperations: (account: string) => Promise<OperationBurn[]>;
     getInternalAsset: () => Promise<Map<string, any>>;
     getAsset: (assetId: string) => Promise<Map<string, any>>;
     getAccountHistory: () => Promise<WithdrawTransaction[]>;
     getAccount(accountId: string): Promise<Map<string, any>>;
     getEesAccount: () => Promise<Map<string, any>>;
-    getBurnOperations: (account: string) => Promise<OperationBurn[]>;
+    getObject: (objectId: string) => Promise<Map<string, any>>;
+    getLastIrreversibleBlockNumber: () => Promise<number>;
 }
