@@ -1,5 +1,4 @@
 import Withdraw from "./Withdraw";
-import Deposit from "context/Domain/Deposit";
 
 export default interface WithdrawRepositoryInterface {
     save: (withdraw: Withdraw) => void;

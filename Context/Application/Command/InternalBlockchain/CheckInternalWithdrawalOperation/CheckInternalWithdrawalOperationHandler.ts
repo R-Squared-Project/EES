@@ -10,6 +10,7 @@ import Withdraw from "context/Domain/Withdraw";
 import { Map } from "immutable";
 import config from "context/config";
 import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
+import { HardFailError } from "./Errors";
 
 @Injectable()
 export default class CheckInternalWithdrawalOperationHandler
@@ -43,13 +44,13 @@ export default class CheckInternalWithdrawalOperationHandler
                 transferOperation.get("op")[1].amount.amount,
                 transferOperation.get("op")[1].amount.asset_id
             );
+            this.withdrawRepository.save(command.withdraw);
         } catch (error: unknown) {
-            if (error instanceof Error) {
+            if (error instanceof HardFailError) {
                 command.withdraw.error(error.message);
+                this.withdrawRepository.save(command.withdraw);
             }
         }
-
-        this.withdrawRepository.save(command.withdraw);
     }
 
     public async checkHTLCOperation(htlcOperation: Map<string, any>, withdraw: Withdraw) {
@@ -69,7 +70,8 @@ export default class CheckInternalWithdrawalOperationHandler
             throw new Errors.InvalidAmount(withdraw);
         }
 
-        if (htlcOperation.get("op")[1].amount.asset_id != "1.3.1") {
+        const asset = await this.internalBlockchain.getAsset("RVETH");
+        if (htlcOperation.get("op")[1].amount.asset_id != asset.get("id")) {
             throw new Errors.InvalidAsset(withdraw);
         }
 
@@ -91,7 +93,7 @@ export default class CheckInternalWithdrawalOperationHandler
         await this.checkReceiver(transferOperation);
 
         let minimalWithdrawalFee = config.revpop.rveth_withdrawal_fee;
-        if (transferOperation.get("op")[1].amount.asset_id == "1.3.0") {
+        if (transferOperation.get("op")[1].amount.asset_id == config.revpop.asset_id) {
             minimalWithdrawalFee = config.revpop.rvp_withdrawal_fee;
         }
 
