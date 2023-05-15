@@ -42,7 +42,9 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
             throw new Errors.ExternalContractNotExists(command.contractId);
         }
 
-        new ExternalContractValidator(contract).validate();
+        const validator = new ExternalContractValidator(contract);
+        validator.validate();
+        validator.validateTimeLock();
 
         const externalContract = new ExternalContract(
             new UniqueEntityID(contract.contractId),

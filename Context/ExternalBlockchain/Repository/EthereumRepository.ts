@@ -2,7 +2,8 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { BlockTransactionString, TransactionReceipt } from "web3-eth";
 import { Contract as ContractWeb3, EventData } from "web3-eth-contract";
-import HashedTimeLockAbi from "../../../src/assets/abi/DepositHashedTimelock.json";
+import DepositHashedTimeLockAbi from "../../../src/assets/abi/DepositHashedTimelock.json";
+import WithdrawHashedTimeLockAbi from "../../../src/assets/abi/WithdrawHashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import config from "context/config";
@@ -24,11 +25,11 @@ export default class EthereumRepository implements RepositoryInterface {
         );
 
         this._depositContract = new this._web3.eth.Contract(
-            HashedTimeLockAbi as AbiItem[],
+            DepositHashedTimeLockAbi as AbiItem[],
             config.eth?.deposit_contract_address
         );
         this._withdrawContract = new this._web3.eth.Contract(
-            HashedTimeLockAbi as AbiItem[],
+            WithdrawHashedTimeLockAbi as AbiItem[],
             config.eth?.withdraw_contract_address
         );
     }
