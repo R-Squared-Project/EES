@@ -15,8 +15,6 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
 
     async create(deposit: Deposit) {
         await this._datasource.getRepository<Deposit>(Deposit).save(deposit);
-
-        deposit.addDomainEvent(new IncomingContractProcessedEvent(deposit.id.toValue()));
     }
 
     async save(deposit: Deposit) {
