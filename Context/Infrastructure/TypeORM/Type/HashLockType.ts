@@ -9,8 +9,8 @@ const HashLockType: EntitySchemaColumnOptions = {
         to(hashLock: HashLock | undefined): string {
             return hashLock?.value;
         },
-        from(value: string): HashLock {
-            return HashLock.create(value);
+        from(value: string | null): HashLock | null {
+            return value ? HashLock.create(value) : null;
         },
     },
 };

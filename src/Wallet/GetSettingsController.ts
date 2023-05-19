@@ -10,6 +10,7 @@ export default class GetSettingsController {
         return Promise.resolve(
             SuccessResponse.create({
                 deposit_contract_address: config.eth.deposit_contract_address,
+                withdraw_contract_address: config.eth.withdraw_contract_address,
                 receiver_address: config.eth.receiver,
                 minimum_deposit: config.eth.minimum_deposit_amount.toString(),
                 minimum_withdraw: config.eth.minimum_withdraw_amount.toString(),

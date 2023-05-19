@@ -1,14 +1,13 @@
 import { Controller, Post, Body, HttpCode, HttpException, HttpStatus, Inject } from "@nestjs/common";
 import SuccessResponse from "../Response/SuccessResponse";
-import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 
 interface Request {
     sessionId: string;
 }
 
-@Controller("withdraw/ready-to-sign")
-export default class CheckWithdrawReadyToSignController {
+@Controller("withdraw/get-external-contract-id")
+export default class GetWithdrawExternalContractController {
     constructor(@Inject("WithdrawRepositoryInterface") private _repository: WithdrawRepositoryInterface) {}
 
     @Post()
@@ -26,7 +25,7 @@ export default class CheckWithdrawReadyToSignController {
 
         return Promise.resolve(
             SuccessResponse.create({
-                readyToSign: true,
+                contractId: withdraw.externalContract?.idString,
             })
         );
     }

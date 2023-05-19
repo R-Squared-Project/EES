@@ -7,7 +7,7 @@ import DataSource from "context/Infrastructure/TypeORM/DataSource/DataSource";
 import SubmitWithdrawRequestHandler from "context/Application/Command/SubmitWithdrawRequest/SubmitWithdrawRequestHandler";
 import { CoreModule } from "context/Core/CoreModule";
 import SubmitWithdrawRequestController from "./SubmitWithdrawRequestController";
-import CheckWithdrawReadyToSignController from "./CheckWithdrawReadyToSignController";
+import GetWithdrawExternalContractController from "./GetWithdrawExternalContractController";
 
 @Module({
     imports: [CoreModule],
@@ -27,7 +27,7 @@ import CheckWithdrawReadyToSignController from "./CheckWithdrawReadyToSignContro
         SubmitDepositRequestController,
         SubmitWithdrawRequestController,
         CheckDepositSubmittedToInternalBlockchainController,
-        CheckWithdrawReadyToSignController,
+        GetWithdrawExternalContractController,
     ],
 })
 export default class WalletModule {}

@@ -66,7 +66,7 @@ export default class StubRepository implements RepositoryInterface {
         return Map<string, any>({ id: assetId, precision: ASSET_PRECISION });
     }
 
-    async getAccountHistory(): Promise<WithdrawTransaction[]> {
+    async getAccountHistory(lastProcessedAccountHistoryOperation: string): Promise<WithdrawTransaction[]> {
         return [];
     }
     async getAccount(accountId: string): Promise<Map<string, any>> {

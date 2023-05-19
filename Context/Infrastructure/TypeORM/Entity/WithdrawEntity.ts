@@ -18,6 +18,7 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
         externalContract: {
             target: "ExternalContract",
             type: "one-to-one",
+            nullable: false,
             joinColumn: {
                 name: "external_contract_id",
                 referencedColumnName: "idString",
