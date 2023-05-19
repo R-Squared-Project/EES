@@ -1,4 +1,4 @@
-export default class ExternalContractRedeem {
+export default class ExternalDepositRedeem {
     constructor(
         private _txHash: string,
         private _contractId: string

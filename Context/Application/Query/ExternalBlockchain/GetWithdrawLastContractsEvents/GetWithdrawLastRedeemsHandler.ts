@@ -9,7 +9,10 @@ export default class GetWithdrawLastRedeemsHandler implements UseCase<ChainedHan
     public constructor(private readonly externalBlockchain: ExternalBlockchain) {}
 
     public async execute(query: ChainedHandlerCommand): Promise<Response> {
-        const events = await this.externalBlockchain.repository.loadHTLCRedeemEvents(query.fromBlock, query.toBlock);
+        const events = await this.externalBlockchain.repository.loadWithdrawHTLCRedeemEvents(
+            query.fromBlock,
+            query.toBlock
+        );
 
         return new Response(query.fromBlock, query.toBlock, events);
     }

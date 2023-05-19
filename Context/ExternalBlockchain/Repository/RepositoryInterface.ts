@@ -11,7 +11,8 @@ export default interface RepositoryInterface {
     getBlock: (number: number) => Promise<BlockTransactionString | null>;
     loadDepositHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
     loadWithdrawHTLCNewEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
-    loadHTLCRedeemEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
+    loadDepositHTLCRedeemEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
+    loadWithdrawHTLCRedeemEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
     redeem: (contractId: string, secret: string, receiver: string) => Promise<string>;
     getTransactionReceipt: (txHash: string) => Promise<TransactionReceipt>;
     getAsset: () => Map<string, number>;

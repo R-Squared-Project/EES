@@ -102,8 +102,15 @@ export default class EthereumRepository implements RepositoryInterface {
         });
     }
 
-    async loadHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    async loadDepositHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return await this._depositContract.getPastEvents("LogHTLCWithdraw", {
+            fromBlock: fromBlock,
+            toBlock,
+        });
+    }
+
+    async loadWithdrawHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return await this._withdrawContract.getPastEvents("LogHTLCWithdraw", {
             fromBlock: fromBlock,
             toBlock,
         });

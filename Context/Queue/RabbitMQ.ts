@@ -11,15 +11,17 @@ const EXCHANGE_OPTION = {
 
 @Injectable()
 export default class RabbitMQ {
-    public readonly EXTERNAL_CONTRACT_REDEEM = "external_contract_redeem";
+    public readonly EXTERNAL_DEPOSIT_CONTRACT_REDEEM = "external_deposit_contract_redeem";
+    public readonly EXTERNAL_WITHDRAW_CONTRACT_REDEEM = "external_withdraw_contract_redeem";
     public readonly WITHDRAW_READY_TO_PROCESS = "withdraw_ready_to_process";
     private channel: Channel | null = null;
     private connection: Connection | null = null;
 
     public async initProduce() {
         await this.connect();
-        await this.assertQueue(this.EXTERNAL_CONTRACT_REDEEM);
+        await this.assertQueue(this.EXTERNAL_DEPOSIT_CONTRACT_REDEEM);
         await this.assertQueue(this.WITHDRAW_READY_TO_PROCESS);
+        await this.assertQueue(this.EXTERNAL_WITHDRAW_CONTRACT_REDEEM);
     }
 
     public async consume<T>(queueName: string, onMessage: (msg: T, ack: () => void, nack: () => void) => void) {

@@ -1,15 +1,15 @@
 import ChainedHandlerInterface from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
 import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
 import { Injectable } from "@nestjs/common";
-import ExternalContractRedeem from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeem";
-import ExternalContractRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
+import ExternalDepositRedeem from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRedeem/ExternalDepositRedeem";
+import ExternalDepositRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRedeem/ExternalDepositRedeemHandler";
 import GetDepositLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastRedeemsHandler";
 
 @Injectable()
-export default class MonitorExternalContractsRedeemsLink implements ChainedHandlerInterface {
+export default class MonitorExternalDepositRedeemsLink implements ChainedHandlerInterface {
     constructor(
         private getLastRedeemsHandler: GetDepositLastRedeemsHandler,
-        private externalContractRedeemHandler: ExternalContractRedeemHandler
+        private externalContractRedeemHandler: ExternalDepositRedeemHandler
     ) {}
     async execute(command: ChainedHandlerCommand): Promise<void> {
         const lastContracts = await this.getLastRedeemsHandler.execute(command);
@@ -17,9 +17,9 @@ export default class MonitorExternalContractsRedeemsLink implements ChainedHandl
             console.log(`Process transaction ${event.transactionHash}`);
 
             try {
-                const command = new ExternalContractRedeem(event.transactionHash, event.returnValues.contractId);
+                const command = new ExternalDepositRedeem(event.transactionHash, event.returnValues.contractId);
                 await this.externalContractRedeemHandler.execute(command);
-                console.log(`Redeem transaction ${event.transactionHash} successfully queued`);
+                console.log(`Redeem deposit transaction ${event.transactionHash} successfully queued`);
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log("Error in ", typeof this, ":", e.message);

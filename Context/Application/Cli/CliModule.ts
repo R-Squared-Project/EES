@@ -11,8 +11,8 @@ import Setting from "context/Setting/Setting";
 import SettingRepository from "context/Setting/Infrastructure/TypeOrm/Repository";
 import IncomingContractsCreationsProcessingLink from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
 import RabbitMQ from "context/Queue/RabbitMQ";
-import MonitorExternalContractsRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/MonitorExternalContractsRedeemsLink";
-import ExternalContractRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
+import MonitorExternalDepositRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRedeem/MonitorExternalDepositRedeemsLink";
+import ExternalDepositRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRedeem/ExternalDepositRedeemHandler";
 import EthereumRepository from "context/ExternalBlockchain/Repository/EthereumRepository";
 import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
 import { ExternalContractRedeemWorker } from "context/Application/Cli/ExternalContractRedeemWorker";
@@ -39,6 +39,8 @@ import GetDepositLastContractsHandler from "context/Application/Query/ExternalBl
 import GetDepositLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastRedeemsHandler";
 import GetWithdrawLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastContractsHandler";
 import GetWithdrawLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastRedeemsHandler";
+import MonitorExternalWithdrawRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRedeem/MonitorExternalWithdrawRedeemsLink";
+import ExternalWithdrawRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRedeem/ExternalWithdrawRedeemHandler";
 
 @Module({
     imports: [CoreModule],
@@ -54,9 +56,11 @@ import GetWithdrawLastRedeemsHandler from "context/Application/Query/ExternalBlo
         SettingRepository,
         ProcessIncomingContractCreationHandler,
         IncomingContractsCreationsProcessingLink,
-        MonitorExternalContractsRedeemsLink,
+        MonitorExternalDepositRedeemsLink,
+        MonitorExternalWithdrawRedeemsLink,
         GetDepositLastRedeemsHandler,
-        ExternalContractRedeemHandler,
+        ExternalDepositRedeemHandler,
+        ExternalWithdrawRedeemHandler,
         RabbitMQ,
         ConfirmDepositExternalContractRedeemedHandler,
         MonitorDepositInternalContractRefunded,
