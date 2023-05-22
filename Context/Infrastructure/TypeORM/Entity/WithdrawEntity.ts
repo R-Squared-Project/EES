@@ -89,6 +89,11 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
             type: String,
             nullable: true,
         },
+        externalBlockchainRedeemTxHash: {
+            name: "external_blockchain_redeem_tx_hash",
+            type: String,
+            nullable: true,
+        },
     },
 });
 

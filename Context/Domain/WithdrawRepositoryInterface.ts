@@ -6,4 +6,6 @@ export default interface WithdrawRepositoryInterface {
     getByTxHash: (txHash: string) => Promise<Withdraw | null>;
     getById: (id: string) => Promise<Withdraw | null>;
     getByRequestId: (requestId: string) => Promise<Withdraw | null>;
+    getByRedeemTxHash: (txHash: string) => Promise<Withdraw | null>;
+    getByExternalContractId: (contractId: string) => Promise<Withdraw | null>;
 }
