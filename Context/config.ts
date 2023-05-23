@@ -6,7 +6,8 @@ const config = {
     ...Config.config(),
     contract: {
         minimum_timelock: parseInt(process.env.MINUMUM_TIMELOCK as string),
-        withdrawn_timelock: parseInt(process.env.WITHDRAW_TIMELOCK as string),
+        withdraw_internal_timelock: parseInt(process.env.WITHDRAW_INTERNAL_TIMELOCK as string),
+        withdraw_external_timelock: parseInt(process.env.WITHDRAW_EXTERNAL_TIMELOCK as string),
     },
     eth: {
         providers: {
@@ -18,8 +19,9 @@ const config = {
         network: process.env.ETH_NETWORK_NAME as string,
         private_key: process.env.ETH_PRIVATE_KEY as string,
         minimum_deposit_amount: Web3.utils.toBN(Web3.utils.toWei(process.env.MINIMUM_DEPOSIT_AMOUNT as string)),
-        minimum_withdraw_amount: parseFloat(process.env.MINIMUM_WITHDRAW_AMOUNT as string),
-        contract_address: process.env.ETH_CONTRACT_ADDRESS as string,
+        minimum_withdraw_amount: parseFloat(process.env.MINIMUM_DEPOSIT_AMOUNT as string),
+        deposit_contract_address: process.env.ETH_DEPOSIT_CONTRACT_ADDRESS as string,
+        withdraw_contract_address: process.env.ETH_WITHDRAW_CONTRACT_ADDRESS as string,
         deploy_block_number: parseInt(process.env.ETH_DEPLOY_CONTRACT_BLOCK as string, 10),
         receiver: process.env.ETH_RECEIVER as string,
         required_block_confirmations: parseInt(process.env.ETH_REQUIRED_BLOCK_CONFIRMATIONS as string, 10),

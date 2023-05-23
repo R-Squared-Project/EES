@@ -83,6 +83,11 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
             type: String,
             nullable: true,
         },
+        txHash: {
+            name: "tx_hash",
+            type: String,
+            nullable: true,
+        },
     },
 });
 

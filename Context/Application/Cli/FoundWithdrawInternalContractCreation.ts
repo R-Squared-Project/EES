@@ -8,6 +8,7 @@ import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterf
 import { Inject } from "@nestjs/common";
 import CheckInternalWithdrawalOperation from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperation";
 import CheckInternalWithdrawalOperationHandler from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperationHandler";
+import AfterWithdrawReadyToProcess from "context/Subscribers/AfterWithdrawReadyToProcess";
 
 interface FoundWithdrawInternalContractCreationOptions {
     interval: number;
@@ -26,6 +27,7 @@ export class FoundWithdrawInternalContractCreation extends CommandRunner {
     }
 
     async run(passedParam: string[], options: FoundWithdrawInternalContractCreationOptions): Promise<void> {
+        new AfterWithdrawReadyToProcess();
         await this.cycleProcess(options.interval);
     }
 

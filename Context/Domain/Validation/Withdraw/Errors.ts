@@ -5,3 +5,21 @@ export class ReadyToProcessError extends DomainError {
         super(`WithdrawId: ${id}. Status ${status} is invalid.`);
     }
 }
+
+export class CreateWithdrawExternalContractStatusError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`WithdrawId: ${id}. Status ${status} is invalid.`);
+    }
+}
+
+export class InvalidTimelockError extends DomainError {
+    constructor(id: string) {
+        super(`WithdrawId: ${id}. Timelock is invalid, must be later.`);
+    }
+}
+
+export class SendInReplyStatusError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`WithdrawId: ${id}. Status ${status} is invalid.`);
+    }
+}

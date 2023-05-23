@@ -3,10 +3,12 @@ import WithdrawRequest from "./WithdrawRequest";
 import ExternalContract from "./ExternalContract";
 import InternalContract from "context/Domain/InternalContract";
 import ReadyToProcess from "context/Domain/Validation/Withdraw/ReadyToProcess";
+import WithdrawReadyToProcessEvent from "context/Domain/Event/WithdrawReadyToProcessEvent";
+import SendInReply from "context/Domain/Validation/Withdraw/SendInReply";
 
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 5;
 export const STATUS_READY_TO_PROCESS = 10;
-export const STATUS_REDEEMED_IN_INTERNAL_BLOCKCHAIN = 15;
+export const STATUS_SEND_IN_REPLY = 15;
 export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20;
 export const STATUS_COMPLETED = 25;
 export const STATUS_BURNED = 105;
@@ -22,6 +24,7 @@ export default class Withdraw extends AggregateRoot {
     public amountOfHTLC: number | null = null;
     public amountOfWithdrawalFee: number | null = null;
     public assetOfWithdrawalFee: string | null = null;
+    public txHash: string | null = null;
 
     constructor(
         public withdrawRequest: WithdrawRequest,
@@ -61,5 +64,13 @@ export default class Withdraw extends AggregateRoot {
         this.assetOfWithdrawalFee = assetOfWithdrawalFee;
         new ReadyToProcess(this).validate();
         this.status = STATUS_READY_TO_PROCESS;
+
+        this.addDomainEvent(new WithdrawReadyToProcessEvent(this.id.toValue()));
+    }
+
+    public sentInReply(txHash: string) {
+        this.txHash = txHash;
+        new SendInReply(this).validate();
+        this.status = STATUS_SEND_IN_REPLY;
     }
 }

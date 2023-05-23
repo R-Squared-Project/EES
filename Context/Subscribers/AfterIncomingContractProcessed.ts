@@ -4,13 +4,13 @@ import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContrac
 import RabbitMQ from "context/Queue/RabbitMQ";
 
 export default class AfterIncomingContractProcessed implements HandlerInterface<IncomingContractProcessedEvent> {
-    private readonly sender: RabbitMQ
+    private readonly sender: RabbitMQ;
 
     constructor() {
-        this.sender = new RabbitMQ()
+        this.sender = new RabbitMQ();
         this.sender.initProduce().then(() => {
             this.setupSubscriptions();
-        })
+        });
     }
 
     setupSubscriptions() {
@@ -19,8 +19,8 @@ export default class AfterIncomingContractProcessed implements HandlerInterface<
     }
 
     private async onDepositConfirmedEvent(event: IncomingContractProcessedEvent) {
-        await this.sender.publish('create_in_internal_blockchain', {
-            deposit_id: event.depositId
-        })
+        await this.sender.publish("create_in_internal_blockchain", {
+            withdraw_id: event.depositId,
+        });
     }
 }

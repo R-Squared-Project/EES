@@ -235,23 +235,15 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getInternalAsset(): Promise<Map<string, any>> {
-        const asset = await FetchChain("getAsset", this.assetSymbol);
-
-        if (asset === null) {
-            throw new Errors.AssetNotFoundError(this.assetSymbol);
-        }
-
-        return asset;
+        return await this.getAsset(this.assetSymbol);
     }
 
     async getAsset(assetId: string): Promise<Map<string, any>> {
-        const asset = await this.getObject(assetId);
+        const [result] = await Apis.instance()
+            .db_api()
+            .exec("get_assets", [[assetId]]);
 
-        if (asset === null) {
-            throw new Errors.AssetNotFoundError(assetId);
-        }
-
-        return asset;
+        return Map(result);
     }
 
     async getAccountHistory(): Promise<WithdrawTransaction[]> {

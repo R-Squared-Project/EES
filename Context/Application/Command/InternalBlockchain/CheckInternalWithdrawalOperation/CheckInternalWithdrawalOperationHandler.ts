@@ -75,7 +75,7 @@ export default class CheckInternalWithdrawalOperationHandler
             throw new Errors.InvalidAsset(withdraw);
         }
 
-        if (htlcOperation.get("op")[1].claim_period_seconds < config.contract.withdrawn_timelock) {
+        if (htlcOperation.get("op")[1].claim_period_seconds < config.contract.withdraw_internal_timelock) {
             throw new Errors.InvalidTimelock(withdraw);
         }
 
