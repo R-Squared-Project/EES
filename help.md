@@ -31,5 +31,3 @@ yarn found:withdraw_internal_contract_creation
 
 ### Worker Create Withdrawal External Contract
 yarn worker:create_withdrawal_external_contract
-
-
