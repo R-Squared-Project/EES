@@ -31,7 +31,3 @@ yarn found:withdraw_internal_contract_creation
 
 ### Worker Create Withdrawal External Contract
 yarn worker:create_withdrawal_external_contract
-
-
--BlAKFe<?CS%gnL*,#l2XRsH@ejJlKY*
-c87fa93c9ea73f27a4ea0f2092da59efb601f96d6789b16d6796b905cac654b8
