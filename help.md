@@ -38,3 +38,7 @@ yarn monitor:ethereum_transactions
 #### Monitor ETH transaction (Contract Redeem)
 yarn monitor:ethereum_transactions
 
+#### Worker to Confirm Withdraw External Contract Redeemed
+yarn worker:withdraw_external_contract_redeemed
+
+
