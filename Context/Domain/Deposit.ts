@@ -65,7 +65,6 @@ export default class Deposit extends AggregateRoot {
 
     static create(depositRequest: DepositRequest, externalContract: ExternalContract): Deposit {
         const deposit = new Deposit(depositRequest, externalContract);
-        deposit.addDomainEvent(new IncomingContractProcessedEvent(deposit.id.toValue()));
 
         return deposit;
     }
