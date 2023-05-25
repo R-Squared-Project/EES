@@ -21,7 +21,7 @@ export default interface RepositoryInterface {
     getBurnOperations: (account: string) => Promise<OperationBurn[]>;
     getInternalAsset: () => Promise<Map<string, any>>;
     getAsset: (assetId: string) => Promise<Map<string, any>>;
-    getAccountHistory: () => Promise<WithdrawTransaction[]>;
+    getAccountHistory: (lastProcessedAccountHistoryOperation: string) => Promise<WithdrawTransaction[]>;
     getAccount(accountId: string): Promise<Map<string, any>>;
     getEesAccount: () => Promise<Map<string, any>>;
     getObject: (objectId: string) => Promise<Map<string, any>>;

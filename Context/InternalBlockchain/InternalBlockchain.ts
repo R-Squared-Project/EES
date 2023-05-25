@@ -93,8 +93,8 @@ class InternalBlockchain {
         return await this._repository.getAsset(assetId);
     }
 
-    async getAccountHistory(): Promise<WithdrawTransaction[]> {
-        return await this.repository.getAccountHistory();
+    async getAccountHistory(lastProcessedAccountHistoryOperation: string): Promise<WithdrawTransaction[]> {
+        return await this.repository.getAccountHistory(lastProcessedAccountHistoryOperation);
     }
 
     async getAccount(accountId: string): Promise<Map<string, any>> {

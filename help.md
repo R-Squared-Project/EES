@@ -23,11 +23,15 @@ yarn worker:external_contract_redeem
 
 ## Withdraw
 
-### Monitor withdraw internal contract created
+#### Monitor withdraw internal contract created
 yarn monitor:withdraw_internal_contract_created
 
-### Found Withdraw  Internal Contract Creation
+#### Found Withdraw  Internal Contract Creation
 yarn found:withdraw_internal_contract_creation
 
-### Worker Create Withdrawal External Contract
+#### Worker Create Withdrawal External Contract
 yarn worker:create_withdrawal_external_contract
+
+#### Monitor ETH transaction
+yarn monitor:ethereum_transactions
+

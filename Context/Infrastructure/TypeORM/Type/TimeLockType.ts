@@ -1,17 +1,17 @@
-import {EntitySchemaColumnOptions} from "typeorm/entity-schema/EntitySchemaColumnOptions";
+import { EntitySchemaColumnOptions } from "typeorm/entity-schema/EntitySchemaColumnOptions";
 import TimeLock from "context/Domain/ValueObject/TimeLock";
 
 const TimeLockType: EntitySchemaColumnOptions = {
-    type: 'datetime',
-    name: 'time_lock',
+    type: "datetime",
+    name: "time_lock",
     transformer: {
         to(timeLock: TimeLock): number {
-            return timeLock.value.format('YYYY-MM-DD hh:mm:ss')
+            return timeLock.value.format("YYYY-MM-DD hh:mm:ss");
         },
-        from(value: Date): TimeLock {
-            return TimeLock.fromDate(value)
-        }
-    }
-}
+        from(value: Date | null): TimeLock | null {
+            return value ? TimeLock.fromDate(value) : null;
+        },
+    },
+};
 
-export default TimeLockType
+export default TimeLockType;

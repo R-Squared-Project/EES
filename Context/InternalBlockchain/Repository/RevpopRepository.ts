@@ -252,11 +252,15 @@ export default class RevpopRepository implements RepositoryInterface {
         return Map(result);
     }
 
-    async getAccountHistory(): Promise<WithdrawTransaction[]> {
-        const mostRecently = "1." + ChainTypes.object_type.operation_history + ".0";
+    async getAccountHistory(lastProcessedAccountHistoryOperation: string): Promise<WithdrawTransaction[]> {
         const revpopOperations = await Apis.instance()
             .history_api()
-            .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently]);
+            .exec("get_account_history", [
+                this.eesAccount,
+                lastProcessedAccountHistoryOperation,
+                100,
+                "1." + ChainTypes.object_type.operation_history + ".0",
+            ]);
 
         const transactions = [];
         for (const revpopOperation of revpopOperations) {

@@ -1,4 +1,5 @@
 export default class WithdrawTransaction {
+    public id: string | undefined;
     public blockNumber: number | undefined;
     public transactionInBlock: number | undefined;
     public transferId: string | undefined;
