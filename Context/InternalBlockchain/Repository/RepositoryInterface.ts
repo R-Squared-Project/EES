@@ -26,4 +26,5 @@ export default interface RepositoryInterface {
     getEesAccount: () => Promise<Map<string, any>>;
     getObject: (objectId: string) => Promise<Map<string, any>>;
     getLastIrreversibleBlockNumber: () => Promise<number>;
+    withdrawRedeem: (preimage: string, contractId: string, amount: string) => Promise<void>;
 }

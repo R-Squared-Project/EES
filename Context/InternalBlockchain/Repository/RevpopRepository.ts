@@ -302,4 +302,46 @@ export default class RevpopRepository implements RepositoryInterface {
 
         return parseInt(dynamicProperties.get("last_irreversible_block_num"));
     }
+
+    async withdrawRedeem(preimage: string, contractId: string, amount: string): Promise<void> {
+        const accountTo = await this.getEesAccount();
+        const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
+        const asset = await this.getAsset(this.assetSymbol);
+
+        if (asset === null) {
+            throw new Errors.AssetNotFoundError(this.assetSymbol);
+        }
+
+        const txRedeem = new TransactionBuilder();
+        txRedeem.add_type_operation("htlc_redeem", {
+            preimage: preimage.replace("0x", ""),
+            fee: {
+                amount: 0,
+                asset_id: asset.get("id"),
+            },
+            htlc_id: contractId,
+            redeemer: accountTo.get("id"),
+        });
+
+        txRedeem.add_type_operation("asset_reserve", {
+            fee: {
+                amount: 0,
+                asset_id: 0,
+            },
+            payer: accountTo.get("id"),
+            amount_to_reserve: {
+                amount: amount,
+                asset_id: asset.get("id"),
+            },
+        });
+
+        txRedeem.set_required_fees();
+        txRedeem.add_signer(privateKey);
+
+        try {
+            await txRedeem.broadcast();
+        } catch (e: unknown) {
+            throw new Errors.CreateHtlcError();
+        }
+    }
 }

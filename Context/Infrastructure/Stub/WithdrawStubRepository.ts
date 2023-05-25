@@ -1,5 +1,8 @@
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
-import Withdraw, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
+import Withdraw, {
+    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
+    STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
+} from "context/Domain/Withdraw";
 
 export default class WithdrawStubRepository implements WithdrawRepositoryInterface {
     public _exists = false;
@@ -60,5 +63,13 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
         }
 
         return Promise.resolve(null);
+    }
+
+    getByRedeemStatus(): Promise<Withdraw[]> {
+        const withdraws = Object.values(this._withdraws).filter((withdraw: Withdraw) => {
+            return withdraw.status === STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN;
+        });
+
+        return Promise.resolve(withdraws);
     }
 }

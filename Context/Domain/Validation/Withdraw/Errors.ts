@@ -29,3 +29,15 @@ export class ReadyToSignStatusError extends DomainError {
         super(`WithdrawId: ${id}. Status ${status} is invalid.`);
     }
 }
+
+export class RedeemError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`WithdrawId: ${id}. Status ${status} is invalid.`);
+    }
+}
+
+export class RedeemedError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`WithdrawId: ${id}. Status ${status} is invalid.`);
+    }
+}

@@ -112,6 +112,10 @@ class InternalBlockchain {
     async getLastIrreversibleBlockNumber(): Promise<number> {
         return await this.repository.getLastIrreversibleBlockNumber();
     }
+
+    async withdrawRedeem(preimage: string, contractId: string, amount: string) {
+        return await this.repository.withdrawRedeem(preimage, contractId, amount);
+    }
 }
 
 export default InternalBlockchain;

@@ -59,6 +59,11 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
             type: String,
             nullable: true,
         },
+        secret: {
+            name: "secret",
+            type: String,
+            nullable: true,
+        },
         hashlock: {
             name: "hashlock",
             type: String,

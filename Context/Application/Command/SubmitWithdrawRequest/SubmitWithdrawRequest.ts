@@ -2,7 +2,9 @@ export default class SubmitWithdrawRequest {
     constructor(
         private _revpopAccount: string,
         private _amountToPayInRVETH: number,
-        private _addressOfUserInEthereum: string
+        private _addressOfUserInEthereum: string,
+        private _withdrawalFeeAmount: number,
+        private _withdrawalFeeCurrency: string
     ) {}
 
     get revpopAccount(): string {
@@ -15,5 +17,13 @@ export default class SubmitWithdrawRequest {
 
     get addressOfUserInEthereum(): string {
         return this._addressOfUserInEthereum;
+    }
+
+    get withdrawalFeeAmount(): number {
+        return this._withdrawalFeeAmount;
+    }
+
+    get withdrawalFeeCurrency(): string {
+        return this._withdrawalFeeCurrency;
     }
 }

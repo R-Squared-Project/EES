@@ -1,7 +1,10 @@
 import { DataSource } from "typeorm";
 import { Inject, Injectable } from "@nestjs/common";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
-import Withdraw, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
+import Withdraw, {
+    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
+    STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
+} from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import InternalContract from "context/Domain/InternalContract";
 import ExternalContract from "context/Domain/ExternalContract";
@@ -36,9 +39,7 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
         return await this._datasource
             .getRepository<Withdraw>(Withdraw)
             .createQueryBuilder("withdraw")
-            // .leftJoinAndSelect("withdraw.externalContract", "externalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
-            // .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .where("withdraw.status = :status", { status: STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN })
             .getMany();
     }
@@ -58,7 +59,6 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .getRepository<Withdraw>(Withdraw)
             .createQueryBuilder("withdraw")
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
-            // .leftJoinAndSelect("withdraw.externalContract", "externalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdraw.txHash = :withdrawTxHash", { withdrawTxHash: txHash })
             .getOne();
@@ -95,5 +95,16 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("externalContract.id = :contractId", { contractId })
             .getOne();
+    }
+
+    async getByRedeemStatus(): Promise<Withdraw[]> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .where("withdraw.status = :status", { status: STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN })
+            .getMany();
     }
 }

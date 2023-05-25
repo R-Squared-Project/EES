@@ -41,4 +41,5 @@ yarn monitor:ethereum_transactions
 #### Worker to Confirm Withdraw External Contract Redeemed
 yarn worker:withdraw_external_contract_redeemed
 
-
+#### Redeem Withdrawal Internal Contract
+yarn execute:withdraw_internal_contract_redeem
