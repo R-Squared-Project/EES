@@ -1,15 +1,15 @@
 import ChainedHandlerInterface from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
 import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
-import ProcessIncomingContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
-import ProcessIncomingContractCreation from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
 import { Injectable } from "@nestjs/common";
-import GetDepositLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastContractsHandler";
+import ProcessWithdrawContractCreation from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreation";
+import ProcessWithdrawContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreationHandler";
+import GetWithdrawLastContractsHandler from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastContractsHandler";
 
 @Injectable()
-export default class IncomingContractsCreationsProcessingLink implements ChainedHandlerInterface {
+export default class WithdrawContractsCreationsProcessingLink implements ChainedHandlerInterface {
     constructor(
-        private getLastContractsHandler: GetDepositLastContractsHandler,
-        private processIncomingContractCreationHandler: ProcessIncomingContractCreationHandler
+        private getLastContractsHandler: GetWithdrawLastContractsHandler,
+        private processWithdrawContractCreationHandler: ProcessWithdrawContractCreationHandler
     ) {}
     async execute(command: ChainedHandlerCommand): Promise<void> {
         const lastContracts = await this.getLastContractsHandler.execute(command);
@@ -17,11 +17,11 @@ export default class IncomingContractsCreationsProcessingLink implements Chained
             console.log(`Process transaction ${event.transactionHash}`);
 
             try {
-                const command = new ProcessIncomingContractCreation(
+                const command = new ProcessWithdrawContractCreation(
                     event.transactionHash,
                     event.returnValues.contractId
                 );
-                await this.processIncomingContractCreationHandler.execute(command);
+                await this.processWithdrawContractCreationHandler.execute(command);
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log(`Error while processed transaction ${event.transactionHash}: `, e.message);

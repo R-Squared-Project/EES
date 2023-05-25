@@ -21,4 +21,24 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
     getById(id: string): Promise<Withdraw | null> {
         return Promise.resolve(this._withdraws[id] ?? null);
     }
+
+    getByRequestId(requestId: string): Promise<Withdraw | null> {
+        for (const withdraw of Object.values(this._withdraws)) {
+            if (withdraw.withdrawRequest.id.toString() === requestId) {
+                return Promise.resolve(withdraw);
+            }
+        }
+
+        return Promise.resolve(null);
+    }
+
+    getByTxHash(txHash: string): Promise<Withdraw | null> {
+        for (const withdraw of Object.values(this._withdraws)) {
+            if (withdraw.externalContract && withdraw.externalContract.txHash === txHash) {
+                return Promise.resolve(withdraw);
+            }
+        }
+
+        return Promise.resolve(null);
+    }
 }

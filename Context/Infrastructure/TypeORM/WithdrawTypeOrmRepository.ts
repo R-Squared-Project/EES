@@ -4,6 +4,8 @@ import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterf
 import Withdraw, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import InternalContract from "context/Domain/InternalContract";
+import ExternalContract from "context/Domain/ExternalContract";
+import Deposit from "context/Domain/Deposit";
 
 @Injectable()
 export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInterface {
@@ -20,6 +22,12 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             await this._datasource
                 .getRepository<InternalContract>(InternalContract)
                 .upsert(withdraw.internalContract, ["idString"]);
+        }
+
+        if (withdraw.externalContract) {
+            await this._datasource
+                .getRepository<ExternalContract>(ExternalContract)
+                .upsert(withdraw.externalContract, ["idString"]);
         }
 
         await this._datasource.getRepository<Withdraw>(Withdraw).upsert(withdraw, ["id"]);
@@ -43,6 +51,28 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdraw.id = :withdrawId", { withdrawId: id })
+            .getOne();
+    }
+
+    async getByTxHash(txHash: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            // .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .where("withdraw.txHash = :withdrawTxHash", { withdrawTxHash: txHash })
+            .getOne();
+    }
+
+    async getByRequestId(requestId: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .where("withdrawRequest.id = :requestId", { requestId: requestId })
             .getOne();
     }
 }

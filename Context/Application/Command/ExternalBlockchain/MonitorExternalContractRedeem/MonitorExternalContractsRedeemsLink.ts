@@ -1,27 +1,18 @@
-import ChainedHandlerInterface
-    from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
+import ChainedHandlerInterface from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerInterface";
 import ChainedHandlerCommand from "context/Application/Command/ExternalBlockchain/ChainProcessor/ChainedHandlerCommand";
-import ProcessIncomingContractCreationHandler
-    from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreationHandler";
-import ProcessIncomingContractCreation
-    from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/ProcessIncomingContractCreation";
-import AfterIncomingContractProcessed from "context/Subscribers/AfterIncomingContractProcessed";
-import {Injectable} from "@nestjs/common";
-import GetLastRedeemsHandler
-    from "context/Application/Query/ExternalBlockchain/GetLastContractsEvents/GetLastRedeemsHandler";
-import ExternalContractRedeem
-    from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeem";
-import ExternalContractRedeemHandler
-    from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
+import { Injectable } from "@nestjs/common";
+import ExternalContractRedeem from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeem";
+import ExternalContractRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/ExternalContractRedeemHandler";
+import GetDepositLastRedeemsHandler from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastRedeemsHandler";
 
 @Injectable()
 export default class MonitorExternalContractsRedeemsLink implements ChainedHandlerInterface {
     constructor(
-        private getLastRedeemsHandler: GetLastRedeemsHandler,
+        private getLastRedeemsHandler: GetDepositLastRedeemsHandler,
         private externalContractRedeemHandler: ExternalContractRedeemHandler
     ) {}
     async execute(command: ChainedHandlerCommand): Promise<void> {
-        const lastContracts = await this.getLastRedeemsHandler.execute(command)
+        const lastContracts = await this.getLastRedeemsHandler.execute(command);
         for (const event of lastContracts.events) {
             console.log(`Process transaction ${event.transactionHash}`);
 
@@ -31,10 +22,9 @@ export default class MonitorExternalContractsRedeemsLink implements ChainedHandl
                 console.log(`Redeem transaction ${event.transactionHash} successfully queued`);
             } catch (e: unknown) {
                 if (e instanceof Error) {
-                    console.log('Error in ', typeof this, ':', e.message);
+                    console.log("Error in ", typeof this, ":", e.message);
                 }
             }
         }
     }
-
 }

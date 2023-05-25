@@ -2,7 +2,8 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { BlockTransactionString, TransactionReceipt } from "web3-eth";
 import { Contract as ContractWeb3, EventData } from "web3-eth-contract";
-import HashedTimeLockAbi from "../../../src/assets/abi/HashedTimelock.json";
+import DepositHashedTimeLockAbi from "../../../src/assets/abi/DepositHashedTimelock.json";
+import WithdrawHashedTimeLockAbi from "../../../src/assets/abi/WithdrawHashedTimelock.json";
 import RepositoryInterface from "./RepositoryInterface";
 import Contract from "../Contract";
 import config from "context/config";
@@ -24,11 +25,11 @@ export default class EthereumRepository implements RepositoryInterface {
         );
 
         this._depositContract = new this._web3.eth.Contract(
-            HashedTimeLockAbi as AbiItem[],
+            DepositHashedTimeLockAbi as AbiItem[],
             config.eth?.deposit_contract_address
         );
         this._withdrawContract = new this._web3.eth.Contract(
-            HashedTimeLockAbi as AbiItem[],
+            WithdrawHashedTimeLockAbi as AbiItem[],
             config.eth?.withdraw_contract_address
         );
     }
@@ -43,9 +44,27 @@ export default class EthereumRepository implements RepositoryInterface {
         return tx.blockNumber !== null && txReceipt.status && !log.removed;
     }
 
-    async load(txHash: string, contractId: string): Promise<Contract | null> {
+    async loadDepositContract(txHash: string, contractId: string): Promise<Contract | null> {
         const contractData = await this._depositContract.methods.getContract(contractId).call({
             from: config.eth.deposit_contract_address,
+        });
+
+        return new Contract(
+            contractId,
+            contractData.sender,
+            contractData.receiver,
+            contractData.amount,
+            contractData.hashlock,
+            contractData.timelock,
+            contractData.withdrawn,
+            contractData.refunded,
+            contractData.preimage
+        );
+    }
+
+    async loadWithdrawContract(txHash: string, contractId: string): Promise<Contract | null> {
+        const contractData = await this._withdrawContract.methods.getContract(contractId).call({
+            from: config.eth.withdraw_contract_address,
         });
 
         return new Contract(
@@ -69,12 +88,20 @@ export default class EthereumRepository implements RepositoryInterface {
         return await this._web3.eth.getBlock(number);
     }
 
-    async loadHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    async loadDepositHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return await this._depositContract.getPastEvents("LogHTLCNew", {
             fromBlock: fromBlock,
             toBlock,
         });
     }
+
+    async loadWithdrawHTLCNewEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return await this._withdrawContract.getPastEvents("LogHTLCNew", {
+            fromBlock: fromBlock,
+            toBlock,
+        });
+    }
+
     async loadHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return await this._depositContract.getPastEvents("LogHTLCWithdraw", {
             fromBlock: fromBlock,

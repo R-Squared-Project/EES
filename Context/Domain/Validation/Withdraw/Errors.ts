@@ -23,3 +23,9 @@ export class SendInReplyStatusError extends DomainError {
         super(`WithdrawId: ${id}. Status ${status} is invalid.`);
     }
 }
+
+export class ReadyToSignStatusError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`WithdrawId: ${id}. Status ${status} is invalid.`);
+    }
+}
