@@ -66,7 +66,11 @@ export default class StubRepository implements RepositoryInterface {
         this._contract = null;
     }
 
-    loadHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+    loadDepositHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return Promise.resolve([]);
+    }
+
+    loadWithdrawHTLCRedeemEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return Promise.resolve([]);
     }
 

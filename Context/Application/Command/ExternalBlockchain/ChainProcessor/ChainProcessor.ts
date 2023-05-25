@@ -4,8 +4,9 @@ import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import Setting from "context/Setting/Setting";
 import { Injectable } from "@nestjs/common";
 import IncomingContractsCreationsProcessingLink from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/IncomingContractsCreationsProcessingLink";
-import MonitorExternalContractsRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalContractRedeem/MonitorExternalContractsRedeemsLink";
+import MonitorExternalDepositRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRedeem/MonitorExternalDepositRedeemsLink";
 import WithdrawContractsCreationsProcessingLink from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/WithdrawContractsCreationsProcessingLink";
+import MonitorExternalWithdrawRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRedeem/MonitorExternalWithdrawRedeemsLink";
 
 @Injectable()
 export default class ChainProcessor {
@@ -15,12 +16,14 @@ export default class ChainProcessor {
         private readonly externalBlockchain: ExternalBlockchain,
         private setting: Setting,
         private incomingContractsCreationsProcessingLink: IncomingContractsCreationsProcessingLink,
-        private monitorExternalContractsRedeemLink: MonitorExternalContractsRedeemsLink,
-        private withdrawContractsCreationsProcessingLink: WithdrawContractsCreationsProcessingLink
+        private monitorExternalDepositRedeemLink: MonitorExternalDepositRedeemsLink,
+        private withdrawContractsCreationsProcessingLink: WithdrawContractsCreationsProcessingLink,
+        private monitorExternalWithdrawRedeemsLink: MonitorExternalWithdrawRedeemsLink
     ) {
         this.handlers.push(incomingContractsCreationsProcessingLink);
-        this.handlers.push(monitorExternalContractsRedeemLink);
+        this.handlers.push(monitorExternalDepositRedeemLink);
         this.handlers.push(withdrawContractsCreationsProcessingLink);
+        this.handlers.push(monitorExternalWithdrawRedeemsLink);
     }
 
     public async execute(range: ChainedHandlerCommand): Promise<void> {
