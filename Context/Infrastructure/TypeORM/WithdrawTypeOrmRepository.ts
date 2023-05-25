@@ -5,7 +5,6 @@ import Withdraw, { STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN } from "context/Domain/
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import InternalContract from "context/Domain/InternalContract";
 import ExternalContract from "context/Domain/ExternalContract";
-import Deposit from "context/Domain/Deposit";
 
 @Injectable()
 export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInterface {
@@ -73,6 +72,28 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdrawRequest.id = :requestId", { requestId: requestId })
+            .getOne();
+    }
+
+    async getByRedeemTxHash(txHash: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .where("withdraw._externalBlockchainRedeemTxHash = :txHash", { txHash })
+            .getOne();
+    }
+
+    async getByExternalContractId(contractId: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .where("externalContract.id = :contractId", { contractId })
             .getOne();
     }
 }

@@ -17,6 +17,7 @@ export default class ExternalWithdrawRedeemHandler implements UseCase<ExternalWi
 
         await this.rabbitMQ.publish(this.rabbitMQ.EXTERNAL_WITHDRAW_CONTRACT_REDEEM, {
             txHash: command.txHash,
+            contractId: command.contractId,
         });
     }
 }

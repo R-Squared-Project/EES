@@ -19,6 +19,7 @@
     "monitor:withdraw_internal_contract_created": "ts-node -r tsconfig-paths/register cli.ts monitor-withdraw-internal-contract-created",
     "found:withdraw_internal_contract_creation": "ts-node -r tsconfig-paths/register cli.ts found-withdraw-internal-contract-creation",
     "worker:create_withdrawal_external_contract": "ts-node -r tsconfig-paths/register cli.ts worker-create-withdrawal-external-contract",
+    "worker:withdraw_external_contract_redeemed": "ts-node -r tsconfig-paths/register cli.ts worker-withdraw-external-contract-redeemed",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
