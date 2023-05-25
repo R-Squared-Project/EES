@@ -7,6 +7,8 @@ interface Request {
     revpopAccount: string;
     amountToPayInRVETH: number;
     addressOfUserInEthereum: string;
+    withdrawalFeeAmount: number;
+    withdrawalFeeCurrency: string;
 }
 
 @Controller("withdraw")
@@ -19,7 +21,9 @@ export default class SubmitWithdrawRequestController {
         const command = new SubmitWithdrawRequest(
             request.revpopAccount,
             request.amountToPayInRVETH,
-            request.addressOfUserInEthereum
+            request.addressOfUserInEthereum,
+            request.withdrawalFeeAmount,
+            request.withdrawalFeeCurrency
         );
 
         try {

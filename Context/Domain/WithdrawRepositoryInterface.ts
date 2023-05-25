@@ -8,4 +8,5 @@ export default interface WithdrawRepositoryInterface {
     getByRequestId: (requestId: string) => Promise<Withdraw | null>;
     getByRedeemTxHash: (txHash: string) => Promise<Withdraw | null>;
     getByExternalContractId: (contractId: string) => Promise<Withdraw | null>;
+    getByRedeemStatus: () => Promise<Withdraw[]>;
 }

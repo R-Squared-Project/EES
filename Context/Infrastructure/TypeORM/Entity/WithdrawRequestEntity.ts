@@ -32,6 +32,16 @@ const WithdrawRequestEntity = new EntitySchema<WithdrawRequest>({
             name: "address_of_user_in_ethereum",
             type: String,
         },
+        _withdrawalFeeAmount: {
+            name: "withdrawal_fee_amount",
+            type: "decimal",
+            precision: 15,
+            scale: 5,
+        },
+        _withdrawalFeeCurrency: {
+            name: "withdrawal_fee_currency",
+            type: String,
+        },
     },
 });
 

@@ -91,4 +91,8 @@ export default class StubRepository implements RepositoryInterface {
     async getLastIrreversibleBlockNumber(): Promise<number> {
         return 1000000;
     }
+
+    async withdrawRedeem(preimage: string, contractId: string, amount: string): Promise<void> {
+        return;
+    }
 }

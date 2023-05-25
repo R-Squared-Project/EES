@@ -2,8 +2,6 @@ import { UseCase } from "context/Core/Domain/UseCase";
 import SubmitWithdrawRequest from "./SubmitWithdrawRequest";
 import { DatabaseConnectionError } from "context/Infrastructure/Errors";
 import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
-import HashLock from "context/Domain/ValueObject/HashLock";
-import * as Errors from "./Errors";
 import WithdrawRequestRepositoryInterface from "context/Domain/WithdrawRequestRepositoryInterface";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import { Inject, Injectable } from "@nestjs/common";
@@ -19,7 +17,9 @@ export default class SubmitWithdrawRequestHandler implements UseCase<SubmitWithd
         const withdrawRequest = WithdrawRequest.create(
             revpopAccount,
             command.amountToPayInRVETH,
-            command.addressOfUserInEthereum
+            command.addressOfUserInEthereum,
+            command.withdrawalFeeAmount,
+            command.withdrawalFeeCurrency
         );
 
         try {

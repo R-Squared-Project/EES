@@ -9,7 +9,9 @@ export default class WithdrawRequest extends AggregateRoot {
     constructor(
         private _revpopAccount: RevpopAccount,
         private _amountToPayInRVETH: number,
-        private _addressOfUserInEthereum: string
+        private _addressOfUserInEthereum: string,
+        private _withdrawalFeeAmount: number,
+        private _withdrawalFeeCurrency: string
     ) {
         super();
         this._status = STATUS_CREATED;
@@ -31,12 +33,28 @@ export default class WithdrawRequest extends AggregateRoot {
         return this._status;
     }
 
+    get withdrawalFeeAmount(): number {
+        return this._withdrawalFeeAmount;
+    }
+
+    get withdrawalFeeCurrency(): string {
+        return this._withdrawalFeeCurrency;
+    }
+
     static create(
         revpopAccount: RevpopAccount,
         amountToPayInRVETH: number,
-        addressOfUserInEthereum: string
+        addressOfUserInEthereum: string,
+        withdrawalFeeAmount: number,
+        withdrawalFeeCurrency: string
     ): WithdrawRequest {
-        return new WithdrawRequest(revpopAccount, amountToPayInRVETH, addressOfUserInEthereum);
+        return new WithdrawRequest(
+            revpopAccount,
+            amountToPayInRVETH,
+            addressOfUserInEthereum,
+            withdrawalFeeAmount,
+            withdrawalFeeCurrency
+        );
     }
 
     withdrawCreated(): void {

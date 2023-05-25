@@ -44,11 +44,11 @@ export default class CheckInternalWithdrawalOperationHandler
                 transferOperation.get("op")[1].amount.amount,
                 transferOperation.get("op")[1].amount.asset_id
             );
-            this.withdrawRepository.save(command.withdraw);
+            await this.withdrawRepository.save(command.withdraw);
         } catch (error: unknown) {
             if (error instanceof HardFailError) {
                 command.withdraw.error(error.message);
-                this.withdrawRepository.save(command.withdraw);
+                await this.withdrawRepository.save(command.withdraw);
             }
         }
     }

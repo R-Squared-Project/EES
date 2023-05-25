@@ -8,6 +8,7 @@ import { TransactionReceipt } from "web3-eth";
 import * as process from "process";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
+import Contract from "context/ExternalBlockchain/Contract";
 
 @Injectable()
 export default class ConfirmWithdrawExternalContractRedeemedHandler {
@@ -47,7 +48,23 @@ export default class ConfirmWithdrawExternalContractRedeemedHandler {
             throw new Errors.ReversibleReceipt(String(receipt.blockNumber));
         }
 
-        withdraw.redeem(command.txHash);
+        const contract = await this.blockchainRepository.loadWithdrawContract(command.txHash, command.contractId);
+
+        this.checkContract(contract, command);
+
+        withdraw.redeem(command.txHash, contract?.preimage);
         this.withdrawRepository.save(withdraw);
+    }
+
+    checkContract(contract: Contract | null, command: ConfirmWithdrawExternalContractRedeemed): void {
+        if (!contract) {
+            throw new Errors.ContractNotFound(command.contractId, command.txHash);
+        }
+        if (!contract.withdrawn) {
+            throw new Errors.ContractWithdrawnIsFalse(contract.contractId);
+        }
+        if (!contract.preimage) {
+            throw new Errors.ContractWithoutPreimage(contract.contractId);
+        }
     }
 }

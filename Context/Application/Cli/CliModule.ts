@@ -44,6 +44,8 @@ import ExternalWithdrawRedeemHandler from "context/Application/Command/ExternalB
 import { WorkerWithdrawExternalContractRedeemed } from "context/Application/Cli/WorkerWithdrawExternalContractRedeemed";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import ConfirmWithdrawExternalContractRedeemedHandler from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemedHandler";
+import { ExecuteWithdrawInternalContractRedeem } from "context/Application/Cli/ExecuteWithdrawInternalContractRedeem";
+import ProcessWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ProcessWithdrawInternalContractRedeem/ProcessWithdrawInternalContractRedeemHandler";
 
 @Module({
     imports: [CoreModule],
@@ -85,6 +87,8 @@ import ConfirmWithdrawExternalContractRedeemedHandler from "context/Application/
         GetWithdrawLastRedeemsHandler,
         WorkerWithdrawExternalContractRedeemed,
         ConfirmWithdrawExternalContractRedeemedHandler,
+        ExecuteWithdrawInternalContractRedeem,
+        ProcessWithdrawInternalContractRedeemHandler,
         {
             provide: "DataSource",
             useValue: DataSource,

@@ -1,8 +1,8 @@
 import AbstractValidator from "./../AbstractValidator";
-import Withdraw, { STATUS_SEND_IN_REPLY } from "context/Domain/Withdraw";
+import Withdraw, { STATUS_READY_TO_SIGN, STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
 import * as Errors from "context/Domain/Validation/Withdraw/Errors";
 
-export default class ReadyToSign extends AbstractValidator {
+export default class WithdrawRedeem extends AbstractValidator {
     private withdraw: Withdraw;
 
     constructor(withdraw: Withdraw) {
@@ -16,8 +16,8 @@ export default class ReadyToSign extends AbstractValidator {
     }
 
     private validateStatus() {
-        if (this.withdraw.status !== STATUS_SEND_IN_REPLY) {
-            throw new Errors.ReadyToSignStatusError(this.withdraw.id.toValue(), this.withdraw.status);
+        if (this.withdraw.status !== STATUS_READY_TO_SIGN) {
+            throw new Errors.RedeemError(this.withdraw.id.toValue(), this.withdraw.status);
         }
     }
 }
