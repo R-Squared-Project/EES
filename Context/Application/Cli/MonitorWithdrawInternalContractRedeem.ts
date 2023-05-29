@@ -1,30 +1,31 @@
 import { Command, CommandRunner, Option } from "nest-commander";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
-import ConfirmWithdrawInternalContractCreatedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreatedHandler";
 import GetLastWithdrawContracts from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContracts";
 import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
-import ConfirmWithdrawInternalContractCreated from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreated";
+import ConfirmWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeemHandler";
+import ConfirmWithdrawInternalContractRedeem from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeem";
 import { OperationType } from "context/InternalBlockchain/WithdrawTransactionsCollection";
 
-interface MonitorWithdrawInternalContractCreatedOptions {
+interface MonitorWithdrawInternalContractRedeemOptions {
     interval: number;
 }
 
-const REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME = "revpop_last_processed_account_history_operation";
+const REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME =
+    "revpop_last_processed_account_history_withdraw_redeem_operation";
 
 @Command({
-    name: "monitor-withdraw-internal-contract-created",
-    description: "Monitor Withdraw Internal Contract Created",
+    name: "monitor-withdraw-internal-contract-redeem",
+    description: "Monitor Withdraw Internal Contract Redeem",
 })
-export class MonitorWithdrawInternalContractCreated extends CommandRunner {
+export class MonitorWithdrawInternalContractRedeem extends CommandRunner {
     constructor(
-        private readonly confirmWithdrawInternalContractCreateHandler: ConfirmWithdrawInternalContractCreatedHandler,
+        private readonly confirmWithdrawInternalContractRedeemHandler: ConfirmWithdrawInternalContractRedeemHandler,
         private readonly getLastWithdrawContractsHandler: GetLastWithdrawContractsHandler
     ) {
         super();
     }
 
-    async run(passedParam: string[], options: MonitorWithdrawInternalContractCreatedOptions): Promise<void> {
+    async run(passedParam: string[], options: MonitorWithdrawInternalContractRedeemOptions): Promise<void> {
         await this.cycleProcess(options.interval);
     }
 
@@ -39,20 +40,20 @@ export class MonitorWithdrawInternalContractCreated extends CommandRunner {
 
     private async process() {
         const queryGetLastWithdrawContracts = new GetLastWithdrawContracts(
-            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME,
-            OperationType.Create
+            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME,
+            OperationType.Redeem
         );
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
-        const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractCreated");
+        const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractRedeem");
 
         console.log(`Found ${withdrawTransactions.transactions.length} transactions to processed.`);
 
         for (const transaction of withdrawTransactions.transactions) {
-            const query = new ConfirmWithdrawInternalContractCreated(transaction);
+            const query = new ConfirmWithdrawInternalContractRedeem(transaction);
 
             try {
-                await this.confirmWithdrawInternalContractCreateHandler.execute(query);
-                console.log(`Withdraw for transaction ${transaction.transactionId} created.`);
+                await this.confirmWithdrawInternalContractRedeemHandler.execute(query);
+                console.log(`Withdraw for transaction ${transaction.transactionId} redeemed.`);
             } catch (e) {
                 errorHandler.handle(e);
             }

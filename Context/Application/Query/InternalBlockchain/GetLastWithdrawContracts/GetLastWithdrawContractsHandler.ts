@@ -8,8 +8,6 @@ import { WithdrawTransactionsCollection } from "context/InternalBlockchain/Withd
 //@ts-ignore
 import { ChainTypes } from "@revolutionpopuli/revpopjs";
 
-const REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME = "revpop_last_processed_account_history_operation";
-
 @Injectable()
 export default class GetLastWithdrawContractsHandler implements UseCase<GetLastWithdrawContracts, Response> {
     public constructor(
@@ -19,12 +17,12 @@ export default class GetLastWithdrawContractsHandler implements UseCase<GetLastW
 
     public async execute(query: GetLastWithdrawContracts): Promise<Response> {
         const lastProcessedAccountHistoryOperation = await this.setting.load(
-            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME,
+            query.lastOperation,
             "1." + ChainTypes.object_type.operation_history + ".0"
         );
         const operations = await this.internalBlockchain.getAccountHistory(lastProcessedAccountHistoryOperation);
         const eesAccount = await this.internalBlockchain.getEesAccount();
-        const transactions = new WithdrawTransactionsCollection(eesAccount.get("id"));
+        const transactions = new WithdrawTransactionsCollection(eesAccount.get("id"), query.operationType);
 
         for (const operation of operations) {
             transactions.add(operation);
@@ -32,7 +30,7 @@ export default class GetLastWithdrawContractsHandler implements UseCase<GetLastW
 
         const lastOperation = operations.shift();
         if (lastOperation) {
-            await this.setting.save(REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME, lastOperation.id);
+            await this.setting.save(query.lastOperation, lastOperation.id);
         }
 
         return new Response(transactions.transactions);

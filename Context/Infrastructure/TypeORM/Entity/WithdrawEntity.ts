@@ -99,6 +99,11 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
             type: String,
             nullable: true,
         },
+        internalRedeemBlockNumber: {
+            name: "internal_redeem_block_number",
+            type: Number,
+            nullable: true,
+        },
     },
 });
 

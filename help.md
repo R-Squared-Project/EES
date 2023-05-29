@@ -43,3 +43,12 @@ yarn worker:withdraw_external_contract_redeemed
 
 #### Redeem Withdrawal Internal Contract
 yarn execute:withdraw_internal_contract_redeem
+
+#### monitor-withdraw-internal-contract-redeem
+yarn monitor:withdraw_internal_contract_redeem
+
+deposit
+BP)15\%b(R%.yw[qW(y3|$UK^XD:5K:4
+
+withdraw
+X:;S~m1ynIZ2F7e#ysH1p^AVg%s5N,iz

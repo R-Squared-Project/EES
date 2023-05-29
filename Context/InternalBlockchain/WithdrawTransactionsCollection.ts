@@ -2,24 +2,35 @@
 import { ChainTypes } from "@revolutionpopuli/revpopjs";
 import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
 
+export enum OperationType {
+    Create,
+    Redeem,
+}
+
 export class WithdrawTransactionsCollection {
     private _transactions: WithdrawTransaction[] = [];
 
-    constructor(private eesAccountId: string) {}
+    constructor(private eesAccountId: string, private operationType: OperationType) {}
 
     get transactions(): WithdrawTransaction[] {
         return this._transactions;
     }
 
     public add(operation: any) {
-        if (this.isTransfer(operation)) {
+        if (this.isTransfer(operation) && this.operationType == OperationType.Create) {
             this.addTransferOperation(operation);
 
             return;
         }
 
-        if (this.isHtlcCreate(operation)) {
+        if (this.isHtlcCreate(operation) && this.operationType == OperationType.Create) {
             this.addHtlcCreateOperation(operation);
+
+            return;
+        }
+
+        if (this.isHtlcRedeem(operation) && this.operationType == OperationType.Redeem) {
+            this.addHtlcRedeemOperation(operation);
         }
     }
 
@@ -47,6 +58,18 @@ export class WithdrawTransactionsCollection {
 
     private isHtlcCreate(operation: any) {
         if (operation.op[0] != ChainTypes.operations.htlc_create) {
+            return false;
+        }
+
+        if (operation.op[1].to != this.eesAccountId) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private isHtlcRedeem(operation: any) {
+        if (operation.op[0] != ChainTypes.operations.htlc_redeemed) {
             return false;
         }
 
@@ -87,5 +110,11 @@ export class WithdrawTransactionsCollection {
         }
 
         return transaction;
+    }
+
+    private addHtlcRedeemOperation(operation: any) {
+        const transaction = this.getTransaction(operation);
+        transaction.blockNumber = operation.block_num;
+        transaction.htlcId = operation.op[1].htlc_id;
     }
 }
