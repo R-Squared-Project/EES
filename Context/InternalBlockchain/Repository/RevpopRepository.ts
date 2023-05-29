@@ -266,7 +266,8 @@ export default class RevpopRepository implements RepositoryInterface {
         for (const revpopOperation of revpopOperations) {
             if (
                 revpopOperation["op"][0] == ChainTypes.operations.transfer ||
-                revpopOperation["op"][0] == ChainTypes.operations.htlc_create
+                revpopOperation["op"][0] == ChainTypes.operations.htlc_create ||
+                revpopOperation["op"][0] == ChainTypes.operations.htlc_redeemed
             ) {
                 transactions.push(revpopOperation);
             }

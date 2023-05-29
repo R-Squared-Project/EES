@@ -4,6 +4,7 @@ import ConfirmWithdrawInternalContractCreatedHandler from "context/Application/C
 import GetLastWithdrawContracts from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContracts";
 import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
 import ConfirmWithdrawInternalContractCreated from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreated";
+import { OperationType } from "context/InternalBlockchain/WithdrawTransactionsCollection";
 
 interface MonitorWithdrawInternalContractCreatedOptions {
     interval: number;
@@ -38,7 +39,8 @@ export class MonitorWithdrawInternalContractCreated extends CommandRunner {
 
     private async process() {
         const queryGetLastWithdrawContracts = new GetLastWithdrawContracts(
-            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME
+            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME,
+            OperationType.Create
         );
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
         const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractCreated");

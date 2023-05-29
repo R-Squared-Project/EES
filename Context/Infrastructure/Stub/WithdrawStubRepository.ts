@@ -72,4 +72,14 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
 
         return Promise.resolve(withdraws);
     }
+
+    getByInternalContractId(contractId: string): Promise<Withdraw | null> {
+        for (const withdraw of Object.values(this._withdraws)) {
+            if (withdraw.internalContract?.idString === contractId) {
+                return Promise.resolve(withdraw);
+            }
+        }
+
+        return Promise.resolve(null);
+    }
 }

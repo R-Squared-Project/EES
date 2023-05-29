@@ -22,7 +22,7 @@ export default class GetLastWithdrawContractsHandler implements UseCase<GetLastW
         );
         const operations = await this.internalBlockchain.getAccountHistory(lastProcessedAccountHistoryOperation);
         const eesAccount = await this.internalBlockchain.getEesAccount();
-        const transactions = new WithdrawTransactionsCollection(eesAccount.get("id"));
+        const transactions = new WithdrawTransactionsCollection(eesAccount.get("id"), query.operationType);
 
         for (const operation of operations) {
             transactions.add(operation);

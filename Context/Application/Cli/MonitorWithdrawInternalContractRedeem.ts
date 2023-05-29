@@ -2,9 +2,9 @@ import { Command, CommandRunner, Option } from "nest-commander";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import GetLastWithdrawContracts from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContracts";
 import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
-import ConfirmWithdrawInternalContractCreated from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreated";
 import ConfirmWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeemHandler";
 import ConfirmWithdrawInternalContractRedeem from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeem";
+import { OperationType } from "context/InternalBlockchain/WithdrawTransactionsCollection";
 
 interface MonitorWithdrawInternalContractRedeemOptions {
     interval: number;
@@ -40,7 +40,8 @@ export class MonitorWithdrawInternalContractRedeem extends CommandRunner {
 
     private async process() {
         const queryGetLastWithdrawContracts = new GetLastWithdrawContracts(
-            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME
+            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME,
+            OperationType.Redeem
         );
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
         const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractRedeem");

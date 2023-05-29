@@ -31,6 +31,7 @@ export default class Withdraw extends AggregateRoot {
     public assetOfWithdrawalFee: string | null = null;
     public txHash: string | null = null;
     public externalBlockchainRedeemTxHash: string | null = null;
+    public internalRedeemBlockNumber: number | null = null;
 
     constructor(
         public withdrawRequest: WithdrawRequest,
@@ -100,5 +101,9 @@ export default class Withdraw extends AggregateRoot {
     public redeemed() {
         new WithdrawRedeemed(this).validate();
         this.status = STATUS_REDEEMED;
+    }
+
+    public setInternalRedeemBlockNumber(blockNumber: number) {
+        this.internalRedeemBlockNumber = blockNumber;
     }
 }
