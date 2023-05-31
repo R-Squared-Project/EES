@@ -41,3 +41,9 @@ export class RedeemedError extends DomainError {
         super(`WithdrawId: ${id}. Status ${status} is invalid.`);
     }
 }
+
+export class ProcessedError extends DomainError {
+    constructor(id: string, status: number) {
+        super(`WithdrawId: ${id}. Status ${status} is invalid.`);
+    }
+}
