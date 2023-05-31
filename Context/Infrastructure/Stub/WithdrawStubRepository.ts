@@ -2,6 +2,7 @@ import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterf
 import Withdraw, {
     STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
     STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
+    STATUS_REDEEMED,
 } from "context/Domain/Withdraw";
 
 export default class WithdrawStubRepository implements WithdrawRepositoryInterface {
@@ -81,5 +82,13 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
         }
 
         return Promise.resolve(null);
+    }
+
+    getAllRedeemed(): Promise<Withdraw[]> {
+        const withdraws = Object.values(this._withdraws).filter((withdraw: Withdraw) => {
+            return withdraw.status === STATUS_REDEEMED;
+        });
+
+        return Promise.resolve(withdraws);
     }
 }

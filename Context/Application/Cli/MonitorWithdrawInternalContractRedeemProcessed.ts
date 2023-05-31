@@ -4,26 +4,26 @@ import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterf
 import { Inject } from "@nestjs/common";
 import CheckInternalWithdrawalOperation from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperation";
 import CheckInternalWithdrawalOperationHandler from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperationHandler";
-import AfterWithdrawReadyToProcess from "context/Subscribers/AfterWithdrawReadyToProcess";
+import ConfirmWithdrawProcessedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawProcessed/ConfirmWithdrawProcessedHandler";
+import ConfirmWithdrawProcessed from "context/Application/Command/InternalBlockchain/ConfirmWithdrawProcessed/ConfirmWithdrawProcessed";
 
-interface FoundWithdrawInternalContractCreationOptions {
+interface MonitorWithdrawInternalContractRedeemProcessedOptions {
     interval: number;
 }
 
 @Command({
-    name: "found-withdraw-internal-contract-creation",
-    description: "Found Withdraw Internal Contract Creation",
+    name: "monitor-withdraw-internal-contract-redeem-processed",
+    description: "Monitor Withdraw Internal Contract Redeem Processed",
 })
-export class FoundWithdrawInternalContractCreation extends CommandRunner {
+export class MonitorWithdrawInternalContractRedeemProcessed extends CommandRunner {
     constructor(
-        private readonly checkInternalWithdrawalOperationHandler: CheckInternalWithdrawalOperationHandler,
+        private readonly confirmWithdrawProcessedHandler: ConfirmWithdrawProcessedHandler,
         @Inject("WithdrawRepositoryInterface") private readonly withdrawRepository: WithdrawRepositoryInterface
     ) {
         super();
     }
 
-    async run(passedParam: string[], options: FoundWithdrawInternalContractCreationOptions): Promise<void> {
-        new AfterWithdrawReadyToProcess();
+    async run(passedParam: string[], options: MonitorWithdrawInternalContractRedeemProcessedOptions): Promise<void> {
         await this.cycleProcess(options.interval);
     }
 
@@ -37,16 +37,15 @@ export class FoundWithdrawInternalContractCreation extends CommandRunner {
     }
 
     private async process() {
-        const withdraws = await this.withdrawRepository.getAllForCheck();
-        const errorHandler = new ErrorHandler("FoundWithdrawInternalContractCreation");
+        const withdraws = await this.withdrawRepository.getAllRedeemed();
+        const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractRedeemProcessed");
 
-        console.log(`Found ${withdraws.length} transactions to processed.`);
+        console.log(`Found redeemed withdraw transactions ${withdraws.length}.`);
 
         for (const withdraw of withdraws) {
-            const query = new CheckInternalWithdrawalOperation(withdraw);
-
+            const query = new ConfirmWithdrawProcessed(withdraw);
             try {
-                await this.checkInternalWithdrawalOperationHandler.execute(query);
+                await this.confirmWithdrawProcessedHandler.execute(query);
                 console.log(`Withdraw ${withdraw.idString} processed.`);
             } catch (e) {
                 errorHandler.handle(e);

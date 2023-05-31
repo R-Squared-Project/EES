@@ -48,6 +48,8 @@ import { ExecuteWithdrawInternalContractRedeem } from "context/Application/Cli/E
 import ProcessWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ProcessWithdrawInternalContractRedeem/ProcessWithdrawInternalContractRedeemHandler";
 import { MonitorWithdrawInternalContractRedeem } from "context/Application/Cli/MonitorWithdrawInternalContractRedeem";
 import ConfirmWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeemHandler";
+import { MonitorWithdrawInternalContractRedeemProcessed } from "context/Application/Cli/MonitorWithdrawInternalContractRedeemProcessed";
+import ConfirmWithdrawProcessedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawProcessed/ConfirmWithdrawProcessedHandler";
 
 @Module({
     imports: [CoreModule],
@@ -93,6 +95,8 @@ import ConfirmWithdrawInternalContractRedeemHandler from "context/Application/Co
         ProcessWithdrawInternalContractRedeemHandler,
         MonitorWithdrawInternalContractRedeem,
         ConfirmWithdrawInternalContractRedeemHandler,
+        MonitorWithdrawInternalContractRedeemProcessed,
+        ConfirmWithdrawProcessedHandler,
         {
             provide: "DataSource",
             useValue: DataSource,

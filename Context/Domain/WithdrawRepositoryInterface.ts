@@ -10,4 +10,5 @@ export default interface WithdrawRepositoryInterface {
     getByExternalContractId: (contractId: string) => Promise<Withdraw | null>;
     getByRedeemStatus: () => Promise<Withdraw[]>;
     getByInternalContractId: (contractId: string) => Promise<Withdraw | null>;
+    getAllRedeemed: () => Promise<Withdraw[]>;
 }
