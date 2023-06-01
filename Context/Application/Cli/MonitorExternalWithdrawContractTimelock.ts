@@ -12,7 +12,7 @@ interface MonitorExternalWithdrawContractTimelockOptions {
 }
 
 @Command({
-    name: "monitor-external-withdraw-contract-timelock-options",
+    name: "monitor-external-withdraw-contract-timelock",
     description: "Monitor External Withdraw Contract Timelock",
 })
 export class MonitorExternalWithdrawContractTimelock extends CommandRunner {
