@@ -2,17 +2,12 @@ import { UseCase } from "context/Core/Domain/UseCase";
 import ConfirmWithdrawProcessed from "context/Application/Command/InternalBlockchain/ConfirmWithdrawProcessed/ConfirmWithdrawProcessed";
 import { Inject } from "@nestjs/common";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
-import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
-import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
-import Setting, { INTERNAL_REDEEM_ALERT_THRESHOLD_TIMEOUT } from "context/Setting/Setting";
+import Setting from "context/Setting/Setting";
 import NotifierInterface from "context/Notifier/NotifierInterface";
-import dayjs from "dayjs";
 import { ProcessWithdrawExternalContractRefund } from "context/Application/Command/ExternalBlockchain/ProcessWithdrawExternalContractRefund/ProcessWithdrawExternalContractRefund";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 
 export class ProcessWithdrawExternalContractRefundHandler implements UseCase<ConfirmWithdrawProcessed, void> {
-    private lastIrreversibleBlockNumber: number | undefined = undefined;
-
     public constructor(
         @Inject("WithdrawRepositoryInterface") private readonly withdrawRepository: WithdrawRepositoryInterface,
         @Inject("ExternalBlockchain") private readonly externalBlockchain: ExternalBlockchain,
