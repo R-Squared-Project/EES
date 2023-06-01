@@ -18,4 +18,5 @@ export default interface RepositoryInterface {
     getAsset: () => Map<string, number>;
     getGasPrice: () => Promise<string>;
     createWithdrawHTLC: (receiver: string, hashlock: string, timelock: number, amount: string) => Promise<string>;
+    refund(contractId: string): Promise<string>;
 }

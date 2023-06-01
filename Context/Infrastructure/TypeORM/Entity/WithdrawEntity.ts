@@ -104,6 +104,11 @@ const WithdrawEntity = new EntitySchema<Withdraw>({
             type: Number,
             nullable: true,
         },
+        externalBlockchainRefundTxHash: {
+            name: "external_blockchain_refund_tx_hash",
+            type: String,
+            nullable: true,
+        },
     },
 });
 

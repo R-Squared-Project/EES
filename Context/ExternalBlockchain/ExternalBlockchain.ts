@@ -3,6 +3,7 @@ import EthereumRepository from "./Repository/EthereumRepository";
 import StubRepository from "./Repository/StubRepository";
 import { Inject, Injectable } from "@nestjs/common";
 import config from "context/config";
+import Contract from "context/ExternalBlockchain/Contract";
 
 @Injectable()
 class ExternalBlockchain {
@@ -50,6 +51,14 @@ class ExternalBlockchain {
         amount: string
     ): Promise<string> {
         return await this._repository.createWithdrawHTLC(receiver, hashlock, timelock, amount);
+    }
+
+    public async loadWithdrawContract(txHash: string, contractId: string): Promise<Contract | null> {
+        return await this._repository.loadWithdrawContract(txHash, contractId);
+    }
+
+    public async refund(contractId: string) {
+        return await this._repository.refund(contractId);
     }
 }
 

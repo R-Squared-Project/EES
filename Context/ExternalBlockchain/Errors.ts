@@ -23,3 +23,9 @@ export class CreateWithdrawContractUnexpactedError extends ExternalBlockchainErr
         super(`Error while creating new contract for receiver ${receiver}: ${message}`);
     }
 }
+
+export class RefundUnexpectedError extends ExternalBlockchainError {
+    constructor(contractId: string, message: string) {
+        super(`Error while refund contract ${contractId}: ${message}`);
+    }
+}

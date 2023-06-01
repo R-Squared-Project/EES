@@ -10,6 +10,7 @@ import config from "context/config";
 import * as Errors from "context/ExternalBlockchain/Errors";
 import { Injectable } from "@nestjs/common";
 import { Map } from "immutable";
+import { RefundUnexpectedError } from "context/ExternalBlockchain/Errors";
 
 @Injectable()
 export default class EthereumRepository implements RepositoryInterface {
@@ -201,6 +202,42 @@ export default class EthereumRepository implements RepositoryInterface {
             }
 
             throw new Errors.CreateWithdrawContractUnexpactedError(receiver, e.message);
+        }
+    }
+
+    async refund(contractId: string): Promise<string> {
+        let gas: number;
+
+        try {
+            gas = await this._withdrawContract.methods.refund(contractId).estimateGas({
+                from: config.eth.receiver,
+            });
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw new Errors.RedeemUnexpectedError(contractId, e.message);
+        }
+
+        const tx = {
+            from: config.eth.receiver,
+            gas,
+            data: this._withdrawContract.methods.refund(contractId).encodeABI(),
+        };
+
+        const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
+
+        try {
+            const result = await this._web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
+
+            return result.transactionHash;
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw new Errors.RefundUnexpectedError(contractId, e.message);
         }
     }
 

@@ -3,6 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 import Withdraw, {
     STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
+    STATUS_READY_TO_SIGN,
     STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
     STATUS_REDEEMED,
 } from "context/Domain/Withdraw";
@@ -126,6 +127,18 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .where("withdraw.status = :status", { status: STATUS_REDEEMED })
+            .getMany();
+    }
+
+    async getAllReadyToRefund(): Promise<Withdraw[]> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .where("withdraw.status = :status", { status: STATUS_READY_TO_SIGN })
+            .andWhere("externalContract.timelock <= NOW()")
             .getMany();
     }
 }

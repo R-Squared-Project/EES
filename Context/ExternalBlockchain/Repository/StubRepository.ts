@@ -85,4 +85,8 @@ export default class StubRepository implements RepositoryInterface {
     createWithdrawHTLC(receiver: string, hashlock: string, timelock: number, amount: string): Promise<string> {
         return Promise.resolve("");
     }
+
+    refund(contractId: string): Promise<string> {
+        return Promise.resolve("");
+    }
 }
