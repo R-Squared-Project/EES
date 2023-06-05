@@ -100,4 +100,14 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
 
         return Promise.resolve(withdraws);
     }
+
+    getByRefundTxHash(txHash: string): Promise<Withdraw | null> {
+        for (const withdraw of Object.values(this._withdraws)) {
+            if (withdraw.externalBlockchainRefundTxHash === txHash) {
+                return Promise.resolve(withdraw);
+            }
+        }
+
+        return Promise.resolve(null);
+    }
 }

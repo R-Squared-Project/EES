@@ -8,8 +8,9 @@ import SendInReply from "context/Domain/Validation/Withdraw/SendInReply";
 import ReadyToSign from "context/Domain/Validation/Withdraw/ReadyToSign";
 import WithdrawRedeemed from "context/Domain/Validation/Withdraw/WithdrawRedeemed";
 import WithdrawRedeem from "context/Domain/Validation/Withdraw/WithdrawRedeem";
-import WithdrawProcesed from "context/Domain/Validation/Withdraw/WithdrawProcesed";
+import WithdrawProcessed from "context/Domain/Validation/Withdraw/WithdrawProcesed";
 import WithdrawRefund from "context/Domain/Validation/Withdraw/WithdrawRefund";
+import WithdrawRefunded from "context/Domain/Validation/Withdraw/WithdrawRefunded";
 
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 5;
 export const STATUS_READY_TO_PROCESS = 10;
@@ -19,6 +20,7 @@ export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 25;
 export const STATUS_REDEEMED = 30;
 export const STATUS_PROCESSED = 35;
 export const STATUS_REFUND = 100;
+export const STATUS_REFUNDED = 105;
 export const STATUS_FAILED_PROCESSING = 200;
 
 export default class Withdraw extends AggregateRoot {
@@ -111,7 +113,7 @@ export default class Withdraw extends AggregateRoot {
     }
 
     public processed() {
-        new WithdrawProcesed(this).validate();
+        new WithdrawProcessed(this).validate();
         this.status = STATUS_PROCESSED;
     }
 
@@ -119,5 +121,10 @@ export default class Withdraw extends AggregateRoot {
         new WithdrawRefund(this).validate();
         this.externalBlockchainRefundTxHash = txHash;
         this.status = STATUS_REFUND;
+    }
+
+    public refunded() {
+        new WithdrawRefunded(this).validate();
+        this.status = STATUS_REFUNDED;
     }
 }

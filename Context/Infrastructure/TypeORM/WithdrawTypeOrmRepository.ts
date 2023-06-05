@@ -141,4 +141,15 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .andWhere("externalContract.timelock <= NOW()")
             .getMany();
     }
+
+    async getByRefundTxHash(txHash: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .where("withdraw._externalBlockchainRefundTxHash = :txHash", { txHash })
+            .getOne();
+    }
 }
