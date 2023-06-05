@@ -248,4 +248,11 @@ export default class EthereumRepository implements RepositoryInterface {
     private async loadBlock(blockNumber: number) {
         return await this._web3.eth.getBlock(blockNumber);
     }
+
+    async loadWithdrawHTLCRefundEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return await this._withdrawContract.getPastEvents("LogHTLCRefund", {
+            fromBlock: fromBlock,
+            toBlock,
+        });
+    }
 }

@@ -19,4 +19,5 @@ export default interface RepositoryInterface {
     getGasPrice: () => Promise<string>;
     createWithdrawHTLC: (receiver: string, hashlock: string, timelock: number, amount: string) => Promise<string>;
     refund(contractId: string): Promise<string>;
+    loadWithdrawHTLCRefundEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
 }
