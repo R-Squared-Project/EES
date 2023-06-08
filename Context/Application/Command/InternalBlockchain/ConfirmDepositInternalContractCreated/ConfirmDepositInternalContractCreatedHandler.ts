@@ -1,26 +1,37 @@
-import {UseCase} from "context/Core/Domain/UseCase";
+import { UseCase } from "context/Core/Domain/UseCase";
 import ConfirmDepositInternalContractCreated from "./ConfirmDepositInternalContractCreated";
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
 import InternalContract from "context/Domain/InternalContract";
-import {DepositNotFound} from "./Errors";
-import {ensureHasPrefix} from "context/Infrastructure/Helpers";
+import { DepositNotFound } from "./Errors";
+import { ensureHasPrefix } from "context/Infrastructure/Helpers";
+import { STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN } from "context/Domain/Deposit";
+import { delay } from "rxjs";
 
-export default class ConfirmDepositInternalContractCreatedHandler implements UseCase<ConfirmDepositInternalContractCreated, void> {
-    public constructor(
-        private readonly depositRepository: DepositRepositoryInterface
-    ) {}
+export default class ConfirmDepositInternalContractCreatedHandler
+    implements UseCase<ConfirmDepositInternalContractCreated, void>
+{
+    public constructor(private readonly depositRepository: DepositRepositoryInterface) {}
 
     public async execute(command: ConfirmDepositInternalContractCreated): Promise<void> {
-        const txHash = ensureHasPrefix(command.txHash)
-        const deposit = await this.depositRepository.getByTxHash(txHash)
+        const txHash = ensureHasPrefix(command.txHash);
+        let deposit = await this.depositRepository.getByTxHash(txHash);
 
         if (null === deposit) {
-            throw new DepositNotFound(txHash)
+            throw new DepositNotFound(txHash);
         }
 
-        const internalContract = new InternalContract(command.internalId)
-        deposit.createdInInternalBlockchain(internalContract)
+        if (deposit.status < STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN) {
+            await new Promise((r) => setTimeout(r, 2000));
+            deposit = await this.depositRepository.getByTxHash(txHash);
 
-        await this.depositRepository.save(deposit)
+            if (null === deposit) {
+                throw new DepositNotFound(txHash);
+            }
+        }
+
+        const internalContract = new InternalContract(command.internalId);
+        deposit.createdInInternalBlockchain(internalContract);
+
+        await this.depositRepository.save(deposit);
     }
 }

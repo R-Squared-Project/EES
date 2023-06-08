@@ -40,14 +40,18 @@ export class FoundWithdrawInternalContractCreation extends CommandRunner {
         const withdraws = await this.withdrawRepository.getAllForCheck();
         const errorHandler = new ErrorHandler("FoundWithdrawInternalContractCreation");
 
-        console.log(`Found ${withdraws.length} transactions to processed.`);
+        if (withdraws.length === 0) {
+            return;
+        }
+
+        console.log(`FoundWithdrawInternalContractCreation: Found ${withdraws.length} transactions to processed.`);
 
         for (const withdraw of withdraws) {
             const query = new CheckInternalWithdrawalOperation(withdraw);
 
             try {
                 await this.checkInternalWithdrawalOperationHandler.execute(query);
-                console.log(`Withdraw ${withdraw.idString} processed.`);
+                console.log(`FoundWithdrawInternalContractCreation: Withdraw ${withdraw.idString} processed.`);
             } catch (e) {
                 errorHandler.handle(e);
             }

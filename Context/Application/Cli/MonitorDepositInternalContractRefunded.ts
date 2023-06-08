@@ -1,71 +1,67 @@
-import { Command, CommandRunner, Option } from 'nest-commander';
+import { Command, CommandRunner, Option } from "nest-commander";
 import * as Errors from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/Errors";
 import DepositRepositoryInterface from "context/Domain/DepositRepositoryInterface";
-import {Inject} from "@nestjs/common";
-import DepositInternalContractRefund
-    from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefund";
-import DepositInternalContractRefundHandler
-    from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
+import { Inject } from "@nestjs/common";
+import DepositInternalContractRefund from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefund";
+import DepositInternalContractRefundHandler from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
 
 interface MonitorDepositInternalContractRefundedOptions {
     interval: number;
 }
 
-@Command({ name: 'monitor-deposit-internal-contract-refunded', description: 'Monitor Deposit Internal Contract Refunded'})
+@Command({
+    name: "monitor-deposit-internal-contract-refunded",
+    description: "Monitor Deposit Internal Contract Refunded",
+})
 export class MonitorDepositInternalContractRefunded extends CommandRunner {
     constructor(
         @Inject("DepositRepositoryInterface") private readonly depositRepository: DepositRepositoryInterface,
-        private readonly depositInternalContractRefundHandler: DepositInternalContractRefundHandler,
+        private readonly depositInternalContractRefundHandler: DepositInternalContractRefundHandler
     ) {
-        super()
+        super();
     }
 
-    async run(
-        passedParam: string[],
-        options: MonitorDepositInternalContractRefundedOptions,
-    ): Promise<void> {
-        await this.cycleProcess(options.interval)
+    async run(passedParam: string[], options: MonitorDepositInternalContractRefundedOptions): Promise<void> {
+        await this.cycleProcess(options.interval);
     }
 
     @Option({
-        flags: '-i, --interval [number]',
-        description: 'Launch interval (seconds)',
-        defaultValue: 10
+        flags: "-i, --interval [number]",
+        description: "Launch interval (seconds)",
+        defaultValue: 10,
     })
     parseInterval(val: string): number {
         return Number(val);
     }
 
     private async process() {
-        const errorHandler = new ErrorHandler('MonitorDepositInternalContractRefunded');
+        const errorHandler = new ErrorHandler("MonitorDepositInternalContractRefunded");
         try {
             const deposits = await this.depositRepository.getOverdueTimeLock();
             for (const deposit of deposits) {
-                const command = new DepositInternalContractRefund(deposit.idString)
+                const command = new DepositInternalContractRefund(deposit.idString);
                 try {
-                    await this.depositInternalContractRefundHandler.execute(command)
+                    await this.depositInternalContractRefundHandler.execute(command);
                 } catch (e) {
-                    errorHandler.handle(e)
+                    errorHandler.handle(e);
                 }
             }
         } catch (e: unknown) {
             if (e instanceof Errors.DepositNotFound) {
-
-                console.log(e.message)
-                return
+                errorHandler.handle(e);
+                return;
             }
 
-            throw e
+            throw e;
         }
     }
 
     private cycleProcess(interval: number) {
-        this.process()
-            .then(() => {
-                setTimeout(() => {
-                    this.cycleProcess(interval);
-                }, interval * 1000)
-            });
+        this.process().then(() => {
+            setTimeout(() => {
+                this.cycleProcess(interval);
+            }, interval * 1000);
+        });
     }
 }

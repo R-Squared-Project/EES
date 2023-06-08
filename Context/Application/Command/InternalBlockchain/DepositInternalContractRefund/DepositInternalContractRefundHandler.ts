@@ -28,20 +28,20 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
         const internalContractId = deposit.internalContract?.internalId as string;
 
         if (!(await this.hasRefundOperation(internalContractId, deposit._depositRequest.revpopAccount.value))) {
-            console.log(`Deposit ${deposit.idString} has not refund yet.`);
+            console.log(`DepositInternalContractRefundHandler: Deposit ${deposit.idString} has not refund yet.`);
 
             return;
         }
 
-        console.log(`Deposit ${deposit.idString} has refund.`);
+        console.log(`DepositInternalContractRefundHandler: Deposit ${deposit.idString} has refund.`);
         deposit.burned(deposit.mintedAmount);
 
         try {
             await this.internalBlockchain.burnAsset(deposit.mintedAmount);
             this.repository.save(deposit);
-            console.log(`Deposit ${deposit.idString} has burned.`);
+            console.log(`DepositInternalContractRefundHandler: Deposit ${deposit.idString} has burned.`);
         } catch (e: unknown) {
-            console.log(`Error processing deposit ${deposit.idString}`);
+            console.log(`DepositInternalContractRefundHandler: Error processing deposit ${deposit.idString}`);
         }
     }
 

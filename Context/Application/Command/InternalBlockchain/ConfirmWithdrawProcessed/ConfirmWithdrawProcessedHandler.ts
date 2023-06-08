@@ -7,6 +7,7 @@ import ConfirmWithdrawProcessed from "context/Application/Command/InternalBlockc
 import Setting, { INTERNAL_REDEEM_ALERT_THRESHOLD_TIMEOUT } from "context/Setting/Setting";
 import dayjs from "dayjs";
 import NotifierInterface from "context/Notifier/NotifierInterface";
+import * as Errors from "./Errors";
 
 @Injectable()
 export default class ConfirmWithdrawProcessedHandler implements UseCase<ConfirmWithdrawProcessed, void> {
@@ -41,7 +42,10 @@ export default class ConfirmWithdrawProcessedHandler implements UseCase<ConfirmW
 
         if (timeDifference > alertPeriod) {
             await this.notifier.sendMessage("Timeout of HTLC Redeem in Internal Blockchain");
+            throw new Errors.BlockIsReversible(command.withdraw.externalBlockchainRedeemTxHash ?? "");
         }
+
+        throw new Error("Error processing redeem");
     }
 
     private async isLastIrreversible(blockNumber: number): Promise<boolean> {

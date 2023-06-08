@@ -14,7 +14,7 @@ export default class WithdrawContractsCreationsProcessingLink implements Chained
     async execute(command: ChainedHandlerCommand): Promise<void> {
         const lastContracts = await this.getLastContractsHandler.execute(command);
         for (const event of lastContracts.events) {
-            console.log(`Process transaction ${event.transactionHash}`);
+            console.log(`WithdrawContractsCreationsProcessingLink: Process transaction ${event.transactionHash}`);
 
             try {
                 const command = new ProcessWithdrawContractCreation(
@@ -24,12 +24,17 @@ export default class WithdrawContractsCreationsProcessingLink implements Chained
                 await this.processWithdrawContractCreationHandler.execute(command);
             } catch (e: unknown) {
                 if (e instanceof Error) {
-                    console.log(`Error while processed transaction ${event.transactionHash}: `, e.message);
+                    console.log(
+                        `WithdrawContractsCreationsProcessingLink: Error while processed transaction ${event.transactionHash}: `,
+                        e.message
+                    );
                     continue;
                 }
             }
 
-            console.log(`Successfully added new transaction ${event.transactionHash}. `);
+            console.log(
+                `WithdrawContractsCreationsProcessingLink: Successfully added new transaction ${event.transactionHash}. `
+            );
         }
     }
 }

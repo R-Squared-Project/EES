@@ -45,11 +45,14 @@ async function main() {
             try {
                 await handler.execute(command);
                 ack();
-                console.log(`HTLC contract submitted in an internal blockchain: ${message.deposit_id}`);
+                console.log(
+                    `WorkerCreateInInternalBlockchain: HTLC contract submitted in an internal blockchain: ${message.deposit_id}`
+                );
             } catch (e: unknown) {
                 nack();
+                const errorMessage = (e as Error).message;
                 console.log(
-                    `Error occurred while HTLC contract submitted in an internal blockchain: ${message.deposit_id}`
+                    `WorkerCreateInInternalBlockchain: Error occurred while HTLC contract submitted in an internal blockchain: ${message.deposit_id} ${errorMessage}`
                 );
             }
         }

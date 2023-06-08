@@ -14,12 +14,14 @@ export default class MonitorExternalDepositRedeemsLink implements ChainedHandler
     async execute(command: ChainedHandlerCommand): Promise<void> {
         const lastContracts = await this.getLastRedeemsHandler.execute(command);
         for (const event of lastContracts.events) {
-            console.log(`Process transaction ${event.transactionHash}`);
+            console.log(`MonitorExternalDepositRedeemsLink: Process transaction ${event.transactionHash}`);
 
             try {
                 const command = new ExternalDepositRedeem(event.transactionHash, event.returnValues.contractId);
                 await this.externalContractRedeemHandler.execute(command);
-                console.log(`Redeem deposit transaction ${event.transactionHash} successfully queued`);
+                console.log(
+                    `MonitorExternalDepositRedeemsLink: Redeem deposit transaction ${event.transactionHash} successfully queued`
+                );
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log("Error in ", typeof this, ":", e.message);

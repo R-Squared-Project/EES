@@ -30,8 +30,10 @@ export class ExternalContractRedeemWorker extends CommandRunner {
                     );
                 } catch (e: unknown) {
                     nack();
+                    const errorMessage = (e as Error).message;
+
                     console.log(
-                        `Error occurred while confirming redeem of HTLC contract with txHash ${message.txHash}.`
+                        `Error occurred while confirming redeem of HTLC contract with txHash ${message.txHash}: ${errorMessage}.`
                     );
                 }
             }

@@ -6,7 +6,7 @@ const TimeLockType: EntitySchemaColumnOptions = {
     name: "time_lock",
     transformer: {
         to(timeLock: TimeLock): number {
-            return timeLock.value.format("YYYY-MM-DD hh:mm:ss");
+            return timeLock.value.format("YYYY-MM-DD HH:mm:ss");
         },
         from(value: Date | null): TimeLock | null {
             return value ? TimeLock.fromDate(value) : null;

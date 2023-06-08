@@ -17,21 +17,18 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
 
     async save(withdraw: Withdraw) {
         if (withdraw.withdrawRequest) {
-            await this._datasource
-                .getRepository<WithdrawRequest>(WithdrawRequest)
-                .upsert(withdraw.withdrawRequest, ["idString"]);
+            const withdrawRequestRepository = this._datasource.getRepository<WithdrawRequest>(WithdrawRequest);
+            await withdrawRequestRepository.upsert(withdraw.withdrawRequest, ["idString"]);
         }
 
         if (withdraw.internalContract) {
-            await this._datasource
-                .getRepository<InternalContract>(InternalContract)
-                .upsert(withdraw.internalContract, ["idString"]);
+            const internalContractRepository = await this._datasource.getRepository<InternalContract>(InternalContract);
+            await internalContractRepository.upsert(withdraw.internalContract, ["idString"]);
         }
 
         if (withdraw.externalContract) {
-            await this._datasource
-                .getRepository<ExternalContract>(ExternalContract)
-                .upsert(withdraw.externalContract, ["idString"]);
+            const externalContractRepository = await this._datasource.getRepository<ExternalContract>(ExternalContract);
+            await externalContractRepository.upsert(withdraw.externalContract, ["idString"]);
         }
 
         await this._datasource.getRepository<Withdraw>(Withdraw).upsert(withdraw, ["id"]);
@@ -138,7 +135,7 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .where("withdraw.status = :status", { status: STATUS_READY_TO_SIGN })
-            .andWhere("externalContract.timelock <= NOW()")
+            .andWhere("externalContract.time_lock <= NOW()")
             .getMany();
     }
 

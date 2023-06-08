@@ -46,14 +46,22 @@ export class MonitorWithdrawInternalContractRedeem extends CommandRunner {
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
         const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractRedeem");
 
-        console.log(`Found ${withdrawTransactions.transactions.length} transactions to processed.`);
+        if (withdrawTransactions.transactions.length === 0) {
+            return;
+        }
+
+        console.log(
+            `MonitorWithdrawInternalContractRedeem: Found ${withdrawTransactions.transactions.length} transactions to processed.`
+        );
 
         for (const transaction of withdrawTransactions.transactions) {
             const query = new ConfirmWithdrawInternalContractRedeem(transaction);
 
             try {
                 await this.confirmWithdrawInternalContractRedeemHandler.execute(query);
-                console.log(`Withdraw for transaction ${transaction.transactionId} redeemed.`);
+                console.log(
+                    `MonitorWithdrawInternalContractRedeem: Withdraw for transaction ${transaction.transactionId} redeemed.`
+                );
             } catch (e) {
                 errorHandler.handle(e);
             }

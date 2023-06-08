@@ -10,7 +10,7 @@ import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 export class ProcessWithdrawExternalContractRefundHandler implements UseCase<ConfirmWithdrawProcessed, void> {
     public constructor(
         @Inject("WithdrawRepositoryInterface") private readonly withdrawRepository: WithdrawRepositoryInterface,
-        @Inject("ExternalBlockchain") private readonly externalBlockchain: ExternalBlockchain,
+        private readonly externalBlockchain: ExternalBlockchain,
         private readonly setting: Setting,
         @Inject("NotifierInterface") private readonly notifier: NotifierInterface
     ) {}
@@ -27,6 +27,6 @@ export class ProcessWithdrawExternalContractRefundHandler implements UseCase<Con
 
         const txHash = await this.externalBlockchain.refund(externalContract?.contractId ?? "");
         command.withdraw.refund(txHash);
-        this.withdrawRepository.save(command.withdraw);
+        await this.withdrawRepository.save(command.withdraw);
     }
 }

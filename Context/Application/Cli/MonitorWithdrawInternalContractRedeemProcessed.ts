@@ -40,13 +40,19 @@ export class MonitorWithdrawInternalContractRedeemProcessed extends CommandRunne
         const withdraws = await this.withdrawRepository.getAllRedeemed();
         const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractRedeemProcessed");
 
-        console.log(`Found redeemed withdraw transactions ${withdraws.length}.`);
+        if (withdraws.length === 0) {
+            return;
+        }
+
+        console.log(
+            `MonitorWithdrawInternalContractRedeemProcessed: Found redeemed withdraw transactions ${withdraws.length}.`
+        );
 
         for (const withdraw of withdraws) {
             const query = new ConfirmWithdrawProcessed(withdraw);
             try {
                 await this.confirmWithdrawProcessedHandler.execute(query);
-                console.log(`Withdraw ${withdraw.idString} processed.`);
+                console.log(`MonitorWithdrawInternalContractRedeemProcessed: Withdraw ${withdraw.idString} processed.`);
             } catch (e) {
                 errorHandler.handle(e);
             }

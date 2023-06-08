@@ -14,12 +14,16 @@ export default class MonitorExternalWithdrawRefundsLink implements ChainedHandle
     async execute(command: ChainedHandlerCommand): Promise<void> {
         const lastContracts = await this.getLastRefundsHandler.execute(command);
         for (const event of lastContracts.events) {
-            console.log(`Process withdraw refund transaction ${event.transactionHash}`);
+            console.log(
+                `MonitorExternalWithdrawRefundsLink: Process withdraw refund transaction ${event.transactionHash}`
+            );
 
             try {
                 const command = new ExternalWithdrawRefund(event.transactionHash, event.returnValues.contractId);
                 await this.externalContractRefundHandler.execute(command);
-                console.log(`Refund withdraw transaction ${event.transactionHash} successfully queued`);
+                console.log(
+                    `MonitorExternalWithdrawRefundsLink: Refund withdraw transaction ${event.transactionHash} successfully queued`
+                );
             } catch (e: unknown) {
                 if (e instanceof Error) {
                     console.log("Error in ", typeof this, ":", e.message);

@@ -38,15 +38,21 @@ export class MonitorExternalWithdrawContractTimelock extends CommandRunner {
 
     private async process() {
         const withdraws = await this.withdrawRepository.getAllReadyToRefund();
-        const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractRedeemProcessed");
+        const errorHandler = new ErrorHandler("MonitorExternalWithdrawContractTimelock");
 
-        console.log(`Found withdraw transactions ${withdraws.length} for refund.`);
+        if (withdraws.length === 0) {
+            return;
+        }
+
+        console.log(
+            `MonitorExternalWithdrawContractTimelock: Found withdraw transactions ${withdraws.length} for refund.`
+        );
 
         for (const withdraw of withdraws) {
             const query = new ProcessWithdrawExternalContractRefund(withdraw);
             try {
                 await this.processWithdrawExternalContractRefundHandler.execute(query);
-                console.log(`Withdraw ${withdraw.idString} refunded.`);
+                console.log(`MonitorExternalWithdrawContractTimelock: Withdraw ${withdraw.idString} refunded.`);
             } catch (e) {
                 errorHandler.handle(e);
             }
