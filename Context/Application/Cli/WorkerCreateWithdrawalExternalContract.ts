@@ -29,9 +29,11 @@ export class WorkerCreateWithdrawalExternalContract extends CommandRunner {
                 try {
                     await this.handler.execute(command);
                     ack();
-                    console.log(`HTLC contract created in an external blockchain: ${message.withdraw_id}`);
+                    console.log(
+                        `WorkerCreateWithdrawalExternalContract: HTLC contract created in an external blockchain: ${message.withdraw_id}`
+                    );
                 } catch (e: unknown) {
-                    console.log(e);
+                    console.log("WorkerCreateWithdrawalExternalContract: ", e);
 
                     if (e instanceof PersistentError) {
                         ack();

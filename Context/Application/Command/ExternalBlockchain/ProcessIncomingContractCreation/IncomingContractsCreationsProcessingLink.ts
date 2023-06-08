@@ -14,7 +14,9 @@ export default class IncomingContractsCreationsProcessingLink implements Chained
     async execute(command: ChainedHandlerCommand): Promise<void> {
         const lastContracts = await this.getLastContractsHandler.execute(command);
         for (const event of lastContracts.events) {
-            console.log(`Process transaction ${event.transactionHash}`);
+            console.log(
+                `Deposit IncomingContractsCreationsProcessingLink: Process transaction ${event.transactionHash}`
+            );
 
             try {
                 const command = new ProcessIncomingContractCreation(
@@ -24,12 +26,17 @@ export default class IncomingContractsCreationsProcessingLink implements Chained
                 await this.processIncomingContractCreationHandler.execute(command);
             } catch (e: unknown) {
                 if (e instanceof Error) {
-                    console.log(`Error while processed transaction ${event.transactionHash}: `, e.message);
+                    console.log(
+                        `Deposit IncomingContractsCreationsProcessingLink: Error while processed transaction ${event.transactionHash}: `,
+                        e.message
+                    );
                     continue;
                 }
             }
 
-            console.log(`Successfully added new transaction ${event.transactionHash}. `);
+            console.log(
+                `Deposit IncomingContractsCreationsProcessingLink: Successfully added new transaction ${event.transactionHash}. `
+            );
         }
     }
 }

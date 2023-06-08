@@ -17,16 +17,18 @@ async function main() {
 
     messenger.consume<RedeemedInInternalBlockchainMessage>(
         "deposit_redeemed_in_internal_blockchain",
-        async (message: RedeemedInInternalBlockchainMessage, ack) => {
+        async (message: RedeemedInInternalBlockchainMessage, ack, nack) => {
             const command = new RedeemDepositExternalContract(message.deposit_id);
 
             try {
                 await handler.execute(command);
                 ack();
-                console.log(`HTLC contract redeemed in an external blockchain: ${message.deposit_id}`);
+                console.log(
+                    `WorkerRedeemInInternalBlockchain: HTLC contract redeemed in an external blockchain: ${message.deposit_id}`
+                );
             } catch (e: unknown) {
-                console.log(e);
-                //TODO::nack?
+                console.log("WorkerRedeemInInternalBlockchain: ", e);
+                nack();
             }
         }
     );

@@ -217,11 +217,16 @@ export default class EthereumRepository implements RepositoryInterface {
                 throw new Errors.ConnectionError();
             }
 
-            throw new Errors.RedeemUnexpectedError(contractId, e.message);
+            if ((e as Error).message.indexOf("already refunded") > -1) {
+                return "ALREADY_REFUNDED";
+            }
+
+            throw new Errors.RefundUnexpectedError(contractId, e.message);
         }
 
         const tx = {
             from: config.eth.receiver,
+            to: config.eth.withdraw_contract_address,
             gas,
             data: this._withdrawContract.methods.refund(contractId).encodeABI(),
         };

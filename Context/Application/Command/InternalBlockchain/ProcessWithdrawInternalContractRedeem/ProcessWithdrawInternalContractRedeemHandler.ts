@@ -40,9 +40,16 @@ export default class ProcessWithdrawInternalContractRedeemHandler
         try {
             await this.internalBlockchain.withdrawRedeem(withdraw.secret, internalContractId, denormalizedAmount);
             await this.repository.save(withdraw);
-            console.log(`Withdraw ${withdraw.idString} has redeemed.`);
+            console.log(`ProcessWithdrawInternalContractRedeemHandler: Withdraw ${withdraw.idString} has redeemed.`);
         } catch (e: unknown) {
-            console.log(`Error processing withdraw redeem ${withdraw.idString}`);
+            if (e instanceof Error) {
+                withdraw.error(e.message);
+                await this.repository.save(withdraw);
+            }
+
+            console.log(
+                `ProcessWithdrawInternalContractRedeemHandler: Error processing withdraw redeem ${withdraw.idString}`
+            );
         }
     }
 }

@@ -49,6 +49,8 @@ export default class CheckInternalWithdrawalOperationHandler
             if (error instanceof HardFailError) {
                 command.withdraw.error(error.message);
                 await this.withdrawRepository.save(command.withdraw);
+            } else {
+                throw error;
             }
         }
     }

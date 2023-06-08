@@ -42,5 +42,5 @@ const main = async () => {
 };
 
 main().then(() => {
-    console.log(`Internal HTLC for deposit ${depositId} was created.`);
+    console.log(`Create in internal blockchain: Internal HTLC for deposit ${depositId} was created.`);
 });

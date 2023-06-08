@@ -45,14 +45,22 @@ export class MonitorWithdrawInternalContractCreated extends CommandRunner {
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
         const errorHandler = new ErrorHandler("MonitorWithdrawInternalContractCreated");
 
-        console.log(`Found ${withdrawTransactions.transactions.length} transactions to processed.`);
+        if (withdrawTransactions.transactions.length === 0) {
+            return;
+        }
+
+        console.log(
+            `MonitorWithdrawInternalContractCreated: Found ${withdrawTransactions.transactions.length} transactions to processed.`
+        );
 
         for (const transaction of withdrawTransactions.transactions) {
             const query = new ConfirmWithdrawInternalContractCreated(transaction);
 
             try {
                 await this.confirmWithdrawInternalContractCreateHandler.execute(query);
-                console.log(`Withdraw for transaction ${transaction.transactionId} created.`);
+                console.log(
+                    `MonitorWithdrawInternalContractCreated: Withdraw for transaction ${transaction.transactionId} created.`
+                );
             } catch (e) {
                 errorHandler.handle(e);
             }

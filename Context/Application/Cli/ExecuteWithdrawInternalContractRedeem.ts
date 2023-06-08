@@ -49,7 +49,7 @@ export class ExecuteWithdrawInternalContractRedeem extends CommandRunner {
             }
         } catch (e: unknown) {
             if (e instanceof Errors.WithdrawNotFound) {
-                console.log(e.message);
+                errorHandler.handle(e);
                 return;
             }
 

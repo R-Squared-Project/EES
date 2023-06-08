@@ -44,14 +44,20 @@ async function main() {
     const queryGetLastDepositContracts = new GetLastDepositContracts();
     const depositInternalContracts = await getLastDepositContractsHandler.execute(queryGetLastDepositContracts);
 
-    console.log(`Found ${depositInternalContracts.contracts.length} internal contracts to processed.`);
+    if (depositInternalContracts.contracts.length === 0) {
+        return;
+    }
+
+    console.log(
+        `MonitorDepositInternalContractCreated: Found ${depositInternalContracts.contracts.length} internal contracts to processed.`
+    );
 
     for (const contract of depositInternalContracts.contracts) {
         const query = new ConfirmDepositInternalContractCreated(contract.message, contract.id);
 
         try {
             await confirmDepositInternalContractCreatedHandler.execute(query);
-            console.log(`Internal contract ${contract.id} created.`);
+            console.log(`MonitorDepositInternalContractCreated: Internal contract ${contract.id} created.`);
         } catch (e) {
             errorHandler.handle(e);
         }

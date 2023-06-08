@@ -1,7 +1,5 @@
 import { Command, CommandRunner } from "nest-commander";
 import RabbitMQ from "context/Queue/RabbitMQ";
-import CreateWithdrawalExternalContract from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContract";
-import CreateWithdrawalExternalContractHandler from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContractHandler";
 import { PersistentError } from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/Errors";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import ConfirmWithdrawExternalContractRedeemedHandler from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemedHandler";
@@ -32,9 +30,12 @@ export class WorkerWithdrawExternalContractRedeemed extends CommandRunner {
                 try {
                     await this.handler.execute(command);
                     ack();
-                    console.log(`HTLC contract ${message.contractId} redeemed in an external blockchain`);
+                    console.log(
+                        `WorkerWithdrawExternalContractRedeemed: HTLC contract ${message.contractId} redeemed in an external blockchain`
+                    );
                 } catch (e: unknown) {
-                    console.log(e);
+                    const errorMessage = (e as Error).message;
+                    console.log("WorkerWithdrawExternalContractRedeemed: ", errorMessage);
                     if (e instanceof PersistentError) {
                         ack();
                     } else {
