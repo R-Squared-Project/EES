@@ -115,4 +115,9 @@ export default class Deposit extends AggregateRoot {
         this._internalBlockchainBurnTxHash = txHash;
         this._status = STATUS_REFUNDED;
     }
+
+    public resetToCreated() {
+        this._status = STATUS_CREATED;
+        this._mintedAmount = null;
+    }
 }
