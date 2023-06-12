@@ -18,7 +18,6 @@ import WithdrawTypeOrmRepository from "context/Infrastructure/TypeORM/WithdrawTy
             database: config.db.name,
             entities: DatabaseConfig.entities,
             // keepConnectionAlive: true,
-            connectTimeout: 30000,
         }),
         TypeOrmModule.forFeature(DatabaseConfig.entities as EntityClassOrSchema[]),
     ],

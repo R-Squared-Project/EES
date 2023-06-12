@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18-bullseye
 
 RUN apt-get update && apt-get install --assume-yes --no-install-recommends supervisor
 COPY docker/node/supervisord.conf /etc/supervisor/conf.d/supervisord.conf

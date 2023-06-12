@@ -17,6 +17,7 @@ services:
       RABBITMQ_HOST: rabbitmq
     depends_on:
       - db
+      - rabbitmq
     networks:
       - ees_network
   db:
@@ -28,6 +29,7 @@ services:
       - "3306:3306"
     volumes:
       - db:/var/lib/mysql
+      - ./docker/mysql_custom.cnf:/etc/mysql/conf.d/custom.cnf
       - ./docker/initdb.sh:/docker-entrypoint-initdb.d/init.sh
       - ./docker/initdb_test.sh:/initdb_test.sh
     networks:
