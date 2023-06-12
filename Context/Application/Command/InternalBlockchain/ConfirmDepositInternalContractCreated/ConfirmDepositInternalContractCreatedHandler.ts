@@ -5,7 +5,6 @@ import InternalContract from "context/Domain/InternalContract";
 import { DepositNotFound } from "./Errors";
 import { ensureHasPrefix } from "context/Infrastructure/Helpers";
 import { STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN } from "context/Domain/Deposit";
-import { delay } from "rxjs";
 
 export default class ConfirmDepositInternalContractCreatedHandler
     implements UseCase<ConfirmDepositInternalContractCreated, void>
@@ -21,7 +20,6 @@ export default class ConfirmDepositInternalContractCreatedHandler
         }
 
         if (deposit.status < STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN) {
-            await new Promise((r) => setTimeout(r, 2000));
             deposit = await this.depositRepository.getByTxHash(txHash);
 
             if (null === deposit) {

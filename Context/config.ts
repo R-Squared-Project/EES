@@ -51,5 +51,4 @@ const config = {
         port: parseInt(process.env.RABBITMQ_PORT as string, 10),
     },
 };
-
 export default config;

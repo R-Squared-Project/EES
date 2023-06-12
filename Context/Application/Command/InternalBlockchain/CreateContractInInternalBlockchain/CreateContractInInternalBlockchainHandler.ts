@@ -37,16 +37,20 @@ export default class CreateContractInInternalBlockchainHandler
         );
 
         deposit.submittedToInternalBlockchain(denormalizedAmount);
-
-        await this.internalBlockchain.createContract(
-            deposit._externalContract.txHash,
-            deposit._depositRequest.revpopAccount.value,
-            denormalizedAmount,
-            deposit._depositRequest.hashLock.value.substring(2),
-            this.timeLock()
-        );
-
         await this.repository.save(deposit);
+
+        try {
+            await this.internalBlockchain.createContract(
+                deposit._externalContract.txHash,
+                deposit._depositRequest.revpopAccount.value,
+                denormalizedAmount,
+                deposit._depositRequest.hashLock.value.substring(2),
+                this.timeLock()
+            );
+        } catch (e: unknown) {
+            deposit.resetToCreated();
+            await this.repository.save(deposit);
+        }
     }
 
     private timeLock(): number {
