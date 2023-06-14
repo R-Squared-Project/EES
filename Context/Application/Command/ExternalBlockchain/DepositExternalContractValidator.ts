@@ -6,7 +6,7 @@ import Web3 from "web3";
 import { HashZero } from "@ethersproject/constants";
 import Contract from "context/ExternalBlockchain/Contract";
 
-export default class ExternalContractValidator extends AbstractValidator {
+export default class DepositExternalContractValidator extends AbstractValidator {
     constructor(private externalContract: Contract) {
         super();
     }

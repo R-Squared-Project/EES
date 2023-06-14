@@ -29,7 +29,10 @@ export default class ProcessWithdrawInternalContractRedeemHandler
 
         const internalContractId = withdraw.internalContract?.internalId as string;
         const asset = await this.internalBlockchain.getAsset(withdraw.withdrawRequest.withdrawalFeeCurrency);
-        const denormalizedAmount = this.normalizer.denormalize(withdraw.withdrawRequest.withdrawalFeeAmount, asset);
+        const denormalizedAmount = this.normalizer.denormalize(
+            Number(withdraw.withdrawRequest.withdrawalFeeAmount) + Number(withdraw.withdrawRequest.amountToPayInRVETH),
+            asset
+        );
 
         if (!withdraw.secret) {
             throw new Errors.WithdrawWithoutSecret(withdraw.idString);
