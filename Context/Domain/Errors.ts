@@ -62,6 +62,12 @@ export class ReceiverIsInvalid extends UseCaseError {
     }
 }
 
+export class SenderIsInvalid extends UseCaseError {
+    constructor() {
+        super("The sender is invalid.");
+    }
+}
+
 export class DepositIsToSmall extends UseCaseError {
     constructor(minValue: string, value: string) {
         super(`The deposit ${value} is to small. Minimum deposit is ${minValue}.`);

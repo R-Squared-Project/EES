@@ -5,7 +5,7 @@ import DepositRequestRepositoryInterface from "context/Domain/DepositRequestRepo
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessIncomingContractCreation/Errors";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import HashLock from "context/Domain/ValueObject/HashLock";
-import ExternalContractValidator from "context/Application/Command/ExternalBlockchain/ExternalContractValidator";
+import DepositExternalContractValidator from "context/Application/Command/ExternalBlockchain/DepositExternalContractValidator";
 import ExternalContract from "context/Domain/ExternalContract";
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 import Deposit from "context/Domain/Deposit";
@@ -42,7 +42,7 @@ export default class ProcessIncomingContractCreationHandler implements UseCase<P
             throw new Errors.ExternalContractNotExists(command.contractId);
         }
 
-        const validator = new ExternalContractValidator(contract);
+        const validator = new DepositExternalContractValidator(contract);
         validator.validate();
         validator.validateTimeLock();
 

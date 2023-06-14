@@ -2,7 +2,6 @@ import { UseCase } from "context/Core/Domain/UseCase";
 import * as Errors from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/Errors";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import HashLock from "context/Domain/ValueObject/HashLock";
-import ExternalContractValidator from "context/Application/Command/ExternalBlockchain/ExternalContractValidator";
 import ExternalContract from "context/Domain/ExternalContract";
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 import { DatabaseConnectionError } from "context/Infrastructure/Errors";
@@ -11,6 +10,7 @@ import TimeLock from "context/Domain/ValueObject/TimeLock";
 import { Inject, Injectable } from "@nestjs/common";
 import ProcessWithdrawContractCreation from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreation";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
+import WithdrawExternalContractValidator from "context/Application/Command/ExternalBlockchain/WithdrawExternalContractValidator";
 
 @Injectable()
 export default class ProcessWithdrawContractCreationHandler implements UseCase<ProcessWithdrawContractCreation, void> {
@@ -39,7 +39,7 @@ export default class ProcessWithdrawContractCreationHandler implements UseCase<P
             throw new Errors.ExternalContractNotExists(command.contractId);
         }
 
-        new ExternalContractValidator(contract).validate();
+        new WithdrawExternalContractValidator(contract).validate();
 
         const externalContract = new ExternalContract(
             new UniqueEntityID(contract.contractId),
