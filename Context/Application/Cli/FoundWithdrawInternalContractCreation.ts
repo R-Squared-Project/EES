@@ -5,6 +5,7 @@ import { Inject } from "@nestjs/common";
 import CheckInternalWithdrawalOperation from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperation";
 import CheckInternalWithdrawalOperationHandler from "context/Application/Command/InternalBlockchain/CheckInternalWithdrawalOperation/CheckInternalWithdrawalOperationHandler";
 import AfterWithdrawReadyToProcess from "context/Subscribers/AfterWithdrawReadyToProcess";
+import config from "context/config";
 
 interface FoundWithdrawInternalContractCreationOptions {
     interval: number;
@@ -30,7 +31,7 @@ export class FoundWithdrawInternalContractCreation extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);

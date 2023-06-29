@@ -6,12 +6,13 @@ import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import AfterIncomingContractRedeemed from "context/Subscribers/AfterIncomingContractRedeemed";
 import ConfirmDepositInternalContractRedeemed from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractRedeemed/ConfirmDepositInternalContractRedeemed";
 import ConfirmDepositInternalContractRedeemedHandler from "context/Application/Command/InternalBlockchain/ConfirmDepositInternalContractRedeemed/ConfirmDepositInternalContractRedeemedHandler";
+import config from "context/config";
 
 const argv = yargs(process.argv.slice(2))
     .option("interval", {
         alias: "i",
         describe: "Launch interval (seconds)",
-        default: 10,
+        default: config.worker.period,
         type: "number",
     })
     .help()

@@ -5,6 +5,7 @@ import { Inject } from "@nestjs/common";
 import DepositInternalContractRefund from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefund";
 import DepositInternalContractRefundHandler from "context/Application/Command/InternalBlockchain/DepositInternalContractRefund/DepositInternalContractRefundHandler";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
+import config from "context/config";
 
 interface MonitorDepositInternalContractRefundedOptions {
     interval: number;
@@ -29,7 +30,7 @@ export class MonitorDepositInternalContractRefunded extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);

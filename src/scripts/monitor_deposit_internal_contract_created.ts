@@ -8,12 +8,13 @@ import ConfirmDepositInternalContractCreatedHandler from "../../Context/Applicat
 import Setting from "context/Setting/Setting";
 import GetLastDepositContractsHandler from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContractsHandler";
 import GetLastDepositContracts from "context/Application/Query/InternalBlockchain/GetLastDepositContracts/GetLastDepositContracts";
+import config from "context/config";
 
 const argv = yargs(process.argv.slice(2))
     .option("interval", {
         alias: "i",
         describe: "Launch interval (seconds)",
-        default: 10,
+        default: config.worker.period,
         type: "number",
     })
     .help()

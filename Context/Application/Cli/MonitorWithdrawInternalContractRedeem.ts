@@ -5,6 +5,7 @@ import GetLastWithdrawContractsHandler from "context/Application/Query/InternalB
 import ConfirmWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeemHandler";
 import ConfirmWithdrawInternalContractRedeem from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeem";
 import { OperationType } from "context/InternalBlockchain/WithdrawTransactionsCollection";
+import config from "context/config";
 
 interface MonitorWithdrawInternalContractRedeemOptions {
     interval: number;
@@ -32,7 +33,7 @@ export class MonitorWithdrawInternalContractRedeem extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);
