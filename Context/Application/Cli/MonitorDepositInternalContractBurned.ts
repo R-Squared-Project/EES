@@ -5,6 +5,7 @@ import { Inject } from "@nestjs/common";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import BurnedHandler from "context/Application/Command/InternalBlockchain/Confirm/Burned/BurnedHandler";
 import Burned from "context/Application/Command/InternalBlockchain/Confirm/Burned/Burned";
+import config from "context/config";
 
 interface MonitorDepositInternalContractBurnedOptions {
     interval: number;
@@ -26,7 +27,7 @@ export class MonitorDepositInternalContractBurned extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);

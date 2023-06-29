@@ -6,6 +6,7 @@ import ErrorHandler from "context/Infrastructure/Errors/Handler";
 import ConfirmWithdrawProcessed from "context/Application/Command/InternalBlockchain/ConfirmWithdrawProcessed/ConfirmWithdrawProcessed";
 import { ProcessWithdrawExternalContractRefundHandler } from "context/Application/Command/ExternalBlockchain/ProcessWithdrawExternalContractRefund/ProcessWithdrawExternalContractRefundHandler";
 import { ProcessWithdrawExternalContractRefund } from "context/Application/Command/ExternalBlockchain/ProcessWithdrawExternalContractRefund/ProcessWithdrawExternalContractRefund";
+import config from "context/config";
 
 interface MonitorExternalWithdrawContractTimelockOptions {
     interval: number;
@@ -30,7 +31,7 @@ export class MonitorExternalWithdrawContractTimelock extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);

@@ -5,6 +5,7 @@ import GetLastWithdrawContracts from "context/Application/Query/InternalBlockcha
 import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
 import ConfirmWithdrawInternalContractCreated from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractCreated/ConfirmWithdrawInternalContractCreated";
 import { OperationType } from "context/InternalBlockchain/WithdrawTransactionsCollection";
+import config from "context/config";
 
 interface MonitorWithdrawInternalContractCreatedOptions {
     interval: number;
@@ -31,7 +32,7 @@ export class MonitorWithdrawInternalContractCreated extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);
