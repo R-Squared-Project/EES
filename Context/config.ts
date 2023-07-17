@@ -9,6 +9,9 @@ const config = {
         withdraw_internal_timelock: parseInt(process.env.WITHDRAW_INTERNAL_TIMELOCK as string),
         withdraw_external_timelock: parseInt(process.env.WITHDRAW_EXTERNAL_TIMELOCK as string),
     },
+    worker: {
+        period: parseInt(process.env.WORKER_PERIOD ?? "10"),
+    },
     eth: {
         providers: {
             infura: {

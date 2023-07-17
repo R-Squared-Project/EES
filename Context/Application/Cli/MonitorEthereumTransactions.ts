@@ -6,6 +6,7 @@ import ChainProcessor from "context/Application/Command/ExternalBlockchain/Chain
 import GetLastBlocksHandler from "context/Application/Query/ExternalBlockchain/GetLastBlocks/GetLastBlocksHandler";
 import GetLastBlockResponse from "context/Application/Query/ExternalBlockchain/GetLastBlocks/Response";
 import AfterIncomingContractProcessed from "context/Subscribers/AfterIncomingContractProcessed";
+import config from "context/config";
 
 interface MonitorEthereumTransactionsOptions {
     blockNumber?: number;
@@ -40,7 +41,7 @@ export class MonitorEthereumTransactions extends CommandRunner {
     @Option({
         flags: "-i, --interval [number]",
         description: "Launch interval (seconds)",
-        defaultValue: 10,
+        defaultValue: config.worker.period,
     })
     parseInterval(val: string): number {
         return Number(val);
