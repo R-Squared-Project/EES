@@ -50,6 +50,7 @@ export default class CreateContractInInternalBlockchainHandler
         } catch (e: unknown) {
             deposit.resetToCreated();
             await this.repository.save(deposit);
+            throw e;
         }
     }
 

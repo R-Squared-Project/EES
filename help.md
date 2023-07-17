@@ -41,7 +41,7 @@ yarn worker:create_withdrawal_external_contract
 #### Monitor ETH transaction (Contract Create)
 yarn monitor:ethereum_transactions
 
-#### Monitor ETH transaction (Contract Redeem)
+#### Monitor ETH transaction (Contract Redeem) 20
 yarn monitor:ethereum_transactions
 
 #### Worker to Confirm Withdraw External Contract Redeemed
@@ -59,11 +59,16 @@ yarn monitor:withdraw_internal_contract_redeem_processed
 #### Process Withdrawal External Contract Refund
 yarn monitor:external_withdraw_contract_timelock
 
-deposit
-H<olXiB<0lF(^8fT?1\\L/g3;8WfOUx4
-1340f70ae3e72e2c4640902628949a0b38d2d706fb65fad80f647e1722f8bbdc
+d
+8tB(KkI-+vd.s1<(ry5W0$g{VAdY%!Tu
 
+d-loc
+c!oH9^7n]hgs7N^8H4W-O:hgb7CjSsET
 
-withdraw
-gmTsg7B.SrAACgNDdtzI@A?!020:hWVE
-90c37c5e1dfd8fadf1eaf4cfe4f4f56a9d7287a4e006b314447f51af28347ba6
+2KSfxI#AC1czDOIaz7RiX1N$D$Q,aMnq
+
+w
+*J3wVCGpiA6K@Doi3[$XO5*scS*8L)UU
+
+w-loc
+dwJw<[y35ov!,:f]ZL:&u~$if8s(^QWz
