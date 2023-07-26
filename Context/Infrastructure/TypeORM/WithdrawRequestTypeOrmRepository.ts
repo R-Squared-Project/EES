@@ -16,6 +16,7 @@ export default class WithdrawRequestTypeOrmRepository implements WithdrawRequest
             .getRepository<WithdrawRequest>(WithdrawRequest)
             .createQueryBuilder("withdraw_request")
             .where("withdraw_request.status = :status", { status: STATUS_CREATED })
+            .orderBy("withdraw_request.created_at", "DESC")
             .getMany();
     }
 
