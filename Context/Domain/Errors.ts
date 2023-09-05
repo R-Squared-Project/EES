@@ -145,3 +145,5 @@ export class BurnedAmountError extends DomainError {
         super(`DepositId: ${id}. Burned amount ${burnedAmount} is greater than minted amount ${mintedAmount}`);
     }
 }
+
+export class WithdrawRequestValidationError extends UseCaseError {}

@@ -1,12 +1,13 @@
 import AggregateRoot from "../Core/Domain/AggregateRoot";
 import RevpopAccount from "./ValueObject/RevpopAccount";
+import { WithdrawRequestValidationError } from "context/Domain/Errors";
 
 export const STATUS_CREATED = 1;
 export const STATUS_WITHDRAW_CREATED = 5;
 
 export default class WithdrawRequest extends AggregateRoot {
     private _status: number;
-    constructor(
+    private constructor(
         private _revpopAccount: RevpopAccount,
         private _amountToPayInRVETH: number,
         private _addressOfUserInEthereum: string,
@@ -48,6 +49,18 @@ export default class WithdrawRequest extends AggregateRoot {
         withdrawalFeeAmount: number,
         withdrawalFeeCurrency: string
     ): WithdrawRequest {
+        if (amountToPayInRVETH <= 0) {
+            throw new WithdrawRequestValidationError("Amount to pay in RVETH can not be negative or zero");
+        }
+        if (addressOfUserInEthereum.length === 0) {
+            throw new WithdrawRequestValidationError("Address of user in Ethereum can not be empty");
+        }
+        if (withdrawalFeeAmount <= 0) {
+            throw new WithdrawRequestValidationError("Withdrawal fee amount can not be negative or zero");
+        }
+        if (withdrawalFeeCurrency.length === 0) {
+            throw new WithdrawRequestValidationError("Withdrawal fee currency can not be empty");
+        }
         return new WithdrawRequest(
             revpopAccount,
             amountToPayInRVETH,
