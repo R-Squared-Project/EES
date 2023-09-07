@@ -107,7 +107,9 @@ describe("ConfirmWithdrawExternalContractRedeemedHandler", () => {
     describe("execute", () => {
         describe("success", () => {
             it("should redeemed withdraw", async () => {
-                handler.execute(new ConfirmWithdrawExternalContractRedeemed("0x123TxHash", externalContract.idString));
+                await handler.execute(
+                    new ConfirmWithdrawExternalContractRedeemed("0x123TxHash", externalContract.idString)
+                );
                 expect(withdraw.status).eq(STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN);
                 expect(withdraw.externalBlockchainRedeemTxHash).eq("0x123TxHash");
             });

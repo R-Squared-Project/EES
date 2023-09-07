@@ -21,12 +21,7 @@ export default class ConfirmWithdrawExternalContractRedeemedHandler {
     ) {}
 
     async execute(command: ConfirmWithdrawExternalContractRedeemed): Promise<void> {
-        let withdraw: Withdraw | null;
-        try {
-            withdraw = await this.withdrawRepository.getByExternalContractId(command.contractId);
-        } catch (e: unknown) {
-            throw new Errors.WithdrawNotExists(command.contractId);
-        }
+        const withdraw = await this.withdrawRepository.getByExternalContractId(command.contractId);
 
         if (withdraw === null) {
             throw new Errors.WithdrawNotExists(command.contractId);
