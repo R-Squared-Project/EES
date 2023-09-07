@@ -18,6 +18,8 @@ export default class StubRepository implements RepositoryInterface {
     public _redeemedRequests: RedeemRequest[] = [];
     public _redeemTxHash: string | null = null;
     public _transactionReceipt: TransactionReceipt | null = null;
+    public _lastBlockNumber = 100;
+
     async txIncluded(txHash: string): Promise<boolean> {
         return this._txIncluded;
     }
@@ -31,7 +33,7 @@ export default class StubRepository implements RepositoryInterface {
     }
 
     getLastBlockNumber(): Promise<number> {
-        return Promise.resolve(0);
+        return Promise.resolve(this._lastBlockNumber);
     }
 
     async getBlock(number: number): Promise<BlockTransactionString | null> {

@@ -9,6 +9,7 @@ import * as process from "process";
 import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import Contract from "context/ExternalBlockchain/Contract";
+import Withdraw from "context/Domain/Withdraw";
 
 @Injectable()
 export default class ConfirmWithdrawExternalContractRedeemedHandler {
@@ -20,7 +21,12 @@ export default class ConfirmWithdrawExternalContractRedeemedHandler {
     ) {}
 
     async execute(command: ConfirmWithdrawExternalContractRedeemed): Promise<void> {
-        const withdraw = await this.withdrawRepository.getByExternalContractId(command.contractId);
+        let withdraw: Withdraw | null;
+        try {
+            withdraw = await this.withdrawRepository.getByExternalContractId(command.contractId);
+        } catch (e: unknown) {
+            throw new Errors.WithdrawNotExists(command.contractId);
+        }
 
         if (withdraw === null) {
             throw new Errors.WithdrawNotExists(command.contractId);
