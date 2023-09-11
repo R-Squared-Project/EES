@@ -17,4 +17,8 @@ export default class InternalContract extends Entity {
     get createdAt(): Date {
         return this._createdAt;
     }
+
+    set createdAt(value: Date) {
+        this._createdAt = value;
+    }
 }

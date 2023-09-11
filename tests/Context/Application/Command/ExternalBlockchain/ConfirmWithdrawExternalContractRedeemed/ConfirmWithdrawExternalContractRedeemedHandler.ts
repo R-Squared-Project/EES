@@ -5,11 +5,7 @@ import Setting from "context/Setting/Setting";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import StubRepository from "context/ExternalBlockchain/Repository/StubRepository";
 import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
-import Withdraw, {
-    STATUS_READY_TO_SIGN,
-    STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
-    STATUS_REDEEMED,
-} from "context/Domain/Withdraw";
+import Withdraw, { STATUS_READY_TO_SIGN, STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
 import InternalContract from "context/Domain/InternalContract";
