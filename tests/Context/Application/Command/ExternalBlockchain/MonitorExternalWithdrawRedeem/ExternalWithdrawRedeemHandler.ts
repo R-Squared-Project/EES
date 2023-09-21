@@ -23,7 +23,6 @@ describe("ExternalWithdrawRedeemHandler", () => {
                 stubRepository._txIncluded = true;
                 await handler.execute(new ExternalWithdrawRedeem("0x123", "0x123"));
                 expect(rabbitMQ.key).equal(EXTERNAL_WITHDRAW_CONTRACT_REDEEM);
-
                 expect(rabbitMQ.message.txHash).equal("0x123");
                 expect(rabbitMQ.message.contractId).equal("0x123");
             });
