@@ -39,7 +39,7 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
 
     getByTxHash(txHash: string): Promise<Withdraw | null> {
         for (const withdraw of Object.values(this._withdraws)) {
-            if (withdraw.externalContract && withdraw.externalContract.txHash === txHash) {
+            if (withdraw.txHash === txHash) {
                 return Promise.resolve(withdraw);
             }
         }

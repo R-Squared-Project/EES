@@ -10,7 +10,7 @@ import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
 import InternalContract from "context/Domain/InternalContract";
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 
-describe("ExternalWithdrawRefund", () => {
+describe("ExternalWithdrawRefundHandler", () => {
     let externalBlockchain: ExternalBlockchain;
     let stubRepository: StubRepository;
     let withdrawRepository: WithdrawStubRepository;
