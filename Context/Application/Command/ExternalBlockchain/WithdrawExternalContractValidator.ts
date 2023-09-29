@@ -2,7 +2,6 @@ import AbstractValidator from "context/Domain/Validation/AbstractValidator";
 import config from "context/config";
 import * as Errors from "context/Domain/Errors";
 import dayjs from "dayjs";
-import Web3 from "web3";
 import { HashZero } from "@ethersproject/constants";
 import Contract from "context/ExternalBlockchain/Contract";
 
@@ -25,21 +24,10 @@ export default class WithdrawExternalContractValidator extends AbstractValidator
         }
     }
 
-    public validateTimeLock() {
-        const timeLockLimit = dayjs().add(config.contract.minimum_timelock, "minutes");
-
-        if (this.externalContract.timeLock < timeLockLimit.unix()) {
-            throw new Errors.TimeLockIsToSmall(
-                dayjs.unix(this.externalContract.timeLock).format(),
-                timeLockLimit.format()
-            );
-        }
-    }
-
     private validateValue() {
-        const contractValue = Web3.utils.toBN(this.externalContract.value);
-        if (contractValue < config.eth.minimum_deposit_amount) {
-            throw new Errors.DepositIsToSmall(config.eth.minimum_deposit_amount.toString(), contractValue.toString());
+        const contractValue = parseFloat(this.externalContract.value);
+        if (contractValue < config.eth.minimum_withdraw_amount) {
+            throw new Errors.DepositIsToSmall(config.eth.minimum_withdraw_amount.toString(), contractValue.toString());
         }
     }
 
