@@ -5,11 +5,7 @@ import Setting from "context/Setting/Setting";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import StubRepository from "context/ExternalBlockchain/Repository/StubRepository";
 import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
-import Withdraw, {
-    STATUS_READY_TO_SIGN,
-    STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
-    STATUS_REDEEMED,
-} from "context/Domain/Withdraw";
+import Withdraw, { STATUS_READY_TO_SIGN, STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
 import InternalContract from "context/Domain/InternalContract";
@@ -20,6 +16,7 @@ import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 import Address from "context/Domain/ValueObject/Address";
 import HashLock from "context/Domain/ValueObject/HashLock";
 import TimeLock from "context/Domain/ValueObject/TimeLock";
+import { command } from "yargs";
 
 describe("ConfirmWithdrawExternalContractRedeemedHandler", () => {
     let withdrawRepository: WithdrawStubRepository;
@@ -118,6 +115,53 @@ describe("ConfirmWithdrawExternalContractRedeemedHandler", () => {
             it("should return error if withdraw non exist", () => {
                 const command = new ConfirmWithdrawExternalContractRedeemed("0x123", "0x123");
                 expect(handler.execute(command)).rejectedWith("Withdraw not exists");
+            });
+            it("should return error if contract is not withdrawn", () => {
+                externalBlockchain._contract = new Contract(
+                    "0x123ContractId",
+                    "0x123Sender",
+                    "0x123Receiver",
+                    "0x123Value",
+                    "0x123HashLock",
+                    1,
+                    false,
+                    false,
+                    "0x123Preimage"
+                );
+                const command = new ConfirmWithdrawExternalContractRedeemed("0x123", "0x123");
+                expect(handler.execute(command)).rejectedWith("Contract withdrawn is false");
+            });
+            it("should return error if contract without preimage", () => {
+                externalBlockchain._contract = new Contract(
+                    "0x123ContractId",
+                    "0x123Sender",
+                    "0x123Receiver",
+                    "0x123Value",
+                    "0x123HashLock",
+                    1,
+                    true,
+                    false,
+                    ""
+                );
+                const command = new ConfirmWithdrawExternalContractRedeemed("0x123", "0x123");
+                expect(handler.execute(command)).rejectedWith("Contract without preimage");
+            });
+            it("should return error if contract not found", () => {
+                externalBlockchain._contract = null;
+                const command = new ConfirmWithdrawExternalContractRedeemed("0x123", "0x123");
+                expect(handler.execute(command)).rejectedWith("Contract not found");
+            });
+            it("should return error if receipt is reversible", () => {
+                if (externalBlockchain._transactionReceipt) {
+                    externalBlockchain._transactionReceipt.blockNumber = externalBlockchain._lastBlockNumber + 1;
+                }
+                const command = new ConfirmWithdrawExternalContractRedeemed("0x123", "0x123");
+                expect(handler.execute(command)).rejectedWith("Receipt is reversible");
+            });
+            it("should return error if receipt not found", () => {
+                externalBlockchain._transactionReceipt = null;
+                const command = new ConfirmWithdrawExternalContractRedeemed("0x123", "0x123");
+                expect(handler.execute(command)).rejectedWith("Transaction receipt not found");
             });
         });
     });

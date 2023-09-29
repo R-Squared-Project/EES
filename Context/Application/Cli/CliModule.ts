@@ -42,7 +42,6 @@ import GetWithdrawLastRedeemsHandler from "context/Application/Query/ExternalBlo
 import MonitorExternalWithdrawRedeemsLink from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRedeem/MonitorExternalWithdrawRedeemsLink";
 import ExternalWithdrawRedeemHandler from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRedeem/ExternalWithdrawRedeemHandler";
 import { WorkerWithdrawExternalContractRedeemed } from "context/Application/Cli/WorkerWithdrawExternalContractRedeemed";
-import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import ConfirmWithdrawExternalContractRedeemedHandler from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemedHandler";
 import { ExecuteWithdrawInternalContractRedeem } from "context/Application/Cli/ExecuteWithdrawInternalContractRedeem";
 import ProcessWithdrawInternalContractRedeemHandler from "context/Application/Command/InternalBlockchain/ProcessWithdrawInternalContractRedeem/ProcessWithdrawInternalContractRedeemHandler";
@@ -72,7 +71,6 @@ import { ProcessWithdrawExternalContractRefundHandler } from "context/Applicatio
         GetDepositLastRedeemsHandler,
         ExternalDepositRedeemHandler,
         ExternalWithdrawRedeemHandler,
-        RabbitMQ,
         ConfirmDepositExternalContractRedeemedHandler,
         MonitorDepositInternalContractRefunded,
         DepositInternalContractRefundHandler,
@@ -138,6 +136,10 @@ import { ProcessWithdrawExternalContractRefundHandler } from "context/Applicatio
         {
             provide: "ConverterInterface",
             useClass: EtherToWrappedEtherConverter,
+        },
+        {
+            provide: "QueueInterface",
+            useClass: RabbitMQ,
         },
     ],
 })

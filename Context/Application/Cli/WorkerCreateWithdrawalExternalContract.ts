@@ -3,6 +3,8 @@ import RabbitMQ from "context/Queue/RabbitMQ";
 import CreateWithdrawalExternalContract from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContract";
 import CreateWithdrawalExternalContractHandler from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContractHandler";
 import { PersistentError } from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/Errors";
+import QueueInterface, { WITHDRAW_READY_TO_PROCESS } from "context/Queue/QueueInterface";
+import { Inject } from "@nestjs/common";
 
 interface CreateWithdrawalExternalContractMessage {
     withdraw_id: string;
@@ -14,7 +16,7 @@ interface CreateWithdrawalExternalContractMessage {
 })
 export class WorkerCreateWithdrawalExternalContract extends CommandRunner {
     constructor(
-        private readonly messenger: RabbitMQ,
+        @Inject("QueueInterface") private readonly messenger: QueueInterface,
         private readonly handler: CreateWithdrawalExternalContractHandler
     ) {
         super();
@@ -22,7 +24,7 @@ export class WorkerCreateWithdrawalExternalContract extends CommandRunner {
 
     async run(passedParam: string[]): Promise<void> {
         this.messenger.consume<CreateWithdrawalExternalContractMessage>(
-            this.messenger.WITHDRAW_READY_TO_PROCESS,
+            WITHDRAW_READY_TO_PROCESS,
             async (message: CreateWithdrawalExternalContractMessage, ack, nack) => {
                 const command = new CreateWithdrawalExternalContract(message.withdraw_id);
 

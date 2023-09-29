@@ -2,6 +2,11 @@ import amqp, { Channel, Connection } from "amqplib";
 import config from "context/config";
 import { ConsumeMessage, Replies } from "amqplib/properties";
 import { Injectable } from "@nestjs/common";
+import QueueInterface, {
+    EXTERNAL_DEPOSIT_CONTRACT_REDEEM,
+    EXTERNAL_WITHDRAW_CONTRACT_REDEEM,
+    WITHDRAW_READY_TO_PROCESS,
+} from "context/Queue/QueueInterface";
 
 const EXCHANGE_NAME = "deposit";
 const EXCHANGE_TYPE = "direct";
@@ -10,18 +15,15 @@ const EXCHANGE_OPTION = {
 };
 
 @Injectable()
-export default class RabbitMQ {
-    public readonly EXTERNAL_DEPOSIT_CONTRACT_REDEEM = "external_deposit_contract_redeem";
-    public readonly EXTERNAL_WITHDRAW_CONTRACT_REDEEM = "external_withdraw_contract_redeem";
-    public readonly WITHDRAW_READY_TO_PROCESS = "withdraw_ready_to_process";
+export default class RabbitMQ implements QueueInterface {
     private channel: Channel | null = null;
     private connection: Connection | null = null;
 
     public async initProduce() {
         await this.connect();
-        await this.assertQueue(this.EXTERNAL_DEPOSIT_CONTRACT_REDEEM);
-        await this.assertQueue(this.WITHDRAW_READY_TO_PROCESS);
-        await this.assertQueue(this.EXTERNAL_WITHDRAW_CONTRACT_REDEEM);
+        await this.assertQueue(EXTERNAL_DEPOSIT_CONTRACT_REDEEM);
+        await this.assertQueue(WITHDRAW_READY_TO_PROCESS);
+        await this.assertQueue(EXTERNAL_WITHDRAW_CONTRACT_REDEEM);
     }
 
     public async consume<T>(queueName: string, onMessage: (msg: T, ack: () => void, nack: () => void) => void) {

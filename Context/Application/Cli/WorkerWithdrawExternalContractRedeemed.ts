@@ -1,8 +1,9 @@
 import { Command, CommandRunner } from "nest-commander";
-import RabbitMQ from "context/Queue/RabbitMQ";
 import { PersistentError } from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/Errors";
 import ConfirmWithdrawExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemed";
 import ConfirmWithdrawExternalContractRedeemedHandler from "context/Application/Command/ExternalBlockchain/ConfirmWithdrawExternalContractRedeemed/ConfirmWithdrawExternalContractRedeemedHandler";
+import QueueInterface, { EXTERNAL_WITHDRAW_CONTRACT_REDEEM } from "context/Queue/QueueInterface";
+import { Inject } from "@nestjs/common";
 
 interface WithdrawExternalContractRedeemedMessage {
     txHash: string;
@@ -15,7 +16,7 @@ interface WithdrawExternalContractRedeemedMessage {
 })
 export class WorkerWithdrawExternalContractRedeemed extends CommandRunner {
     constructor(
-        private readonly messenger: RabbitMQ,
+        @Inject("QueueInterface") private readonly messenger: QueueInterface,
         private readonly handler: ConfirmWithdrawExternalContractRedeemedHandler
     ) {
         super();
@@ -23,7 +24,7 @@ export class WorkerWithdrawExternalContractRedeemed extends CommandRunner {
 
     async run(passedParam: string[]): Promise<void> {
         this.messenger.consume<WithdrawExternalContractRedeemedMessage>(
-            this.messenger.EXTERNAL_WITHDRAW_CONTRACT_REDEEM,
+            EXTERNAL_WITHDRAW_CONTRACT_REDEEM,
             async (message: WithdrawExternalContractRedeemedMessage, ack, nack) => {
                 const command = new ConfirmWithdrawExternalContractRedeemed(message.txHash, message.contractId);
 

@@ -2,6 +2,7 @@ import DomainEvents from "context/Core/Domain/Events/DomainEvents";
 import HandlerInterface from "context/Core/Domain/Events/HandlerInterface";
 import RabbitMQ from "context/Queue/RabbitMQ";
 import WithdrawReadyToProcessEvent from "context/Domain/Event/WithdrawReadyToProcessEvent";
+import { WITHDRAW_READY_TO_PROCESS } from "context/Queue/QueueInterface";
 
 export default class AfterWithdrawReadyToProcess implements HandlerInterface<WithdrawReadyToProcessEvent> {
     private readonly sender: RabbitMQ;
@@ -19,7 +20,7 @@ export default class AfterWithdrawReadyToProcess implements HandlerInterface<Wit
     }
 
     private async onWithdrawReadyToProcessEvent(event: WithdrawReadyToProcessEvent) {
-        await this.sender.publish(this.sender.WITHDRAW_READY_TO_PROCESS, {
+        await this.sender.publish(WITHDRAW_READY_TO_PROCESS, {
             withdraw_id: event.withdrawId,
         });
     }
