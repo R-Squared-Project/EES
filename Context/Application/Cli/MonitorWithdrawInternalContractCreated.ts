@@ -11,7 +11,7 @@ interface MonitorWithdrawInternalContractCreatedOptions {
     interval: number;
 }
 
-const REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME = "revpop_last_processed_account_history_operation";
+const NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME = "native_last_processed_account_history_operation";
 
 @Command({
     name: "monitor-withdraw-internal-contract-created",
@@ -40,7 +40,7 @@ export class MonitorWithdrawInternalContractCreated extends CommandRunner {
 
     private async process() {
         const queryGetLastWithdrawContracts = new GetLastWithdrawContracts(
-            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME,
+            NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_OPERATION_NAME,
             OperationType.Create
         );
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);

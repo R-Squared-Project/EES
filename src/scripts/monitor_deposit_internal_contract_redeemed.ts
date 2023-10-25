@@ -28,7 +28,7 @@ const errorHandler = new ErrorHandler("MonitorDepositInternalContractRedeemed");
 async function init() {
     depositRepository = new DepositRepository(DataSource);
     internalBlockchain = await InternalBlockchain.init({
-        repository: "revpop",
+        repository: "native",
     });
     confirmDepositInternalContractRedeemedHandler = new ConfirmDepositInternalContractRedeemedHandler(
         depositRepository,

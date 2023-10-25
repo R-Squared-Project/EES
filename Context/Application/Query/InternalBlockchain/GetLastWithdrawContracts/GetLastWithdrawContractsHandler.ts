@@ -6,7 +6,7 @@ import Response from "./Response";
 import { Inject, Injectable } from "@nestjs/common";
 import { WithdrawTransactionsCollection } from "context/InternalBlockchain/WithdrawTransactionsCollection";
 //@ts-ignore
-import { ChainTypes } from "@revolutionpopuli/revpopjs";
+import { ChainTypes } from "@r-squared/rsquared-js";
 
 @Injectable()
 export default class GetLastWithdrawContractsHandler implements UseCase<GetLastWithdrawContracts, Response> {

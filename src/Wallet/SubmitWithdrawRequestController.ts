@@ -4,8 +4,8 @@ import SubmitWithdrawRequest from "context/Application/Command/SubmitWithdrawReq
 import SubmitWithdrawRequestHandler from "context/Application/Command/SubmitWithdrawRequest/SubmitWithdrawRequestHandler";
 
 interface Request {
-    revpopAccount: string;
-    amountToPayInRVETH: number;
+    nativeAccount: string;
+    amountToPayInRQETH: number;
     addressOfUserInEthereum: string;
     withdrawalFeeAmount: number;
     withdrawalFeeCurrency: string;
@@ -19,8 +19,8 @@ export default class SubmitWithdrawRequestController {
     @HttpCode(200)
     async create(@Body() request: Request): Promise<SuccessResponse> {
         const command = new SubmitWithdrawRequest(
-            request.revpopAccount,
-            request.amountToPayInRVETH,
+            request.nativeAccount,
+            request.amountToPayInRQETH,
             request.addressOfUserInEthereum,
             request.withdrawalFeeAmount,
             request.withdrawalFeeCurrency

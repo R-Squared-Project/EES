@@ -23,7 +23,7 @@ const depositId = argv.id;
 const main = async () => {
     const depositRepository = new DepositTypeOrmRepository(DataSource);
     const internalBlockchain = await InternalBlockchain.init({
-        repository: "revpop",
+        repository: "native",
     });
     const externalBlockchain = new ExternalBlockchain("ethereum");
     const converter = new EtherToWrappedEtherConverter();

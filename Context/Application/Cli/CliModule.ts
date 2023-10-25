@@ -126,7 +126,7 @@ import { ProcessWithdrawExternalContractRefundHandler } from "context/Applicatio
         {
             provide: "InternalBlockchain",
             useFactory: () => {
-                return InternalBlockchain.init({ repository: "revpop" });
+                return InternalBlockchain.init({ repository: "native" });
             },
         },
         {

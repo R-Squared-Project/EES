@@ -26,14 +26,14 @@ import OperationRedeem from "context/InternalBlockchain/OperationRedeem";
 //     _transactionId: '1.11.1205898'
 //   }
 
-const account = 'revpop_account_name'
-const internalContractId = '1.16.1'
-const secret = 'b85a0e9f792cb3a9bc7dc75fdb1b795e91cf91ffddacc8d7869638079b02850b'
-const transactionId = '1.11.1205898'
+const account = "native_account_name";
+const internalContractId = "1.16.1";
+const secret = "b85a0e9f792cb3a9bc7dc75fdb1b795e91cf91ffddacc8d7869638079b02850b";
+const transactionId = "1.11.1205898";
 
 interface Params {
-    internalContractId?: string,
-    secret?: string
+    internalContractId?: string;
+    secret?: string;
 }
 
 export function createOperationRedeem(params?: Params): OperationRedeem {
@@ -41,6 +41,6 @@ export function createOperationRedeem(params?: Params): OperationRedeem {
         account,
         params?.internalContractId ?? internalContractId,
         params?.secret ?? secret,
-        transactionId,
-    )
+        transactionId
+    );
 }

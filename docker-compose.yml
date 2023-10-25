@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   node:
-    image: revpop/ees
+    image: rsquared/ees
     build:
       context: .
       dockerfile: docker/node/Dockerfile

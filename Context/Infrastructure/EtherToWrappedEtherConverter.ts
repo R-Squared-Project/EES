@@ -3,11 +3,11 @@ import { Injectable } from "@nestjs/common";
 import config from "context/config";
 
 type Eth = number;
-type RvEth = number;
+type RQETH = number;
 
 @Injectable()
 export default class EtherToWrappedEtherConverter implements ConverterInterface {
-    convert(eth: Eth): RvEth {
-        return eth / config.revpop.eth_to_rveth_rate;
+    convert(eth: Eth): RQETH {
+        return eth / config.r_squared.eth_to_rqeth_rate;
     }
 }

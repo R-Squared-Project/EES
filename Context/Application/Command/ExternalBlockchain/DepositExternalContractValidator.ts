@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import Web3 from "web3";
 import { HashZero } from "@ethersproject/constants";
 import Contract from "context/ExternalBlockchain/Contract";
+import SanctionedAddress from "../../../../src/assets/SanctionedAddresses/sanctioned_addresses_ETH.json";
 
 export default class DepositExternalContractValidator extends AbstractValidator {
     constructor(private externalContract: Contract) {
@@ -13,6 +14,7 @@ export default class DepositExternalContractValidator extends AbstractValidator 
 
     validate(): void {
         this.validateReceiver();
+        this.validateSender();
         this.validateValue();
         this.validateWithdrawn();
         this.validateRefunded();
@@ -58,6 +60,12 @@ export default class DepositExternalContractValidator extends AbstractValidator 
     private validatePreimage() {
         if (this.externalContract.preimage !== HashZero) {
             throw new Errors.PreimageNotEmpty();
+        }
+    }
+
+    private validateSender() {
+        if(SanctionedAddress.includes(this.externalContract.sender)){
+            throw new Errors.SenderIsSanctioned();
         }
     }
 }

@@ -36,7 +36,7 @@ export default class ConfirmWithdrawInternalContractCreatedHandler
         }
 
         for (const request of requests) {
-            if (request.revpopAccount.value === senderName && request.amountToPayInRVETH == normalizedAmount) {
+            if (request.nativeAccount.value === senderName && request.amountToPayInRQETH == normalizedAmount) {
                 const internalContract = new InternalContract(command.transaction.htlcId ?? "");
                 const withdraw = Withdraw.create(
                     request,

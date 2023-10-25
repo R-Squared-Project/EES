@@ -2,12 +2,12 @@ import SubmitWithdrawRequestHandler from "context/Application/Command/SubmitWith
 import WithdrawRequestRepository from "context/Infrastructure/Stub/WithdrawRequestRepository";
 import SubmitWithdrawRequest from "context/Application/Command/SubmitWithdrawRequest/SubmitWithdrawRequest";
 import { expect } from "chai";
-import { RevpopAccountValidationError, WithdrawRequestValidationError } from "context/Domain/Errors";
+import { NativeAccountValidationError, WithdrawRequestValidationError } from "context/Domain/Errors";
 
 describe("SubmitWithdrawRequestHandler", () => {
     let repository: WithdrawRequestRepository;
     let handler: SubmitWithdrawRequestHandler;
-    const internalAccount = "revpop_account_name";
+    const internalAccount = "native_account_name";
 
     beforeEach(function () {
         repository = new WithdrawRequestRepository();
@@ -28,15 +28,15 @@ describe("SubmitWithdrawRequestHandler", () => {
             it("should return error if account is empty", async () => {
                 const command = new SubmitWithdrawRequest("", 1, "0x0000000", 1, "ETH");
 
-                await expect(handler.execute(command)).rejectedWith(RevpopAccountValidationError);
+                await expect(handler.execute(command)).rejectedWith(NativeAccountValidationError);
             });
 
-            it("should return error if amount to pay in RVETH is empty", async () => {
+            it("should return error if amount to pay in RQETH is empty", async () => {
                 const command = new SubmitWithdrawRequest(internalAccount, 0, "0x0000000", 1, "ETH");
 
                 await expect(handler.execute(command)).rejectedWith(
                     WithdrawRequestValidationError,
-                    "Amount to pay in RVETH can not be negative or zero"
+                    "Amount to pay in RQETH can not be negative or zero"
                 );
             });
 
@@ -80,8 +80,8 @@ describe("SubmitWithdrawRequestHandler", () => {
                 const command = new SubmitWithdrawRequest("", 1, "0x0000000", 1, "ETH");
 
                 await expect(handler.execute(command)).rejectedWith(
-                    RevpopAccountValidationError,
-                    'Account name "" is invalid: Revpop account can not be empty'
+                    NativeAccountValidationError,
+                    'Account name "" is invalid: Native account can not be empty'
                 );
             });
         });

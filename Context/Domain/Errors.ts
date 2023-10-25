@@ -16,11 +16,11 @@ export class CreateDepositRequestUnexpectedError extends DomainError {
 
 export class ValidationError extends DomainError {}
 
-export class RevpopAccountValidationError extends ValidationError {
+export class NativeAccountValidationError extends ValidationError {
     private error: string;
 
-    constructor(error: string, revpopAccount: string) {
-        super(`Account name "${revpopAccount}" is invalid: ${error}`);
+    constructor(error: string, nativeAccount: string) {
+        super(`Account name "${nativeAccount}" is invalid: ${error}`);
 
         this.error = error;
     }
@@ -143,6 +143,12 @@ export class BurnedStatusError extends DomainError {
 export class BurnedAmountError extends DomainError {
     constructor(id: string, burnedAmount: string, mintedAmount: string) {
         super(`DepositId: ${id}. Burned amount ${burnedAmount} is greater than minted amount ${mintedAmount}`);
+    }
+}
+
+export class SenderIsSanctioned extends UseCaseError {
+    constructor() {
+        super(`Sender is sanctioned.`);
     }
 }
 

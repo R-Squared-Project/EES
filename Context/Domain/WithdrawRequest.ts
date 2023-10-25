@@ -1,6 +1,7 @@
 import AggregateRoot from "../Core/Domain/AggregateRoot";
-import RevpopAccount from "./ValueObject/RevpopAccount";
+import NativeAccount from "./ValueObject/NativeAccount";
 import { WithdrawRequestValidationError } from "context/Domain/Errors";
+import SanctionedAddress from "../../src/assets/SanctionedAddresses/sanctioned_addresses_ETH.json";
 
 export const STATUS_CREATED = 1;
 export const STATUS_WITHDRAW_CREATED = 5;
@@ -8,8 +9,8 @@ export const STATUS_WITHDRAW_CREATED = 5;
 export default class WithdrawRequest extends AggregateRoot {
     private _status: number;
     private constructor(
-        private _revpopAccount: RevpopAccount,
-        private _amountToPayInRVETH: number,
+        private _nativeAccount: NativeAccount,
+        private _amountToPayInRQETH: number,
         private _addressOfUserInEthereum: string,
         private _withdrawalFeeAmount: number,
         private _withdrawalFeeCurrency: string
@@ -18,12 +19,12 @@ export default class WithdrawRequest extends AggregateRoot {
         this._status = STATUS_CREATED;
     }
 
-    get revpopAccount(): RevpopAccount {
-        return this._revpopAccount;
+    get nativeAccount(): NativeAccount {
+        return this._nativeAccount;
     }
 
-    get amountToPayInRVETH(): number {
-        return this._amountToPayInRVETH;
+    get amountToPayInRQETH(): number {
+        return this._amountToPayInRQETH;
     }
 
     get addressOfUserInEthereum(): string {
@@ -43,17 +44,20 @@ export default class WithdrawRequest extends AggregateRoot {
     }
 
     static create(
-        revpopAccount: RevpopAccount,
-        amountToPayInRVETH: number,
+        nativeAccount: NativeAccount,
+        amountToPayInRQETH: number,
         addressOfUserInEthereum: string,
         withdrawalFeeAmount: number,
         withdrawalFeeCurrency: string
     ): WithdrawRequest {
-        if (amountToPayInRVETH <= 0) {
-            throw new WithdrawRequestValidationError("Amount to pay in RVETH can not be negative or zero");
+        if (amountToPayInRQETH <= 0) {
+            throw new WithdrawRequestValidationError("Amount to pay in RQETH can not be negative or zero");
         }
         if (addressOfUserInEthereum.length === 0) {
             throw new WithdrawRequestValidationError("Address of user in Ethereum can not be empty");
+        }
+        if(SanctionedAddress.includes(addressOfUserInEthereum)){
+            throw new WithdrawRequestValidationError("Address of user in Ethereum is sanctioned");
         }
         if (withdrawalFeeAmount <= 0) {
             throw new WithdrawRequestValidationError("Withdrawal fee amount can not be negative or zero");
@@ -62,8 +66,8 @@ export default class WithdrawRequest extends AggregateRoot {
             throw new WithdrawRequestValidationError("Withdrawal fee currency can not be empty");
         }
         return new WithdrawRequest(
-            revpopAccount,
-            amountToPayInRVETH,
+            nativeAccount,
+            amountToPayInRQETH,
             addressOfUserInEthereum,
             withdrawalFeeAmount,
             withdrawalFeeCurrency

@@ -4,7 +4,7 @@ import WithdrawStubRepository from "context/Infrastructure/Stub/WithdrawStubRepo
 import ProcessWithdrawContractCreationHandler from "context/Application/Command/ExternalBlockchain/ProcessWithdrawContractCreation/ProcessWithdrawContractCreationHandler";
 import Withdraw, { STATUS_READY_TO_SIGN, STATUS_SEND_IN_REPLY } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
-import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
+import NativeAccount from "context/Domain/ValueObject/NativeAccount";
 import InternalContract from "context/Domain/InternalContract";
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 import Contract from "context/ExternalBlockchain/Contract";
@@ -30,7 +30,7 @@ describe("ProcessWithdrawContractCreationHandler", () => {
         stubRepository = externalBlockchain.repository as StubRepository;
         withdrawRepository = new WithdrawStubRepository();
         withdraw = new Withdraw(
-            WithdrawRequest.create(RevpopAccount.create("123"), 1, "0x123", 0.1, "RVP"),
+            WithdrawRequest.create(NativeAccount.create("123"), 1, "0x123", 0.1, "RQRX"),
             new InternalContract("0x123"),
             "0x123",
             "0x123"

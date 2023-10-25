@@ -1,20 +1,17 @@
 import AggregateRoot from "../Core/Domain/AggregateRoot";
-import RevpopAccount from "./ValueObject/RevpopAccount";
+import NativeAccount from "./ValueObject/NativeAccount";
 import HashLock from "./ValueObject/HashLock";
 
 export default class DepositRequest extends AggregateRoot {
-    private _status: number
+    private _status: number;
 
-    constructor(
-        private _revpopAccount: RevpopAccount,
-        private _hashLock: HashLock
-    ) {
-        super()
-        this._status = 1
+    constructor(private _nativeAccount: NativeAccount, private _hashLock: HashLock) {
+        super();
+        this._status = 1;
     }
 
-    get revpopAccount(): RevpopAccount {
-        return this._revpopAccount;
+    get nativeAccount(): NativeAccount {
+        return this._nativeAccount;
     }
 
     get hashLock(): HashLock {
@@ -25,9 +22,9 @@ export default class DepositRequest extends AggregateRoot {
         return this._status;
     }
 
-    static create(revpopAccount: RevpopAccount, hashLock: HashLock): DepositRequest {
-        const depositRequest = new DepositRequest(revpopAccount, hashLock)
+    static create(nativeAccount: NativeAccount, hashLock: HashLock): DepositRequest {
+        const depositRequest = new DepositRequest(nativeAccount, hashLock);
 
-        return depositRequest
+        return depositRequest;
     }
 }

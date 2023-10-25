@@ -31,7 +31,7 @@ const errorHandler = new ErrorHandler("MonitorDepositInternalContractCreated");
 async function init() {
     depositRepository = new DepositTypeOrmRepository(DataSource);
     internalBlockchain = await InternalBlockchain.init({
-        repository: "revpop",
+        repository: "native",
     });
     settings = Setting.init({
         repository: "typeorm",

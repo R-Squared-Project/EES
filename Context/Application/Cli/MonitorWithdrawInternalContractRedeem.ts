@@ -11,8 +11,8 @@ interface MonitorWithdrawInternalContractRedeemOptions {
     interval: number;
 }
 
-const REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME =
-    "revpop_last_processed_account_history_withdraw_redeem_operation";
+const NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME =
+    "native_last_processed_account_history_withdraw_redeem_operation";
 
 @Command({
     name: "monitor-withdraw-internal-contract-redeem",
@@ -41,7 +41,7 @@ export class MonitorWithdrawInternalContractRedeem extends CommandRunner {
 
     private async process() {
         const queryGetLastWithdrawContracts = new GetLastWithdrawContracts(
-            REVPOP_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME,
+            NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REDEEM_OPERATION_NAME,
             OperationType.Redeem
         );
         const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);

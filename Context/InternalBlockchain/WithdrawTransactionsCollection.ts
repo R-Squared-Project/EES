@@ -1,5 +1,5 @@
 //@ts-ignore
-import { ChainTypes } from "@revolutionpopuli/revpopjs";
+import { ChainTypes } from "@r-squared/rsquared-js";
 import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
 
 export enum OperationType {

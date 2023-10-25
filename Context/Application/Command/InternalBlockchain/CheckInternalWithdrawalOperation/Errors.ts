@@ -31,7 +31,7 @@ export class InvalidAmount extends HardFailError {
 
 export class InvalidAsset extends HardFailError {
     constructor(withdraw: Withdraw) {
-        super(`Asset of ${withdraw.htlcCreateOperationId} is invalid (is not RVETH).`);
+        super(`Asset of ${withdraw.htlcCreateOperationId} is invalid (is not RQETH).`);
     }
 }
 

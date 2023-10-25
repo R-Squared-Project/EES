@@ -1,18 +1,18 @@
 export default class SubmitWithdrawRequest {
     constructor(
-        private _revpopAccount: string,
-        private _amountToPayInRVETH: number,
+        private _nativeAccount: string,
+        private _amountToPayInRQETH: number,
         private _addressOfUserInEthereum: string,
         private _withdrawalFeeAmount: number,
         private _withdrawalFeeCurrency: string
     ) {}
 
-    get revpopAccount(): string {
-        return this._revpopAccount;
+    get nativeAccount(): string {
+        return this._nativeAccount;
     }
 
-    get amountToPayInRVETH(): number {
-        return this._amountToPayInRVETH;
+    get amountToPayInRQETH(): number {
+        return this._amountToPayInRQETH;
     }
 
     get addressOfUserInEthereum(): string {

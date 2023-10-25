@@ -24,7 +24,8 @@ export default class CheckInternalWithdrawalOperationHandler
         @Inject("WithdrawRequestRepositoryInterface")
         private readonly withdrawRequestRepository: WithdrawRequestRepositoryInterface,
         @Inject("InternalBlockchain") private readonly internalBlockchain: InternalBlockchain,
-        private readonly normalizer: AssetNormalizer
+        private readonly normalizer: AssetNormalizer,
+        @Inject("RQETHAssetSymbol") private readonly RQETHAssetSymbol: string
     ) {}
 
     public async execute(command: CheckInternalWithdrawalOperation): Promise<void> {
@@ -72,7 +73,7 @@ export default class CheckInternalWithdrawalOperationHandler
             throw new Errors.InvalidAmount(withdraw);
         }
 
-        const asset = await this.internalBlockchain.getAsset("RVETH");
+        const asset = await this.internalBlockchain.getAsset(this.RQETHAssetSymbol);
         if (htlcOperation.get("op")[1].amount.asset_id != asset.get("id")) {
             throw new Errors.InvalidAsset(withdraw);
         }
@@ -94,9 +95,9 @@ export default class CheckInternalWithdrawalOperationHandler
         await this.checkLastIrreversible(transferOperation);
         await this.checkReceiver(transferOperation);
 
-        let minimalWithdrawalFee = config.revpop.rveth_withdrawal_fee;
-        if (transferOperation.get("op")[1].amount.asset_id == config.revpop.asset_id) {
-            minimalWithdrawalFee = config.revpop.rvp_withdrawal_fee;
+        let minimalWithdrawalFee = config.r_squared.rqeth_withdrawal_fee;
+        if (transferOperation.get("op")[1].amount.asset_id == config.r_squared.asset_id) {
+            minimalWithdrawalFee = config.r_squared.native_token_withdrawal_fee;
         }
 
         if (transferOperation.get("op")[1].amount.amount < minimalWithdrawalFee) {

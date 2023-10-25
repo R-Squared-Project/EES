@@ -1,10 +1,10 @@
 import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
-import { ChainTypes } from "@revolutionpopuli/revpopjs";
+import { ChainTypes } from "@r-squared/rsquared-js";
 //@ts-ignore
-import { Apis, ChainConfig } from "@revolutionpopuli/revpopjs-ws";
+import { Apis, ChainConfig } from "@r-squared/rsquared-js-ws";
 //@ts-ignore
-import { Aes, FetchChain, TransactionBuilder, PrivateKey, ChainStore } from "@revolutionpopuli/revpopjs";
+import { Aes, FetchChain, TransactionBuilder, PrivateKey, ChainStore } from "@r-squared/rsquared-js";
 import * as Errors from "context/InternalBlockchain/Errors";
 import { InternalBlockchainConnectionError } from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
@@ -18,7 +18,7 @@ import { Map } from "immutable";
 const PREIMAGE_HASH_CIPHER_SHA256 = 2;
 const PREIMAGE_LENGTH = 32;
 
-export default class RevpopRepository implements RepositoryInterface {
+export default class NativeRepository implements RepositoryInterface {
     private memo: Memo;
 
     public constructor(
@@ -35,10 +35,10 @@ export default class RevpopRepository implements RepositoryInterface {
         accountPrivateKey: string,
         assetSymbol: string,
         chainId: string
-    ): Promise<RevpopRepository> {
-        ChainConfig.networks["RevPop"].chain_id = chainId;
+    ): Promise<NativeRepository> {
+        ChainConfig.networks["RSquared"].chain_id = chainId;
         ChainConfig.setChainId(chainId);
-        const repository = new RevpopRepository(accountFrom, accountPrivateKey, assetSymbol);
+        const repository = new NativeRepository(accountFrom, accountPrivateKey, assetSymbol);
         await repository.connect(nodeUrl);
         return repository;
     }
@@ -113,12 +113,12 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getIncomingContracts(start: string): Promise<Contract[]> {
-        const revpopContracts = await Apis.instance().db_api().exec("get_htlc_by_from", [this.eesAccount, start, 100]);
+        const nativeContracts = await Apis.instance().db_api().exec("get_htlc_by_from", [this.eesAccount, start, 100]);
 
         const privateKey = PrivateKey.fromWif(this.accountPrivateKey);
 
         const contracts = [];
-        for (const contract of revpopContracts) {
+        for (const contract of nativeContracts) {
             try {
                 const message = Aes.decrypt_with_checksum(
                     privateKey,
@@ -137,7 +137,7 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getRedeemOperations(account: string): Promise<OperationRedeem[]> {
-        const revpopOperations = await Apis.instance()
+        const nativeOperations = await Apis.instance()
             .history_api()
             .exec("get_account_history_operations", [
                 account,
@@ -148,13 +148,13 @@ export default class RevpopRepository implements RepositoryInterface {
             ]);
 
         const operations = [];
-        for (const revpopOperation of revpopOperations) {
+        for (const nativeOperation of nativeOperations) {
             operations.push(
                 OperationRedeem.create(
                     account,
-                    revpopOperation["op"][1]["htlc_id"],
-                    Buffer.from(revpopOperation["op"][1]["preimage"], "hex").toString(),
-                    revpopOperation["id"]
+                    nativeOperation["op"][1]["htlc_id"],
+                    Buffer.from(nativeOperation["op"][1]["preimage"], "hex").toString(),
+                    nativeOperation["id"]
                 )
             );
         }
@@ -164,15 +164,15 @@ export default class RevpopRepository implements RepositoryInterface {
 
     async getRefundOperations(account: string): Promise<OperationRefund[]> {
         const mostRecently = "1." + ChainTypes.object_type.operation_history + ".0";
-        const revpopOperations = await Apis.instance()
+        const nativeOperations = await Apis.instance()
             .history_api()
             .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently]);
 
         const operations = [];
-        for (const revpopOperation of revpopOperations) {
-            if (revpopOperation["op"][0] == ChainTypes.operations.htlc_refund) {
+        for (const nativeOperation of nativeOperations) {
+            if (nativeOperation["op"][0] == ChainTypes.operations.htlc_refund) {
                 operations.push(
-                    OperationRefund.create(account, revpopOperation["op"][1]["htlc_id"], revpopOperation["id"])
+                    OperationRefund.create(account, nativeOperation["op"][1]["htlc_id"], nativeOperation["id"])
                 );
             }
         }
@@ -225,15 +225,15 @@ export default class RevpopRepository implements RepositoryInterface {
 
     async getBurnOperations(account: string): Promise<OperationBurn[]> {
         const mostRecently = "1." + ChainTypes.object_type.operation_history + ".0";
-        const revpopOperations = await Apis.instance()
+        const nativeOperations = await Apis.instance()
             .history_api()
             .exec("get_account_history", [this.eesAccount, mostRecently, 100, mostRecently]);
 
         const operations = [];
 
-        for (const revpopOperation of revpopOperations) {
-            if (revpopOperation["op"][0] == ChainTypes.operations.asset_reserve) {
-                operations.push(OperationBurn.create(account, revpopOperation["id"]));
+        for (const nativeOperation of nativeOperations) {
+            if (nativeOperation["op"][0] == ChainTypes.operations.asset_reserve) {
+                operations.push(OperationBurn.create(account, nativeOperation["id"]));
             }
         }
 
@@ -253,7 +253,7 @@ export default class RevpopRepository implements RepositoryInterface {
     }
 
     async getAccountHistory(lastProcessedAccountHistoryOperation: string): Promise<WithdrawTransaction[]> {
-        const revpopOperations = await Apis.instance()
+        const nativeOperations = await Apis.instance()
             .history_api()
             .exec("get_account_history", [
                 this.eesAccount,
@@ -263,13 +263,13 @@ export default class RevpopRepository implements RepositoryInterface {
             ]);
 
         const transactions = [];
-        for (const revpopOperation of revpopOperations) {
+        for (const nativeOperation of nativeOperations) {
             if (
-                revpopOperation["op"][0] == ChainTypes.operations.transfer ||
-                revpopOperation["op"][0] == ChainTypes.operations.htlc_create ||
-                revpopOperation["op"][0] == ChainTypes.operations.htlc_redeemed
+                nativeOperation["op"][0] == ChainTypes.operations.transfer ||
+                nativeOperation["op"][0] == ChainTypes.operations.htlc_create ||
+                nativeOperation["op"][0] == ChainTypes.operations.htlc_redeemed
             ) {
-                transactions.push(revpopOperation);
+                transactions.push(nativeOperation);
             }
         }
 

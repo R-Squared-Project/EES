@@ -24,7 +24,7 @@ let messenger: RabbitMQ;
 async function main() {
     const depositRepository = new DepositTypeOrmRepository(DataSource);
     internalBlockchain = await InternalBlockchain.init({
-        repository: "revpop",
+        repository: "native",
     });
     const externalBlockchain = new ExternalBlockchain("ethereum");
     const converter = new EtherToWrappedEtherConverter();

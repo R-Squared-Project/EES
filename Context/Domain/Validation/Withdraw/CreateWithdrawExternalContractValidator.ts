@@ -33,7 +33,7 @@ export default class CreateWithdrawExternalContractValidator extends AbstractVal
             .add(config.contract.withdraw_internal_timelock, "minute")
             .diff(dayjs(), "minute");
 
-        const summaryTimelock = config.contract.withdraw_external_timelock + config.revpop.redeem_timeframe;
+        const summaryTimelock = config.contract.withdraw_external_timelock + config.r_squared.redeem_timeframe;
 
         if (internalContractTimelockDifference < summaryTimelock) {
             throw new Errors.InvalidTimelockError(this.withdraw.id.toValue());

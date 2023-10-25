@@ -1,5 +1,5 @@
 {
-  "name": "ees",
+  "name": "@r-squared/rsquared-ees",
   "version": "0.1.0",
   "main": "index.js",
   "author": "Trafterian",
@@ -30,7 +30,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "test": "NODE_ENV=test mocha -r ts-node/register -r tsconfig-paths/register -r ./tests/index.ts ./tests/Context --recursive --extension ts",
-    "test:integration": "NODE_ENV=test mocha -r ts-node/register -r tsconfig-paths/register -r ./tests/index.ts -r ./tests/Integration/hooks.ts ./tests/Integration --recursive --extension ts"
+    "test:integration": "NODE_ENV=test mocha -r ts-node/register -r tsconfig-paths/register -r ./tests/index.ts -r ./tests/Integration/hooks.ts ./tests/Integration --recursive --extension ts",
+    "update-sanctioned-addresses": "curl https://raw.githubusercontent.com/0xB10C/ofac-sanctioned-digital-currency-addresses/lists/sanctioned_addresses_ETH.json -o src/assets/SanctionedAddresses/sanctioned_addresses_ETH.json"
   },
   "dependencies": {
     "@nestjs/cli": "^9.1.1",
@@ -39,10 +40,11 @@
     "@nestjs/core": "^9.0.7",
     "@nestjs/platform-express": "^9.0.7",
     "@nestjs/typeorm": "^9.0.0",
-    "@revolutionpopuli/revpopjs": "^6.0.4",
+    "@r-squared/rsquared-js": "^6.0.5",
     "amqplib": "^0.10.3",
+    "axios": "^1.5.1",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "dayjs": "^1.11.5",
     "mysql2": "^2.3.3",
     "nest-commander": "^3.6.1",

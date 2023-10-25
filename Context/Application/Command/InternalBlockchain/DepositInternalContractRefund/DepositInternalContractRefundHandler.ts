@@ -27,7 +27,7 @@ export default class DepositInternalContractRefundHandler implements UseCase<Dep
 
         const internalContractId = deposit.internalContract?.internalId as string;
 
-        if (!(await this.hasRefundOperation(internalContractId, deposit._depositRequest.revpopAccount.value))) {
+        if (!(await this.hasRefundOperation(internalContractId, deposit._depositRequest.nativeAccount.value))) {
             console.log(`DepositInternalContractRefundHandler: Deposit ${deposit.idString} has not refund yet.`);
 
             return;

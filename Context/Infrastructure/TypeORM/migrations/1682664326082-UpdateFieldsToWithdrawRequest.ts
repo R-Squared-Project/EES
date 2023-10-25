@@ -5,13 +5,13 @@ export class UpdateFieldsToWithdrawRequest1682664326082 implements MigrationInte
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `ALTER TABLE \`withdraw_request\` CHANGE \`amount_to_pay_in_RVETH\` \`amount_to_pay_in_RVETH\` decimal(15,5) NOT NULL`
+            `ALTER TABLE \`withdraw_request\` CHANGE \`amount_to_pay_in_RQETH\` \`amount_to_pay_in_RQETH\` decimal(15,5) NOT NULL`
         );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `ALTER TABLE \`withdraw_request\` CHANGE \`amount_to_pay_in_RVETH\` \`amount_to_pay_in_RVETH\` decimal(10,0) NOT NULL`
+            `ALTER TABLE \`withdraw_request\` CHANGE \`amount_to_pay_in_RQETH\` \`amount_to_pay_in_RQETH\` decimal(10,0) NOT NULL`
         );
     }
 }

@@ -6,7 +6,7 @@ import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import { expect } from "chai";
 import Withdraw, { STATUS_REFUND, STATUS_REFUNDED } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
-import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
+import NativeAccount from "context/Domain/ValueObject/NativeAccount";
 import InternalContract from "context/Domain/InternalContract";
 import UniqueEntityID from "context/Core/Domain/UniqueEntityID";
 
@@ -21,7 +21,7 @@ describe("ExternalWithdrawRefundHandler", () => {
         stubRepository = externalBlockchain.repository as StubRepository;
         withdrawRepository = new WithdrawStubRepository();
         withdraw = new Withdraw(
-            WithdrawRequest.create(RevpopAccount.create("123"), 1, "0x123", 0.1, "RVP"),
+            WithdrawRequest.create(NativeAccount.create("123"), 1, "0x123", 0.1, "RQRX"),
             new InternalContract("0x123"),
             "0x123",
             "0x123"

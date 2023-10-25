@@ -1,30 +1,30 @@
-import {EntitySchema} from "typeorm"
+import { EntitySchema } from "typeorm";
 import DepositRequest from "context/Domain/DepositRequest";
-import RevpopAccountType from "../Type/RevpopAccountType";
+import NativeAccountType from "../Type/NativeAccountType";
 import HashLockType from "../Type/HashLockType";
 
 const DepositEntity = new EntitySchema<DepositRequest>({
     name: "DepositRequest",
-    tableName: 'deposit_request',
+    tableName: "deposit_request",
     target: DepositRequest,
     columns: {
         idString: {
-            name: 'id',
+            name: "id",
             type: String,
-            primary: true
+            primary: true,
         },
         // @ts-ignore
-        _revpopAccount: RevpopAccountType,
+        _nativeAccount: NativeAccountType,
         _hashLock: HashLockType,
         _status: {
             type: Number,
-            name: 'status',
+            name: "status",
         },
         _createdAt: {
-            name: 'created_at',
+            name: "created_at",
             createDate: true,
         },
     },
-})
+});
 
-export default DepositEntity
+export default DepositEntity;

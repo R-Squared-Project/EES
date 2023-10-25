@@ -1,5 +1,5 @@
 import RepositoryInterface from "./Repository/RepositoryInterface";
-import RevpopRepository from "./Repository/RevpopRepository";
+import NativeRepository from "./Repository/NativeRepository";
 import StubRepository from "./Repository/StubRepository";
 import config from "context/config";
 import Contract from "context/InternalBlockchain/HtlcContract";
@@ -10,7 +10,7 @@ import { Injectable } from "@nestjs/common";
 import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
 import { Map } from "immutable";
 
-type Repository = "revpop" | "stub";
+type Repository = "native" | "stub";
 
 interface Config {
     repository: Repository;
@@ -32,13 +32,14 @@ class InternalBlockchain {
 
     static async createRepository(repository: Repository): Promise<RepositoryInterface> {
         switch (repository) {
-            case "revpop":
-                return await RevpopRepository.init(
-                    config.revpop.node_url as string,
-                    config.revpop.ees_account as string,
-                    config.revpop.account_private_key as string,
-                    config.revpop.asset_symbol as string,
-                    config.revpop.chain_id as string
+            case "native":
+                return await NativeRepository.init(
+                    config.r_squared.node_url as string,
+                    config.r_squared.ees_account as string,
+                    config.r_squared.account_private_key as string,
+                    config.r_squared.asset_symbol as string,
+                    config.r_squared.chain_id as string,
+                    config.r_squared.chain_network_name as string
                 );
             case "stub":
                 return new StubRepository();

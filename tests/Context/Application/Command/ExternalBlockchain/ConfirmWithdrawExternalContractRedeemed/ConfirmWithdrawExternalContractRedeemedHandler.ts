@@ -7,7 +7,7 @@ import StubRepository from "context/ExternalBlockchain/Repository/StubRepository
 import ConsoleNotifier from "context/Notifier/ConsoleNotifier";
 import Withdraw, { STATUS_READY_TO_SIGN, STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
-import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
+import NativeAccount from "context/Domain/ValueObject/NativeAccount";
 import InternalContract from "context/Domain/InternalContract";
 import { expect } from "chai";
 import Contract from "context/ExternalBlockchain/Contract";
@@ -45,7 +45,7 @@ describe("ConfirmWithdrawExternalContractRedeemedHandler", () => {
 
         withdraw = new Withdraw(
             WithdrawRequest.create(
-                RevpopAccount.create("revpop_account_name"),
+                NativeAccount.create("native_account_name"),
                 1,
                 "0x0000000AddressOfUserInEthereum",
                 1,

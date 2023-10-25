@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
-import RevpopAccountType from "../Type/RevpopAccountType";
+import NativeAccountType from "../Type/NativeAccountType";
 
 const WithdrawRequestEntity = new EntitySchema<WithdrawRequest>({
     name: "WithdrawRequest",
@@ -17,13 +17,13 @@ const WithdrawRequestEntity = new EntitySchema<WithdrawRequest>({
             name: "status",
             type: Number,
         },
-        _revpopAccount: RevpopAccountType,
+        _nativeAccount: NativeAccountType,
         _createdAt: {
             name: "created_at",
             createDate: true,
         },
-        _amountToPayInRVETH: {
-            name: "amount_to_pay_in_RVETH",
+        _amountToPayInRQETH: {
+            name: "amount_to_pay_in_RQETH",
             type: "decimal",
             precision: 15,
             scale: 5,

@@ -6,7 +6,7 @@ import AssetNormalizer from "context/Infrastructure/AssetNormalizer";
 import CreateWithdrawalExternalContractHandler from "context/Application/Command/ExternalBlockchain/CreateWithdrawalExternalContract/CreateWithdrawalExternalContractHandler";
 import Withdraw, { STATUS_READY_TO_PROCESS } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
-import RevpopAccount from "context/Domain/ValueObject/RevpopAccount";
+import NativeAccount from "context/Domain/ValueObject/NativeAccount";
 import InternalContract from "context/Domain/InternalContract";
 import ExternalBlockchain from "context/ExternalBlockchain/ExternalBlockchain";
 import InternalBlockchain from "context/InternalBlockchain/InternalBlockchain";
@@ -38,7 +38,7 @@ describe("CreateWithdrawExternalContractHandler", () => {
 
         withdraw = new Withdraw(
             WithdrawRequest.create(
-                RevpopAccount.create("revpop_account_name"),
+                NativeAccount.create("native_account_name"),
                 1,
                 "0x0000000AddressOfUserInEthereum",
                 1,

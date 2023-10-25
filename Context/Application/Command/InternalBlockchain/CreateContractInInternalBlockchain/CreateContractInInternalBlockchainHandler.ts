@@ -27,12 +27,12 @@ export default class CreateContractInInternalBlockchainHandler
             throw new Errors.DepositNotFound(command.depositId);
         }
 
-        const rvEthAmount = this.converter.convert(
+        const RQETHAmount = this.converter.convert(
             this.normalizer.normalize(deposit._externalContract.value, this.externalBlockchain.getAsset())
         );
 
         const denormalizedAmount = this.normalizer.denormalize(
-            rvEthAmount,
+            RQETHAmount,
             await this.internalBlockchain.getInternalAsset()
         );
 
@@ -42,7 +42,7 @@ export default class CreateContractInInternalBlockchainHandler
         try {
             await this.internalBlockchain.createContract(
                 deposit._externalContract.txHash,
-                deposit._depositRequest.revpopAccount.value,
+                deposit._depositRequest.nativeAccount.value,
                 denormalizedAmount,
                 deposit._depositRequest.hashLock.value.substring(2),
                 this.timeLock()
@@ -55,6 +55,6 @@ export default class CreateContractInInternalBlockchainHandler
     }
 
     private timeLock(): number {
-        return dayjs().add(config.revpop.redeem_timeframe, "minutes").diff(dayjs(), "seconds");
+        return dayjs().add(config.r_squared.redeem_timeframe, "minutes").diff(dayjs(), "seconds");
     }
 }
