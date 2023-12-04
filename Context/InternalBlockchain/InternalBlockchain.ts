@@ -37,9 +37,9 @@ class InternalBlockchain {
                     config.r_squared.node_url as string,
                     config.r_squared.ees_account as string,
                     config.r_squared.account_private_key as string,
-                    config.r_squared.asset_symbol as string,
+                    config.r_squared.rqeth_asset_symbol as string,
                     config.r_squared.chain_id as string,
-                    config.r_squared.chain_network_name as string
+                    // config.r_squared.chain_network_name as string
                 );
             case "stub":
                 return new StubRepository();

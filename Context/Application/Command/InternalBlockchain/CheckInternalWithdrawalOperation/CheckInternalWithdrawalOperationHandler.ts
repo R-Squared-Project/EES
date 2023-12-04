@@ -97,7 +97,7 @@ export default class CheckInternalWithdrawalOperationHandler
 
         let minimalWithdrawalFee = config.r_squared.rqeth_withdrawal_fee;
         if (transferOperation.get("op")[1].amount.asset_id == config.r_squared.asset_id) {
-            minimalWithdrawalFee = config.r_squared.native_token_withdrawal_fee;
+            minimalWithdrawalFee = config.r_squared.rqrx_withdrawal_fee;
         }
 
         if (transferOperation.get("op")[1].amount.amount < minimalWithdrawalFee) {

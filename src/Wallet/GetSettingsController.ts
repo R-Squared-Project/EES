@@ -16,10 +16,10 @@ export default class GetSettingsController {
                 minimum_withdraw: config.eth.minimum_withdraw_amount.toString(),
                 minimum_timelock: config.contract.minimum_timelock,
                 withdraw_timelock: config.contract.withdraw_internal_timelock,
-                native_token_withdrawal_fee: config.r_squared.native_token_withdrawal_fee,
+                rqrx_withdrawal_fee: config.r_squared.rqrx_withdrawal_fee,
                 rqeth_withdrawal_fee: config.r_squared.rqeth_withdrawal_fee,
-                internal_asset_symbol: config.r_squared.asset_symbol,
-                internal_ees_account: config.r_squared.ees_account,
+                rqeth_asset_symbol: config.r_squared.rqeth_asset_symbol,
+                rsquared_ees_account: config.r_squared.ees_account,
             })
         );
     }

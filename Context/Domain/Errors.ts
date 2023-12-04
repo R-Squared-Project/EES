@@ -152,4 +152,10 @@ export class SenderIsSanctioned extends UseCaseError {
     }
 }
 
+export class ReceiverIsSanctioned extends UseCaseError {
+    constructor() {
+        super(`Receiver is sanctioned.`);
+    }
+}
+
 export class WithdrawRequestValidationError extends UseCaseError {}

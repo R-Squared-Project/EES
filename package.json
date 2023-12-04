@@ -40,7 +40,7 @@
     "@nestjs/core": "^9.0.7",
     "@nestjs/platform-express": "^9.0.7",
     "@nestjs/typeorm": "^9.0.0",
-    "@r-squared/rsquared-js": "^6.0.5",
+    "@r-squared/rsquared-js": "^6.0.7",
     "amqplib": "^0.10.3",
     "axios": "^1.5.1",
     "class-transformer": "^0.5.1",

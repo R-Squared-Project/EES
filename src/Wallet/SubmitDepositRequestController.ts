@@ -3,7 +3,7 @@ import { SubmitDepositRequest, submitDepositRequestHandler } from "../../Context
 import SuccessResponse from "../Response/SuccessResponse";
 
 interface Request {
-    nativeAccount: string;
+    rsquaredAccount: string;
     hashLock: string;
 }
 
@@ -12,7 +12,7 @@ export default class SubmitDepositRequestController {
     @Post()
     @HttpCode(200)
     async create(@Body() request: Request): Promise<SuccessResponse> {
-        const command = new SubmitDepositRequest(request.nativeAccount, request.hashLock);
+        const command = new SubmitDepositRequest(request.rsquaredAccount, request.hashLock);
 
         try {
             const depositRequestId = await submitDepositRequestHandler.execute(command);

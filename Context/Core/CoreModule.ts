@@ -39,6 +39,12 @@ import WithdrawTypeOrmRepository from "context/Infrastructure/TypeORM/WithdrawTy
             useValue: config.r_squared.rqeth_asset_symbol,
         },
     ],
-    exports: ["WithdrawRequestRepositoryInterface", TypeOrmModule, "WithdrawRepositoryInterface"],
+    exports: [
+        "WithdrawRequestRepositoryInterface",
+        TypeOrmModule,
+        "WithdrawRepositoryInterface",
+        "RQETHAssetSymbol",
+        "DataSource"
+    ],
 })
 export class CoreModule {}

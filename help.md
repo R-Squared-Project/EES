@@ -79,3 +79,7 @@ yarn monitor:withdraw_internal_contract_redeem_processed
 ### Process Withdrawal External Contract Refund
 supervisorctl start monitor_external_withdraw_contract_timelock
 yarn monitor:external_withdraw_contract_timelock
+
+
+### deposit locally
+NQB@tkbjKg*%+%BUN^^#x|%>{XAhYK>[

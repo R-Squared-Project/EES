@@ -38,7 +38,7 @@ const config = {
         account_private_key: process.env.INTERNAL_ACCOUNT_PRIVATE_KEY,
         redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_INTERNAL_BLOCKCHAIN as string, 10),
         chain_id: process.env.INTERNALP_CHAIN_ID,
-        native_token_withdrawal_fee: parseFloat(process.env.INTERNAL_NATIVE_TOKEN_WITHDRAWAL_FEE as string),
+        rqrx_withdrawal_fee: parseFloat(process.env.INTERNAL_RQRX_WITHDRAWAL_FEE as string),
         rqeth_withdrawal_fee: parseFloat(process.env.INTERNAL_RQETH_WITHDRAWAL_FEE as string),
         eth_to_rqeth_rate: parseFloat(process.env.INTERNAL_ETH_TO_RQETH_RATE ?? "1"),
         chain_network_name: process.env.INTERNAL_CHAIN_NETWORK_NAME as string,
