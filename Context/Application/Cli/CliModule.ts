@@ -51,6 +51,9 @@ import { MonitorWithdrawInternalContractRedeemProcessed } from "context/Applicat
 import ConfirmWithdrawProcessedHandler from "context/Application/Command/InternalBlockchain/ConfirmWithdrawProcessed/ConfirmWithdrawProcessedHandler";
 import { MonitorExternalWithdrawContractTimelock } from "context/Application/Cli/MonitorExternalWithdrawContractTimelock";
 import { ProcessWithdrawExternalContractRefundHandler } from "context/Application/Command/ExternalBlockchain/ProcessWithdrawExternalContractRefund/ProcessWithdrawExternalContractRefundHandler";
+import {UpdateSanctionedAddresses} from "context/Application/Cli/UpdateSanctionedAddresses";
+import {GetFee} from "context/Application/Cli/GetFee";
+import {SetFee} from "context/Application/Cli/SetFee";
 
 @Module({
     imports: [CoreModule],
@@ -99,6 +102,9 @@ import { ProcessWithdrawExternalContractRefundHandler } from "context/Applicatio
         ConfirmWithdrawProcessedHandler,
         MonitorExternalWithdrawContractTimelock,
         ProcessWithdrawExternalContractRefundHandler,
+        UpdateSanctionedAddresses,
+        GetFee,
+        SetFee,
         {
             provide: "DataSource",
             useValue: DataSource,

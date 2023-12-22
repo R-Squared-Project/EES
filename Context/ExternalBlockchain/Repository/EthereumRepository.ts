@@ -246,6 +246,82 @@ export default class EthereumRepository implements RepositoryInterface {
         }
     }
 
+    async setFee(fee: number): Promise<string> {
+        let gas: number;
+
+        try {
+            gas = await this._depositContract.methods.setFee(fee).estimateGas({
+                from: config.eth.receiver,
+            });
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw e;
+        }
+
+        const tx = {
+            from: config.eth.receiver,
+            to: config.eth.withdraw_contract_address,
+            gas,
+            data: this._depositContract.methods.setFee(fee).encodeABI(),
+        };
+
+        const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
+
+        try {
+            const result = await this._web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
+
+            return result.transactionHash;
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw e;
+        }
+    }
+
+    async getFee(): Promise<any> {
+        let gas: number;
+
+        try {
+            gas = await this._depositContract.methods.getFee().estimateGas({
+                from: config.eth.receiver,
+            });
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw e;
+        }
+
+        const tx = {
+            from: config.eth.receiver,
+            to: config.eth.withdraw_contract_address,
+            gas,
+            data: this._depositContract.methods.getFee().encodeABI(),
+        };
+
+        const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
+
+        try {
+            const result = await this._web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
+
+            return result;
+        } catch (e) {
+            if (e instanceof TypeError) {
+                throw new Errors.ConnectionError();
+            }
+
+            throw e;
+        }
+    }
+
+
+
     private async loadTx(txHash: string) {
         return await this._web3.eth.getTransaction(txHash);
     }

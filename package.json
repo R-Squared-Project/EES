@@ -24,15 +24,17 @@
     "monitor:withdraw_internal_contract_redeem": "ts-node -r tsconfig-paths/register cli.ts monitor-withdraw-internal-contract-redeem",
     "monitor:withdraw_internal_contract_redeem_processed": "ts-node -r tsconfig-paths/register cli.ts monitor-withdraw-internal-contract-redeem-processed",
     "monitor:external_withdraw_contract_timelock": "ts-node -r tsconfig-paths/register cli.ts monitor-external-withdraw-contract-timelock",
+    "update:sanctioned-addresses": "ts-node -r tsconfig-paths/register cli.ts update-sanctioned-addresses",
+    "get-fee": "ts-node -r tsconfig-paths/register cli.ts get-fee",
+    "set-fee": "ts-node -r tsconfig-paths/register cli.ts set-fee",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "test": "NODE_ENV=test mocha -r ts-node/register -r tsconfig-paths/register -r ./tests/index.ts ./tests/Context --recursive --extension ts",
-    "test:integration": "NODE_ENV=test mocha -r ts-node/register -r tsconfig-paths/register -r ./tests/index.ts -r ./tests/Integration/hooks.ts ./tests/Integration --recursive --extension ts",
-    "update-sanctioned-addresses": "curl https://raw.githubusercontent.com/0xB10C/ofac-sanctioned-digital-currency-addresses/lists/sanctioned_addresses_ETH.json -o src/assets/SanctionedAddresses/sanctioned_addresses_ETH.json"
-  },
+    "test:integration": "NODE_ENV=test mocha -r ts-node/register -r tsconfig-paths/register -r ./tests/index.ts -r ./tests/Integration/hooks.ts ./tests/Integration --recursive --extension ts"
+},
   "dependencies": {
     "@nestjs/cli": "^9.1.1",
     "@nestjs/common": "^9.0.7",

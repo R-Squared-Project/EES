@@ -5,7 +5,8 @@ import dayjs from "dayjs";
 import Web3 from "web3";
 import { HashZero } from "@ethersproject/constants";
 import Contract from "context/ExternalBlockchain/Contract";
-import SanctionedAddress from "../../../../src/assets/SanctionedAddresses/sanctioned_addresses_ETH.json";
+import Fs from "fs";
+import Path from "path";
 
 export default class DepositExternalContractValidator extends AbstractValidator {
     constructor(private externalContract: Contract) {
@@ -64,7 +65,9 @@ export default class DepositExternalContractValidator extends AbstractValidator 
     }
 
     private validateSender() {
-        if(SanctionedAddress.includes(this.externalContract.sender)){
+        const sanctionedAddresses = JSON.parse(Fs.readFileSync(Path.resolve(__dirname, '../../../../src/assets/SanctionedAddresses/', 'sanctioned_addresses_ETH.json'), 'utf8'))
+
+        if (sanctionedAddresses.includes(this.externalContract.sender)){
             throw new Errors.SenderIsSanctioned();
         }
     }

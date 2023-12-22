@@ -1,7 +1,8 @@
 import AggregateRoot from "../Core/Domain/AggregateRoot";
 import NativeAccount from "./ValueObject/NativeAccount";
 import { WithdrawRequestValidationError } from "context/Domain/Errors";
-import SanctionedAddress from "../../src/assets/SanctionedAddresses/sanctioned_addresses_ETH.json";
+import Fs from "fs";
+import Path from "path";
 
 export const STATUS_CREATED = 1;
 export const STATUS_WITHDRAW_CREATED = 5;
@@ -56,7 +57,10 @@ export default class WithdrawRequest extends AggregateRoot {
         if (addressOfUserInEthereum.length === 0) {
             throw new WithdrawRequestValidationError("Address of user in Ethereum can not be empty");
         }
-        if(SanctionedAddress.includes(addressOfUserInEthereum)){
+
+        const sanctionedAddresses = JSON.parse(Fs.readFileSync(Path.resolve(__dirname, '../../src/assets/SanctionedAddresses/', 'sanctioned_addresses_ETH.json'), 'utf8'))
+
+        if(sanctionedAddresses.includes(addressOfUserInEthereum)){
             throw new WithdrawRequestValidationError("Address of user in Ethereum is sanctioned");
         }
         if (withdrawalFeeAmount <= 0) {
