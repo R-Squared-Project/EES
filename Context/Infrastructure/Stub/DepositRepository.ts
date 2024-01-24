@@ -90,4 +90,27 @@ export default class DepositRepository implements DepositRepositoryInterface {
     getBurned(): Promise<Deposit[]> {
         return Promise.resolve([])
     }
+
+    getByContractId(contractId: string): Promise<Deposit | null> {
+        for (const deposit of Object.values(this._deposits)) {
+            if (deposit._externalContract.idString === contractId) {
+
+                return Promise.resolve(deposit)
+            }
+        }
+
+        return Promise.resolve(null)
+    }
+
+    getByRequestIds(requestIds: string[]): Promise<Deposit[]> {
+        const deposits: Deposit[] = []
+
+        for (const deposit of Object.values(this._deposits)) {
+            if (requestIds.includes(deposit._depositRequest.id.toString())) {
+                deposits.push(deposit)
+            }
+        }
+
+        return Promise.resolve(deposits)
+    }
 }

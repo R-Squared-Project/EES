@@ -8,6 +8,8 @@ import SubmitWithdrawRequestHandler from "context/Application/Command/SubmitWith
 import { CoreModule } from "context/Core/CoreModule";
 import SubmitWithdrawRequestController from "./SubmitWithdrawRequestController";
 import GetWithdrawExternalContractController from "./GetWithdrawExternalContractController";
+import GetDepositContractIdController from "./GetDepositContractIdController";
+import GetDepositsStatusesController from "./GetDepositsStatusesController";
 
 @Module({
     imports: [CoreModule],
@@ -28,6 +30,8 @@ import GetWithdrawExternalContractController from "./GetWithdrawExternalContract
         SubmitWithdrawRequestController,
         CheckDepositSubmittedToInternalBlockchainController,
         GetWithdrawExternalContractController,
+        GetDepositContractIdController,
+        GetDepositsStatusesController,
     ],
 })
 export default class WalletModule {}

@@ -95,4 +95,16 @@ export default class StubRepository implements RepositoryInterface {
     loadWithdrawHTLCRefundEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return Promise.resolve([]);
     }
+
+    loadDepositHTLCRefundEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return Promise.resolve([]);
+    }
+
+    getFee(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
+    setFee(fee: number): Promise<string> {
+        return Promise.resolve("");
+    }
 }

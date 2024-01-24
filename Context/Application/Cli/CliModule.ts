@@ -54,6 +54,18 @@ import { ProcessWithdrawExternalContractRefundHandler } from "context/Applicatio
 import {UpdateSanctionedAddresses} from "context/Application/Cli/UpdateSanctionedAddresses";
 import {GetFee} from "context/Application/Cli/GetFee";
 import {SetFee} from "context/Application/Cli/SetFee";
+import ExternalDepositRefundHandler
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRefund/ExternalDepositRefundHandler";
+import MonitorExternalDepositRefundsLink
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalDepositRefund/MonitorExternalDepositRefundsLink";
+import MonitorExternalWithdrawRefundsLink
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRefund/MonitorExternalWithdrawRefundsLink";
+import ExternalWithdrawRefundHandler
+    from "context/Application/Command/ExternalBlockchain/MonitorExternalWithdrawRefund/ExternalWithdrawRefundHandler";
+import GetDepositLastRefundsHandler
+    from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastRefundsHandler";
+import GetWithdrawLastRefundsHandler
+    from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastRefundsHandler";
 
 @Module({
     imports: [CoreModule],
@@ -103,6 +115,12 @@ import {SetFee} from "context/Application/Cli/SetFee";
         MonitorExternalWithdrawContractTimelock,
         ProcessWithdrawExternalContractRefundHandler,
         UpdateSanctionedAddresses,
+        ExternalDepositRefundHandler,
+        MonitorExternalDepositRefundsLink,
+        ExternalWithdrawRefundHandler,
+        MonitorExternalWithdrawRefundsLink,
+        GetDepositLastRefundsHandler,
+        GetWithdrawLastRefundsHandler,
         GetFee,
         SetFee,
         {

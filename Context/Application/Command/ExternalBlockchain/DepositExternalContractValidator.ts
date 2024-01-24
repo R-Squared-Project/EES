@@ -41,7 +41,7 @@ export default class DepositExternalContractValidator extends AbstractValidator 
 
     private validateValue() {
         const contractValue = Web3.utils.toBN(this.externalContract.value);
-        if (contractValue < config.eth.minimum_deposit_amount) {
+        if (contractValue.cmp(config.eth.minimum_deposit_amount) < 0) {
             throw new Errors.DepositIsToSmall(config.eth.minimum_deposit_amount.toString(), contractValue.toString());
         }
     }

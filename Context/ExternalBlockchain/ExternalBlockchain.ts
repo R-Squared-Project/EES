@@ -60,6 +60,9 @@ class ExternalBlockchain {
     public async refund(contractId: string) {
         return await this._repository.refund(contractId);
     }
+    public async getFee(): Promise<number> {
+        return await this._repository.getFee();
+    }
 }
 
 export default ExternalBlockchain;

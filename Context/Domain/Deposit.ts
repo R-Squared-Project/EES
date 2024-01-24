@@ -20,6 +20,9 @@ export const STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN = 20;
 export const STATUS_COMPLETED = 25;
 export const STATUS_BURNED = 100;
 export const STATUS_REFUNDED = 105;
+export const STATUS_REFUNDED_IN_EXTERNAL_BLOCKCHAIN = 110;
+
+
 
 export default class Deposit extends AggregateRoot {
     private _secret: string | null = null;
@@ -119,5 +122,13 @@ export default class Deposit extends AggregateRoot {
     public resetToCreated() {
         this._status = STATUS_CREATED;
         this._mintedAmount = null;
+    }
+
+    public refundedInExternalBlockchain() {
+        this._status = STATUS_REFUNDED_IN_EXTERNAL_BLOCKCHAIN;
+    }
+
+    public isRefundedInExternalBlockchain(): boolean {
+        return this._status === STATUS_REFUNDED_IN_EXTERNAL_BLOCKCHAIN;
     }
 }

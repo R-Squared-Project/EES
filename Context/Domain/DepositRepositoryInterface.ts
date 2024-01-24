@@ -12,4 +12,6 @@ export default interface DepositRepositoryInterface {
     getBurned: () => Promise<Deposit[]>
     getByRedeemTxHash: (txHash: string) => Promise<Deposit | null>
     getByBurnTxHash: (txHash: string) => Promise<Deposit | null>
+    getByContractId: (contractId: string) => Promise<Deposit | null>
+    getByRequestIds: (requestIds: string[]) => Promise<Deposit[]>
 }

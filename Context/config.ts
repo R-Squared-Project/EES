@@ -40,6 +40,7 @@ const config = {
         chain_id: process.env.INTERNALP_CHAIN_ID,
         rqrx_withdrawal_fee: parseFloat(process.env.INTERNAL_RQRX_WITHDRAWAL_FEE as string),
         rqeth_withdrawal_fee: parseFloat(process.env.INTERNAL_RQETH_WITHDRAWAL_FEE as string),
+        rqeth_deposit_fee: parseFloat(process.env.INTERNAL_RQETH_DEPOSIT_FEE as string),
         eth_to_rqeth_rate: parseFloat(process.env.INTERNAL_ETH_TO_RQETH_RATE ?? "1"),
         chain_network_name: process.env.INTERNAL_CHAIN_NETWORK_NAME as string,
         rqeth_asset_symbol: process.env.INTERNAL_RQETH_ASSET_SYMBOL as string,

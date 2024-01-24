@@ -29,7 +29,7 @@ export default class CreateContractInInternalBlockchainHandler
 
         const RQETHAmount = this.converter.convert(
             this.normalizer.normalize(deposit._externalContract.value, this.externalBlockchain.getAsset())
-        );
+        ) - config.r_squared.rqeth_deposit_fee;
 
         const denormalizedAmount = this.normalizer.denormalize(
             RQETHAmount,

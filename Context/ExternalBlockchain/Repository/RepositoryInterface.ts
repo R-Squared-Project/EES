@@ -20,4 +20,7 @@ export default interface RepositoryInterface {
     createWithdrawHTLC: (receiver: string, hashlock: string, timelock: number, amount: string) => Promise<string>;
     refund(contractId: string): Promise<string>;
     loadWithdrawHTLCRefundEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
+    loadDepositHTLCRefundEvents: (fromBlock: number, toBlock: number) => Promise<EventData[]>;
+    getFee(): Promise<number>;
+    setFee(fee: number): Promise<string>;
 }

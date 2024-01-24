@@ -10,8 +10,6 @@ import config from "context/config";
 import * as Errors from "context/ExternalBlockchain/Errors";
 import { Injectable } from "@nestjs/common";
 import { Map } from "immutable";
-import { RefundUnexpectedError } from "context/ExternalBlockchain/Errors";
-
 @Injectable()
 export default class EthereumRepository implements RepositoryInterface {
     private _web3: Web3;
@@ -263,7 +261,7 @@ export default class EthereumRepository implements RepositoryInterface {
 
         const tx = {
             from: config.eth.receiver,
-            to: config.eth.withdraw_contract_address,
+            to: config.eth.deposit_contract_address,
             gas,
             data: this._depositContract.methods.setFee(fee).encodeABI(),
         };
@@ -283,34 +281,14 @@ export default class EthereumRepository implements RepositoryInterface {
         }
     }
 
-    async getFee(): Promise<any> {
-        let gas: number;
+    async getFee(): Promise<number> {
 
         try {
-            gas = await this._depositContract.methods.getFee().estimateGas({
-                from: config.eth.receiver,
+            const result = await this._depositContract.methods.getFee().call({
+                from: config.eth.deposit_contract_address,
             });
-        } catch (e) {
-            if (e instanceof TypeError) {
-                throw new Errors.ConnectionError();
-            }
 
-            throw e;
-        }
-
-        const tx = {
-            from: config.eth.receiver,
-            to: config.eth.withdraw_contract_address,
-            gas,
-            data: this._depositContract.methods.getFee().encodeABI(),
-        };
-
-        const signedTx = await this._web3.eth.accounts.signTransaction(tx, config.eth.private_key);
-
-        try {
-            const result = await this._web3.eth.sendSignedTransaction(signedTx.rawTransaction as string);
-
-            return result;
+            return result as unknown as number;
         } catch (e) {
             if (e instanceof TypeError) {
                 throw new Errors.ConnectionError();
@@ -319,8 +297,6 @@ export default class EthereumRepository implements RepositoryInterface {
             throw e;
         }
     }
-
-
 
     private async loadTx(txHash: string) {
         return await this._web3.eth.getTransaction(txHash);
@@ -332,6 +308,13 @@ export default class EthereumRepository implements RepositoryInterface {
 
     async loadWithdrawHTLCRefundEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
         return await this._withdrawContract.getPastEvents("LogHTLCRefund", {
+            fromBlock: fromBlock,
+            toBlock,
+        });
+    }
+
+    async loadDepositHTLCRefundEvents(fromBlock: number, toBlock: number): Promise<EventData[]> {
+        return await this._depositContract.getPastEvents("LogHTLCRefund", {
             fromBlock: fromBlock,
             toBlock,
         });

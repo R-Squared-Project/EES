@@ -1,13 +1,12 @@
 import { DataSource } from "typeorm";
 import DepositRepositoryInterface from "../../Domain/DepositRepositoryInterface";
 import Deposit, {
-    STATUS_BURNED,
-    STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
-    STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN,
+  STATUS_BURNED,
+  STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN, STATUS_REFUNDED_IN_EXTERNAL_BLOCKCHAIN,
+  STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN,
 } from "../../Domain/Deposit";
 import InternalContract from "context/Domain/InternalContract";
 import { Inject, Injectable } from "@nestjs/common";
-import IncomingContractProcessedEvent from "context/Domain/Event/IncomingContractProcessedEvent";
 
 @Injectable()
 export default class TypeOrmRepository implements DepositRepositoryInterface {
@@ -114,9 +113,10 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .leftJoinAndSelect("deposit._externalContract", "externalContract")
             .leftJoinAndSelect("deposit._depositRequest", "depositRequest")
             .leftJoinAndSelect("deposit._internalContract", "internalContract")
-            .where("deposit.status in (:status1, :status2)", {
+            .where("deposit.status in (:status1, :status2, :status3)", {
                 status1: STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
                 status2: STATUS_SUBMITTED_TO_INTERNAL_BLOCKCHAIN,
+                status3: STATUS_REFUNDED_IN_EXTERNAL_BLOCKCHAIN
             })
             .andWhere("externalContract._timeLock <= NOW()")
             .getMany();
@@ -132,6 +132,30 @@ export default class TypeOrmRepository implements DepositRepositoryInterface {
             .where("deposit.status = :status", {
                 status: STATUS_BURNED,
             })
+            .getMany();
+    }
+
+    async getByContractId(contractId: string): Promise<Deposit | null> {
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder("deposit")
+            .leftJoinAndSelect("deposit._externalContract", "externalContract")
+            .leftJoinAndSelect("deposit._internalContract", "internalContract")
+            .leftJoinAndSelect("deposit._depositRequest", "depositRequest")
+            .where("externalContract.id = :contractId", { contractId: contractId })
+            .getOne();
+    }
+
+    async getByRequestIds(requestIds: string[]): Promise<Deposit[]> {
+        if(requestIds.length === 0) return Promise.resolve([]);
+
+        return await this._datasource
+            .getRepository<Deposit>(Deposit)
+            .createQueryBuilder("deposit")
+            .leftJoinAndSelect("deposit._externalContract", "externalContract")
+            .leftJoinAndSelect("deposit._internalContract", "internalContract")
+            .leftJoinAndSelect("deposit._depositRequest", "depositRequest")
+            .where("depositRequest.id in (:requestIds)", { requestIds: requestIds })
             .getMany();
     }
 }
