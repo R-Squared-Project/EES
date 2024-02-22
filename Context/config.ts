@@ -15,10 +15,13 @@ const config = {
     eth: {
         providers: {
             infura: {
-                api_key: process.env.INFURA_API_KEY,
+                api_keys: (process.env.INFURA_API_KEY as string).split(","),
             },
+            sepolia: {
+                url: (process.env.SEPOLIA_URL as string).split(","),
+            }
         },
-        provider: "infura",
+        provider: process.env.ETH_PROVIDER as string,
         network: process.env.ETH_NETWORK_NAME as string,
         private_key: process.env.ETH_PRIVATE_KEY as string,
         minimum_deposit_amount: Web3.utils.toBN(Web3.utils.toWei(process.env.MINIMUM_DEPOSIT_AMOUNT as string)),
