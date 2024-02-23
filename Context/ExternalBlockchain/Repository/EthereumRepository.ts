@@ -64,15 +64,7 @@ export default class EthereumRepository implements RepositoryInterface {
         try {
             return await callBack();
         } catch (e) {
-            if (e instanceof Error
-                && (
-                    e.message.indexOf('CONNECTION ERROR') >= 0
-                    || e.message.indexOf('daily request count exceeded') >= 0
-                    || e.message.indexOf('Invalid JSON RPC response') >= 0
-                    || e.message.indexOf('timeout') >= 0
-                )
-            ) {
-                await this.sleep();
+            if (e instanceof Error && e.message.indexOf('CONNECTION ERROR') >= 0) {
                 this.rotateProviders();
                 return await callBack();
             }
