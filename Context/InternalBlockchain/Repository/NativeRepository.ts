@@ -2,7 +2,7 @@ import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
 import { ChainTypes } from "@r-squared/rsquared-js";
 //@ts-ignore
-import { Apis, ChainConfig } from "@r-squared/rsquared-js-ws";
+import { Apis, ChainConfig, Manager } from "@r-squared/rsquared-js-ws";
 //@ts-ignore
 import { Aes, FetchChain, TransactionBuilder, PrivateKey, ChainStore } from "@r-squared/rsquared-js";
 import * as Errors from "context/InternalBlockchain/Errors";
@@ -20,6 +20,8 @@ const PREIMAGE_LENGTH = 32;
 
 export default class NativeRepository implements RepositoryInterface {
     private memo: Memo;
+    private _connectionManager: Manager;
+    private _instance: Apis;
 
     public constructor(
         private readonly eesAccount: string,
@@ -30,7 +32,7 @@ export default class NativeRepository implements RepositoryInterface {
     }
 
     public static async init(
-        nodeUrl: string,
+        nodeUrls: string[],
         accountFrom: string,
         accountPrivateKey: string,
         assetSymbol: string,
@@ -39,7 +41,7 @@ export default class NativeRepository implements RepositoryInterface {
         ChainConfig.networks["RSquared"].chain_id = chainId;
         ChainConfig.setChainId(chainId);
         const repository = new NativeRepository(accountFrom, accountPrivateKey, assetSymbol);
-        await repository.connect(nodeUrl);
+        await repository.connect(nodeUrls);
         return repository;
     }
 
@@ -180,12 +182,21 @@ export default class NativeRepository implements RepositoryInterface {
         return operations;
     }
 
-    public async connect(nodeUrl: string) {
-        try {
-            await Apis.instance(nodeUrl, true).init_promise;
-        } catch (e: unknown) {
-            throw new InternalBlockchainConnectionError(`Can't connect to the url ${nodeUrl}`);
-        }
+    public async connect(nodeUrls: string[]) {
+
+        this._connectionManager = new Manager({
+            url: nodeUrls[0],
+            urls: nodeUrls,
+            closeCb: () => {
+                throw new InternalBlockchainConnectionError(`Can't connect to the url ${nodeUrls.join(",")}`);
+            },
+            optionalApis: {enableOrders: true},
+            urlChangeCallback: (url: string) => {
+                console.log("fallback to new url:", url);
+            }
+        });
+        this._instance = await this._connectionManager
+            .connectWithFallback(true);
     }
 
     public async disconnect() {

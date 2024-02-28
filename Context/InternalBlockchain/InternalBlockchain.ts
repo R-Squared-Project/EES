@@ -34,7 +34,7 @@ class InternalBlockchain {
         switch (repository) {
             case "native":
                 return await NativeRepository.init(
-                    config.r_squared.node_url as string,
+                    config.r_squared.node_urls,
                     config.r_squared.ees_account as string,
                     config.r_squared.account_private_key as string,
                     config.r_squared.rqeth_asset_symbol as string,

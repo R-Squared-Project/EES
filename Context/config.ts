@@ -31,7 +31,7 @@ const config = {
         redeem_timeframe: parseInt(process.env.TIMEFRAME_REDEEM_EXTERNAL_BLOCKCHAIN as string, 10),
     },
     r_squared: {
-        node_url: process.env.INTERNAL_NODE_URL,
+        node_urls: (process.env.INTERNAL_NODE_URLS as string).split(","),
         ees_account: process.env.INTERNAL_EES_ACCOUNT as string,
         asset_symbol: process.env.INTERNAL_ASSET_SYMBOL,
         asset_id: process.env.INTERNAL_ASSET_ID,
