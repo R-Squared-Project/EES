@@ -159,3 +159,9 @@ export class ReceiverIsSanctioned extends UseCaseError {
 }
 
 export class WithdrawRequestValidationError extends UseCaseError {}
+
+export class WithdrawAmountIsToSmall extends UseCaseError {
+    constructor(minValue: string, value: string) {
+        super(`The withdraw ${value} is too small. Minimum withdraw is ${minValue}.`);
+    }
+}
