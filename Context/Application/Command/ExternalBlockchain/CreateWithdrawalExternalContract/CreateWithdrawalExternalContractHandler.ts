@@ -50,6 +50,7 @@ export default class CreateWithdrawalExternalContractHandler
             Math.floor(Date.now() / 1000) + config.contract.withdraw_external_timelock * 60,
             denormalizedAmount
         );
+        console.log("TXHASH:", txHash, "WITHDRAW_ID", withdraw.idString)
 
         withdraw.sentInReply(txHash);
         await this.withdrawRepository.save(withdraw);
