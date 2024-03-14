@@ -1,17 +1,16 @@
 import { Command, CommandRunner, Option } from "nest-commander";
 import ErrorHandler from "context/Infrastructure/Errors/Handler";
-import GetLastWithdrawContracts from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContracts";
-import GetLastWithdrawContractsHandler from "context/Application/Query/InternalBlockchain/GetLastWithdrawContracts/GetLastWithdrawContractsHandler";
-import ConfirmWithdrawInternalContractRedeem from "context/Application/Command/InternalBlockchain/ConfirmWithdrawInternalContractRedeem/ConfirmWithdrawInternalContractRedeem";
-import { OperationType } from "context/InternalBlockchain/WithdrawTransactionsCollection";
 import config from "context/config";
+import ExecuteRefundedWithdrawInternalContractBurn
+    from "context/Application/Command/InternalBlockchain/ExecuteRefundedWithdrawInternalContractBurn/ExecuteRefundedWithdrawInternalContractBurn";
+import ExecuteRefundedWithdrawInternalContractBurnHandler
+    from "context/Application/Command/InternalBlockchain/ExecuteRefundedWithdrawInternalContractBurn/ExecuteRefundedWithdrawInternalContractBurnHandler";
+import {Inject} from "@nestjs/common";
+import WithdrawRepositoryInterface from "context/Domain/WithdrawRepositoryInterface";
 
 interface ExecuteWithdrawInternalContractRefundOptions {
     interval: number;
 }
-
-const NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REFUND_OPERATION_NAME =
-    "native_last_processed_account_history_withdraw_refund_operation";
 
 @Command({
     name: "execute-withdraw-internal-contract-refund",
@@ -19,7 +18,8 @@ const NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REFUND_OPERATION_NAME =
 })
 export class ExecuteWithdrawInternalContractRefund extends CommandRunner {
     constructor(
-       private readonly getLastWithdrawContractsHandler: GetLastWithdrawContractsHandler
+        @Inject("WithdrawRepositoryInterface") private readonly withdrawRepository: WithdrawRepositoryInterface,
+        private readonly executeRefundedWithdrawInternalContractBurnHandler: ExecuteRefundedWithdrawInternalContractBurnHandler
     ) {
         super();
     }
@@ -38,28 +38,26 @@ export class ExecuteWithdrawInternalContractRefund extends CommandRunner {
     }
 
     private async process() {
-        const queryGetLastWithdrawContracts = new GetLastWithdrawContracts(
-            NATIVE_LAST_PROCESSED_ACCOUNT_HISTORY_WITHDRAW_REFUND_OPERATION_NAME,
-            OperationType.Refund
-        );
-        const withdrawTransactions = await this.getLastWithdrawContractsHandler.execute(queryGetLastWithdrawContracts);
-        const errorHandler = new ErrorHandler("ExecuteWithdrawInternalContractRefund");
+        const withdraws = await this.withdrawRepository.getAllRefundedReadyToBurn();
 
-        if (withdrawTransactions.transactions.length === 0) {
+        if (withdraws.length === 0) {
             return;
         }
 
         console.log(
-            `ExecuteWithdrawInternalContractRefund: Found ${withdrawTransactions.transactions.length} transactions to processed.`
+            `ExecuteWithdrawInternalContractRefund: Found ${withdraws.length} transactions to processed.`
         );
 
-        for (const transaction of withdrawTransactions.transactions) {
-            const query = new ConfirmWithdrawInternalContractRedeem(transaction);
+
+        const errorHandler = new ErrorHandler("ExecuteWithdrawInternalContractRefund");
+
+        for (const withdraw of withdraws) {
+            const query = new ExecuteRefundedWithdrawInternalContractBurn(withdraw);
 
             try {
-                await this.confirmWithdrawInternalContractRedeemHandler.execute(query);
+                await this.executeRefundedWithdrawInternalContractBurnHandler.execute(query);
                 console.log(
-                    `MonitorWithdrawInternalContractRedeem: Withdraw for transaction ${transaction.transactionId} redeemed.`
+                    `ExecuteWithdrawInternalContractRefund: Withdraw ID: ${withdraw.idString} transaction fee burned.`
                 );
             } catch (e) {
                 errorHandler.handle(e);

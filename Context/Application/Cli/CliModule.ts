@@ -66,6 +66,11 @@ import GetDepositLastRefundsHandler
     from "context/Application/Query/ExternalBlockchain/GetDepositLastContractsEvents/GetDepositLastRefundsHandler";
 import GetWithdrawLastRefundsHandler
     from "context/Application/Query/ExternalBlockchain/GetWithdrawLastContractsEvents/GetWithdrawLastRefundsHandler";
+import ExecuteRefundedWithdrawInternalContractBurnHandler
+    from "context/Application/Command/InternalBlockchain/ExecuteRefundedWithdrawInternalContractBurn/ExecuteRefundedWithdrawInternalContractBurnHandler";
+import ExecuteRefundedWithdrawInternalContractBurn
+    from "context/Application/Command/InternalBlockchain/ExecuteRefundedWithdrawInternalContractBurn/ExecuteRefundedWithdrawInternalContractBurn";
+import {ExecuteWithdrawInternalContractRefund} from "context/Application/Cli/ExecuteWithdrawInternalContractRefund";
 
 @Module({
     imports: [CoreModule],
@@ -114,6 +119,8 @@ import GetWithdrawLastRefundsHandler
         ConfirmWithdrawProcessedHandler,
         MonitorExternalWithdrawContractTimelock,
         ProcessWithdrawExternalContractRefundHandler,
+        ExecuteWithdrawInternalContractRefund,
+        ExecuteRefundedWithdrawInternalContractBurnHandler,
         UpdateSanctionedAddresses,
         ExternalDepositRefundHandler,
         MonitorExternalDepositRefundsLink,

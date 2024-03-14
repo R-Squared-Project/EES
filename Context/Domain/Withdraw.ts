@@ -11,6 +11,7 @@ import WithdrawRedeem from "context/Domain/Validation/Withdraw/WithdrawRedeem";
 import WithdrawProcessed from "context/Domain/Validation/Withdraw/WithdrawProcesed";
 import WithdrawRefund from "context/Domain/Validation/Withdraw/WithdrawRefund";
 import WithdrawRefunded from "context/Domain/Validation/Withdraw/WithdrawRefunded";
+import WithdrawRefundedBurned from "context/Domain/Validation/Withdraw/WithdrawRefundedBurned";
 
 export const STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN = 5;
 export const STATUS_READY_TO_PROCESS = 10;
@@ -21,6 +22,7 @@ export const STATUS_REDEEMED = 30;
 export const STATUS_PROCESSED = 35;
 export const STATUS_REFUND = 100;
 export const STATUS_REFUNDED = 105;
+export const STATUS_REFUNDED_BURNED = 110;
 export const STATUS_FAILED_PROCESSING = 200;
 
 export default class Withdraw extends AggregateRoot {
@@ -126,5 +128,10 @@ export default class Withdraw extends AggregateRoot {
     public refunded() {
         new WithdrawRefunded(this).validate();
         this.status = STATUS_REFUNDED;
+    }
+
+    public refundedBurned() {
+        new WithdrawRefundedBurned(this).validate();
+        this.status = STATUS_REFUNDED_BURNED;
     }
 }

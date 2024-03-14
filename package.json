@@ -24,6 +24,7 @@
     "monitor:withdraw_internal_contract_redeem": "ts-node -r tsconfig-paths/register cli.ts monitor-withdraw-internal-contract-redeem",
     "monitor:withdraw_internal_contract_redeem_processed": "ts-node -r tsconfig-paths/register cli.ts monitor-withdraw-internal-contract-redeem-processed",
     "monitor:external_withdraw_contract_timelock": "ts-node -r tsconfig-paths/register cli.ts monitor-external-withdraw-contract-timelock",
+    "execute:withdraw_internal_contract_refund": "ts-node -r tsconfig-paths/register cli.ts execute-withdraw-internal-contract-refund",
     "update:sanctioned-addresses": "ts-node -r tsconfig-paths/register cli.ts update-sanctioned-addresses",
     "get-fee": "ts-node -r tsconfig-paths/register cli.ts get-fee",
     "set-fee": "ts-node -r tsconfig-paths/register cli.ts set-fee",

@@ -1,5 +1,5 @@
-import WithdrawTransaction from "context/InternalBlockchain/WithdrawTransaction";
+import Withdraw from "context/Domain/Withdraw";
 
 export default class ExecuteRefundedWithdrawInternalContractBurn {
-    constructor(public transaction: WithdrawTransaction) {}
+    constructor(public withdraw: Withdraw) {}
 }
