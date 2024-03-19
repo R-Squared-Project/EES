@@ -47,6 +47,16 @@ export default class WithdrawStubRepository implements WithdrawRepositoryInterfa
         return Promise.resolve(null);
     }
 
+    getByHashLock(hashLock: string): Promise<Withdraw | null> {
+        for (const withdraw of Object.values(this._withdraws)) {
+            if (withdraw.hashlock === hashLock) {
+                return Promise.resolve(withdraw);
+            }
+        }
+
+        return Promise.resolve(null);
+    }
+
     getByRedeemTxHash(txHash: string): Promise<Withdraw | null> {
         for (const withdraw of Object.values(this._withdraws)) {
             if (withdraw.externalBlockchainRedeemTxHash === txHash) {

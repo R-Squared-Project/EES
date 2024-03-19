@@ -1,5 +1,9 @@
 export default class ProcessWithdrawContractCreation {
-    constructor(private _txHash: string, private _contractId: string) {}
+    constructor(private _hashLock: string, private _txHash: string, private _contractId: string) {}
+
+    get hashLock(): string {
+        return this._hashLock;
+    }
 
     get blockchain(): string {
         return "Ethereum";

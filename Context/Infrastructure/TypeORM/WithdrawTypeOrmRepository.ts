@@ -63,6 +63,16 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .getOne();
     }
 
+    async getByHashLock(hashLock: string): Promise<Withdraw | null> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .where("withdraw.hashLock = :withdrawHashLock", { withdrawHashLock: hashLock})
+            .getOne();
+    }
+
     async getByRequestId(requestId: string): Promise<Withdraw | null> {
         return await this._datasource
             .getRepository<Withdraw>(Withdraw)
