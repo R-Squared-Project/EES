@@ -40,6 +40,10 @@ export default class ConfirmDepositExternalContractRedeemedHandler {
             throw e;
         }
 
+        if (receipt === null) {
+            throw new Errors.TransactionReceiptNotFound(command.txHash);
+        }
+
         const blocksDifference = (await this.blockchainRepository.getLastBlockNumber()) - receipt.blockNumber;
         const ethRequiredBlockConfirmations = parseInt(process.env.ETH_REQUIRED_BLOCK_CONFIRMATIONS ?? "10");
 

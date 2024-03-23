@@ -11,3 +11,9 @@ export class ReversibleReceipt extends UseCaseError {
         super(`Receipt from block number "${blockNumber}" is reversible`);
     }
 }
+
+export class TransactionReceiptNotFound extends UseCaseError {
+    constructor(txHash: string) {
+        super(`Transaction receipt not found for txHash "${txHash}"`);
+    }
+}
