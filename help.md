@@ -60,19 +60,19 @@ yarn monitor:ethereum_transactions
 supervisorctl start monitor_ethereum_transaction
 yarn monitor:ethereum_transactions
 
-### Worker to Confirm Withdraw External Contract Redeemed 
+### Worker to Confirm Withdraw External Contract Redeemed Status changes to 25
 supervisorctl start worker_withdraw_external_contract_redeemed
 yarn worker:withdraw_external_contract_redeemed
 
-### Redeem Withdrawal Internal Contract 
+### Redeem Withdrawal Internal Contract Status changes to 30
 supervisorctl start execute_withdraw_internal_contract_redeem
 yarn execute:withdraw_internal_contract_redeem
 
-### Monitor Withdraw Internal Contract Redeem 
+### Monitor Withdraw Internal Contract Redeem Status does not change only the queue
 supervisorctl start monitor_withdraw_internal_contract_redeem
 yarn monitor:withdraw_internal_contract_redeem
 
-### Check Redeem Transaction For Internal Blockchain Is Successful 
+### Check Redeem Transaction For Internal Blockchain Is Successful Status changes to 35
 supervisorctl start monitor_withdraw_internal_contract_redeem_processed
 yarn monitor:withdraw_internal_contract_redeem_processed
 
