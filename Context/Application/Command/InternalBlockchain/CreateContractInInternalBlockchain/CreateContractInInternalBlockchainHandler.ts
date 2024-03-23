@@ -1,4 +1,4 @@
-import dayjs, {Dayjs} from "dayjs";
+import dayjs from "dayjs";
 import config from "context/config";
 import { UseCase } from "context/Core/Domain/UseCase";
 import CreateContractInInternalBlockchain from "./CreateContractInInternalBlockchain";
@@ -45,7 +45,7 @@ export default class CreateContractInInternalBlockchainHandler
                 deposit._depositRequest.nativeAccount.value,
                 denormalizedAmount,
                 deposit._depositRequest.hashLock.value.substring(2),
-                this.timeLock(deposit._externalContract.timeLock.value)
+                this.timeLock()
             );
         } catch (e: unknown) {
             deposit.resetToCreated();
@@ -54,7 +54,7 @@ export default class CreateContractInInternalBlockchainHandler
         }
     }
 
-    private timeLock(value: Dayjs): number {
-        return value.add(config.r_squared.redeem_timeframe, "minutes").diff(dayjs(), "seconds");
+    private timeLock(): number {
+        return dayjs().add(config.r_squared.redeem_timeframe, "minutes").diff(dayjs(), "seconds");
     }
 }
