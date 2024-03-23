@@ -1,9 +1,9 @@
 import AbstractValidator from "context/Domain/Validation/AbstractValidator";
 import config from "context/config";
 import * as Errors from "context/Domain/Errors";
-import dayjs from "dayjs";
 import { HashZero } from "@ethersproject/constants";
 import Contract from "context/ExternalBlockchain/Contract";
+import Web3 from "web3";
 
 export default class WithdrawExternalContractValidator extends AbstractValidator {
     constructor(private externalContract: Contract) {
@@ -25,9 +25,9 @@ export default class WithdrawExternalContractValidator extends AbstractValidator
     }
 
     private validateValue() {
-        const contractValue = parseFloat(this.externalContract.value);
-        if (contractValue < config.eth.minimum_withdraw_amount) {
-            throw new Errors.DepositIsToSmall(config.eth.minimum_withdraw_amount.toString(), contractValue.toString());
+        const contractValue = Web3.utils.toBN(this.externalContract.value);
+        if (contractValue.cmp(config.eth.minimum_withdraw_amount) < 0) {
+            throw new Errors.WithdrawAmountIsToSmall(config.eth.minimum_withdraw_amount.toString(), contractValue.toString());
         }
     }
 

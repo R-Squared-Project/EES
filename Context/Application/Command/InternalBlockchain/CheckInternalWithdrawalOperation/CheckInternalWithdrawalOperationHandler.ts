@@ -69,7 +69,7 @@ export default class CheckInternalWithdrawalOperationHandler
             await this.internalBlockchain.getAsset(htlcOperation.get("op")[1].amount.asset_id)
         );
 
-        if (normalizedAmount < config.eth.minimum_withdraw_amount) {
+        if (config.eth.minimum_withdraw_amount.cmpn(normalizedAmount) > 0) {
             throw new Errors.InvalidAmount(withdraw);
         }
 
