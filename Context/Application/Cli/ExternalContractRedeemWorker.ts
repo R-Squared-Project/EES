@@ -1,9 +1,9 @@
 import { Command, CommandRunner } from "nest-commander";
-import RabbitMQ from "context/Queue/RabbitMQ";
 import ConfirmDepositExternalContractRedeemed from "context/Application/Command/ExternalBlockchain/ConfirmDepositExternalContractRedeemed/ConfirmDepositExternalContractRedeemed";
 import ConfirmDepositExternalContractRedeemedHandler from "context/Application/Command/ExternalBlockchain/ConfirmDepositExternalContractRedeemed/ConfirmDepositExternalContractRedeemedHandler";
 import QueueInterface, { EXTERNAL_DEPOSIT_CONTRACT_REDEEM } from "context/Queue/QueueInterface";
 import { Inject } from "@nestjs/common";
+import * as Errors from "context/Application/Command/ExternalBlockchain/ConfirmDepositExternalContractRedeemed/Errors";
 
 interface ExternalContractRedeemMessage {
     txHash: string;
@@ -34,6 +34,15 @@ export class ExternalContractRedeemWorker extends CommandRunner {
                         `Redeem of HTLC contract with txHash ${message.txHash} confirmed in an external blockchain.`
                     );
                 } catch (e: unknown) {
+                    if(e instanceof Errors.DepositNotExists) {
+                        ack();
+                        console.log(
+                            `Deposit with redeem txHash ${message.txHash} does not exist.`
+                        );
+
+                        return;
+                    }
+
                     nack();
                     const errorMessage = (e as Error).message;
 
