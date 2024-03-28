@@ -146,7 +146,7 @@ describe("ProcessWithdrawContractCreationHandler", () => {
                 await expect(handler.execute(command)).rejectedWith(
                     `The deposit ${
                         stubRepository._contract?.value
-                    } is to small. Minimum deposit is ${config.eth.minimum_withdraw_amount.toString()}.`
+                    } is too small. Minimum deposit is ${config.eth.minimum_withdraw_amount.toString()}.`
                 );
             });
 
