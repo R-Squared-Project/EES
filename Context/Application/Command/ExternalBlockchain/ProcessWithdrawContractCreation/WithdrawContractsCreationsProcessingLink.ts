@@ -18,6 +18,7 @@ export default class WithdrawContractsCreationsProcessingLink implements Chained
 
             try {
                 const command = new ProcessWithdrawContractCreation(
+                    event.returnValues.hashlock.replace("0x", ""),
                     event.transactionHash,
                     event.returnValues.contractId
                 );

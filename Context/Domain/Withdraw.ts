@@ -82,14 +82,14 @@ export default class Withdraw extends AggregateRoot {
         this.addDomainEvent(new WithdrawReadyToProcessEvent(this.id.toValue()));
     }
 
-    public sentInReply(txHash: string) {
-        this.txHash = txHash;
+    public sentInReply() {
         new SendInReply(this).validate();
         this.status = STATUS_SEND_IN_REPLY;
     }
 
     public readyToSign(contract: ExternalContract) {
         this.externalContract = contract;
+        this.txHash = contract.txHash;
         new ReadyToSign(this).validate();
         this.status = STATUS_READY_TO_SIGN;
     }
