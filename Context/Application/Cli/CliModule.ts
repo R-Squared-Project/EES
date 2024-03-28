@@ -72,6 +72,23 @@ import ExecuteRefundedWithdrawInternalContractBurn
     from "context/Application/Command/InternalBlockchain/ExecuteRefundedWithdrawInternalContractBurn/ExecuteRefundedWithdrawInternalContractBurn";
 import {ExecuteWithdrawInternalContractRefund} from "context/Application/Cli/ExecuteWithdrawInternalContractRefund";
 
+const LOG_PREFIX = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate() +  ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds();
+const log = console.log;
+
+console.log = function(){
+
+    // 1. Convert args to a normal array
+    var args = Array.from(arguments);
+    // OR you can use: Array.prototype.slice.call( arguments );
+
+    // 2. Prepend log prefix log string
+    args[0] = LOG_PREFIX + " - " + args[0];
+
+    // 3. Pass along arguments to console.log
+    log.apply(console, args);
+}
+
+
 @Module({
     imports: [CoreModule],
     providers: [

@@ -6,9 +6,9 @@ COPY docker/node/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 WORKDIR /var/ees
 
 COPY package.json ./
-COPY yarn.lock ./
+COPY package-lock.json ./
 
-RUN yarn
+RUN npm install
 
 COPY . .
 
