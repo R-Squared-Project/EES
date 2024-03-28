@@ -22,7 +22,7 @@ export default class MonitorExternalWithdrawRefundsLink implements ChainedHandle
                 const command = new ExternalWithdrawRefund(event.transactionHash, event.returnValues.contractId);
                 await this.externalContractRefundHandler.execute(command);
                 console.log(
-                    `MonitorExternalWithdrawRefundsLink: Refund withdraw transaction ${event.transactionHash} successfully queued`
+                    `MonitorExternalWithdrawRefundsLink: Refund withdraw transaction ${event.transactionHash} successfully found.`
                 );
             } catch (e: unknown) {
                 if (e instanceof Error) {

@@ -30,13 +30,14 @@ yarn monitor:ethereum_transactions
 supervisorctl start worker_external_contract_redeem
 yarn worker:external_contract_redeem
 
-### Monitor deposit internal contract refunded
+### Monitor deposit internal contract refunded 
 supervisorctl start deposit_internal_contract_refunded
 yarn monitor:deposit_internal_contract_refunded
 
 ### Monitor Deposit Internal Contract Burned
 supervisorctl start deposit_internal_contract_burned
 yarn monitor:deposit_internal_contract_burned
+
 
 ## Withdraw
 
@@ -48,7 +49,7 @@ yarn monitor:withdraw_internal_contract_created
 supervisorctl start found_withdraw_internal_contract_creation
 yarn found:withdraw_internal_contract_creation
 
-### Worker Create Withdrawal External Contract Status changes to 15
+### Worker Create Withdrawal External Contract Status changes to 15 wait 2 lines
 supervisorctl start worker_create_withdrawal_external_contract
 yarn worker:create_withdrawal_external_contract
 
@@ -76,7 +77,14 @@ yarn monitor:withdraw_internal_contract_redeem
 supervisorctl start monitor_withdraw_internal_contract_redeem_processed
 yarn monitor:withdraw_internal_contract_redeem_processed
 
-### Process Withdrawal External Contract Refund
+### Process Withdrawal External Contract Refund Status changes to 100
 supervisorctl start monitor_external_withdraw_contract_timelock
 yarn monitor:external_withdraw_contract_timelock
 
+### Monitor ETH transaction (Contract Refunded) Status changes to 105
+supervisorctl start monitor_ethereum_transaction
+yarn monitor:ethereum_transactions
+
+### Execute Withdraw Internal Contract Refund Status changes to 110
+supervisorctl start execute_withdraw_internal_contract_refund
+yarn execute:withdraw_internal_contract_refund

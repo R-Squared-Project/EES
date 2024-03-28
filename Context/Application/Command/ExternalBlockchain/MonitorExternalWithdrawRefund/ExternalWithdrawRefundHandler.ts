@@ -18,7 +18,7 @@ export default class ExternalWithdrawRefundHandler implements UseCase<ExternalWi
             throw new Errors.TransactionNotFoundInBlockchain(command.txHash);
         }
 
-        const withdraw = await this.withdrawRepository.getByRefundTxHash(command.txHash);
+        const withdraw = await this.withdrawRepository.getByExternalContractId(command.contractId);
         if (!withdraw) {
             return;
         }

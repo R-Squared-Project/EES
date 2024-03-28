@@ -5,7 +5,7 @@ import Withdraw, {
     STATUS_CREATED_IN_INTERNAL_BLOCKCHAIN,
     STATUS_READY_TO_SIGN,
     STATUS_REDEEM_EXECUTED_IN_EXTERNAL_BLOCKCHAIN,
-    STATUS_REDEEMED,
+    STATUS_REDEEMED, STATUS_REFUNDED,
 } from "context/Domain/Withdraw";
 import WithdrawRequest from "context/Domain/WithdrawRequest";
 import InternalContract from "context/Domain/InternalContract";
@@ -139,6 +139,18 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .getMany();
     }
 
+    async getAllRefundedReadyToBurn(): Promise<Withdraw[]> {
+        return await this._datasource
+            .getRepository<Withdraw>(Withdraw)
+            .createQueryBuilder("withdraw")
+            .leftJoinAndSelect("withdraw.externalContract", "externalContract")
+            .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
+            .leftJoinAndSelect("withdraw.internalContract", "internalContract")
+            .where("withdraw.status = :status", { status: STATUS_REFUNDED })
+            .andWhere("externalContract.time_lock <= NOW()")
+            .getMany();
+    }
+
     async getByRefundTxHash(txHash: string): Promise<Withdraw | null> {
         return await this._datasource
             .getRepository<Withdraw>(Withdraw)
@@ -146,7 +158,7 @@ export default class WithdrawTypeOrmRepository implements WithdrawRepositoryInte
             .leftJoinAndSelect("withdraw.externalContract", "externalContract")
             .leftJoinAndSelect("withdraw.internalContract", "internalContract")
             .leftJoinAndSelect("withdraw.withdrawRequest", "withdrawRequest")
-            .where("withdraw._externalBlockchainRefundTxHash = :txHash", { txHash })
+            .where("withdraw.externalBlockchainRefundTxHash = :txHash", { txHash })
             .getOne();
     }
 }
