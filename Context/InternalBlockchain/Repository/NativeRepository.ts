@@ -1,10 +1,8 @@
 import RepositoryInterface from "./RepositoryInterface";
 //@ts-ignore
-import { ChainTypes } from "@r-squared/rsquared-js";
-//@ts-ignore
 import { Apis, ChainConfig, Manager } from "@r-squared/rsquared-js-ws";
 //@ts-ignore
-import { Aes, FetchChain, TransactionBuilder, PrivateKey, ChainStore } from "@r-squared/rsquared-js";
+import { Aes, FetchChain, TransactionBuilder, PrivateKey, ChainStore, ChainTypes } from "@r-squared/rsquared-js";
 import * as Errors from "context/InternalBlockchain/Errors";
 import { InternalBlockchainConnectionError } from "context/Infrastructure/Errors";
 import Memo from "context/InternalBlockchain/Memo";
@@ -21,7 +19,7 @@ const PREIMAGE_LENGTH = 32;
 export default class NativeRepository implements RepositoryInterface {
     private memo: Memo;
     private _connectionManager: Manager;
-    private _instance: Apis;
+    private assets: Map<string, any> = Map();
 
     public constructor(
         private readonly eesAccount: string,
@@ -110,6 +108,7 @@ export default class NativeRepository implements RepositoryInterface {
         try {
             await txHtlcCreate.broadcast();
         } catch (e: unknown) {
+            await this.burnAsset(amount);
             throw new Errors.CreateHtlcError();
         }
     }
@@ -195,8 +194,17 @@ export default class NativeRepository implements RepositoryInterface {
                 console.log("fallback to new url:", url);
             }
         });
-        this._instance = await this._connectionManager
+        await this._connectionManager
             .connectWithFallback(true);
+
+        try {
+            await ChainStore.init(false);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw new InternalBlockchainConnectionError("Can't connect to the blockchain" + e);
+            }
+        }
+
     }
 
     public async disconnect() {
@@ -256,11 +264,17 @@ export default class NativeRepository implements RepositoryInterface {
     }
 
     async getAsset(assetId: string): Promise<Map<string, any>> {
+        if (this.assets.has(assetId)) {
+            return this.assets.get(assetId);
+        }
+
         const [result] = await Apis.instance()
             .db_api()
             .exec("get_assets", [[assetId]]);
 
-        return Map(result);
+        this.assets = this.assets.set(assetId, Map(result));
+
+        return this.assets.get(assetId);
     }
 
     async getAccountHistory(lastProcessedAccountHistoryOperation: string): Promise<WithdrawTransaction[]> {

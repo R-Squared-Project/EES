@@ -72,6 +72,7 @@ export default class EthereumRepository implements RepositoryInterface {
                     || e.message.indexOf('timeout') >= 0
                 )
             ) {
+                await this.sleep();
                 this.rotateProviders();
                 return await callBack();
             }
