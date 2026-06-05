@@ -1,4 +1,4 @@
-import amqp, { Channel, Connection } from "amqplib";
+import amqp, { Channel, ChannelModel } from "amqplib";
 import config from "context/config";
 import { ConsumeMessage, Replies } from "amqplib/properties";
 import { Injectable } from "@nestjs/common";
@@ -17,7 +17,7 @@ const EXCHANGE_OPTION = {
 @Injectable()
 export default class RabbitMQ implements QueueInterface {
     private channel: Channel | null = null;
-    private connection: Connection | null = null;
+    private connection: ChannelModel | null = null;
 
     public async initProduce() {
         await this.connect();
