@@ -72,10 +72,16 @@ export class MonitorEthereumTransactions extends CommandRunner {
     }
 
     private cycleProcess(interval: number) {
-        this.process(null).then(() => {
-            setTimeout(() => {
-                this.cycleProcess(interval);
-            }, interval * 1000);
-        });
+        // Sin el .catch(), cualquier rechazo no manejado en process() mata el proceso
+        // y deja a supervisord en un crash loop (visto en producción con Infura caído).
+        this.process(null)
+            .catch((e) => {
+                console.error("MonitorEthereumTransactions cycle error:", e);
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    this.cycleProcess(interval);
+                }, interval * 1000);
+            });
     }
 }
