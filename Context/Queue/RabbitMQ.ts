@@ -1,4 +1,4 @@
-import amqp, { Channel, ChannelModel } from "amqplib";
+import amqp, { Channel } from "amqplib";
 import config from "context/config";
 import { ConsumeMessage, Replies } from "amqplib/properties";
 import { Injectable } from "@nestjs/common";
@@ -17,7 +17,9 @@ const EXCHANGE_OPTION = {
 @Injectable()
 export default class RabbitMQ implements QueueInterface {
     private channel: Channel | null = null;
-    private connection: ChannelModel | null = null;
+    // Tipo inferido de amqp.connect para sobrevivir al cambio Connection -> ChannelModel
+    // que ocurrió en @types/amqplib entre 0.10.4 y 0.10.8.
+    private connection: Awaited<ReturnType<typeof amqp.connect>> | null = null;
 
     public async initProduce() {
         await this.connect();
@@ -78,11 +80,12 @@ export default class RabbitMQ implements QueueInterface {
             username: config.rabbitmq.user,
             password: config.rabbitmq.password,
         });
-        this.channel = await this.connection.createChannel();
+        const channel = await this.connection.createChannel();
         // Limita un mensaje en vuelo por consumer para que un mensaje envenenado
         // no pueda saturar al worker con retries paralelos.
-        await this.channel.prefetch(1);
-        await this.channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, EXCHANGE_OPTION);
+        await channel.prefetch(1);
+        await channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, EXCHANGE_OPTION);
+        this.channel = channel;
     }
 
     public async disconnect() {
